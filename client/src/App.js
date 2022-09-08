@@ -1,23 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+// React & Material UI
+import { useState } from 'react';
+import { Routes, Route } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
+
+// Components
+import TopBar from './components/TopBar';
+
+// Pages
+import Landing from './pages/Landing';
+import LoginForm from './pages/LoginForm';
+import RegisterForm from './pages/RegisterForm';
+import RegisterEmailNotification from './pages/RegisterEmailNotification';
+
+// Theme selection
+import appTheme from './themes/AppTheme';
+
+
 
 function App() {
+  const [appState, setAppState] = useState({
+    authenticated: false,
+  });
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ThemeProvider theme={appTheme}>
+        <TopBar appState={[appState, setAppState]} />
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<LoginForm appState={[appState, setAppState]}/>} />
+          <Route path="/register" element={<RegisterForm appState={[appState, setAppState]}/>} />
+          <Route path="/register/emailnotification" element={<RegisterEmailNotification appState={[appState, setAppState]}/>} />
+        </Routes>
+      </ThemeProvider>
     </div>
   );
 }
