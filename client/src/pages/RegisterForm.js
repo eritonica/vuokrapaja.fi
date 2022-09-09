@@ -71,7 +71,11 @@ const RegisterForm = (props) => {
       if(data.message === "Account created, waiting for verification.") {
         setRegisterState({ ...registerState, registerSuccess: true });
       } else {
-        setRegisterState({ ...registerState, registerError: true, registerErrorMessage: data.message });
+        if(data.message === "SQLITE_CONSTRAINT: UNIQUE constraint failed: accounts.email") {
+          setRegisterState({ ...registerState, registerError: true, registerErrorMessage: "Email already in use." });
+        } else {
+          setRegisterState({ ...registerState, registerError: true, registerErrorMessage: "data.message" });
+        }
       }
     }
   }
