@@ -10,7 +10,6 @@ import TopBar from './components/TopBar';
 import Landing from './pages/Landing';
 import LoginForm from './pages/LoginForm';
 import RegisterForm from './pages/RegisterForm';
-import RegisterEmailNotification from './pages/RegisterEmailNotification';
 
 // Theme selection
 import appTheme from './themes/AppTheme';
@@ -30,7 +29,6 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<LoginForm appState={[appState, setAppState]}/>} />
           <Route path="/register" element={<RegisterForm appState={[appState, setAppState]}/>} />
-          <Route path="/register/emailnotification" element={<RegisterEmailNotification appState={[appState, setAppState]}/>} />
         </Routes>
       </ThemeProvider>
     </div>

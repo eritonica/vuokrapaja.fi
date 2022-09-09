@@ -28,7 +28,7 @@ const getAccountByEmail = async (email) => {
 // Post a new account
 // TODO: Add validation
 
-router.post("/account", (req, res) => {
+router.post("/accounts", (req, res) => {
   let db = database.open("accounts");
   let sql = `INSERT INTO accounts (username, email, password, activation_code) VALUES (?, ?, ?, ?)`;
   let activationCode = crypto.generateString(32);
@@ -53,7 +53,7 @@ router.post("/account", (req, res) => {
 });
 
 // Activate an account
-router.get("/account/activate/:activationCode",(req, res) => {
+router.get("/accounts/activate/:activationCode",(req, res) => {
   let db = database.open("accounts");
   let sql = `UPDATE accounts SET active = 1 WHERE activation_code = ?`;
   db.run(sql, req.params.activationCode, (err) => {
@@ -69,7 +69,7 @@ router.get("/account/activate/:activationCode",(req, res) => {
 // Get account by id
 // TODO: check if session is valid before getting account with id. 
 
-router.get("/account/:id", (req, res) => {
+router.get("/accounts/:id", (req, res) => {
   let confirmed = sessions.confirm(req.body.token);
   if(confirmed) {
     let db = database.open("accounts");
@@ -92,7 +92,7 @@ router.get("/account/:id", (req, res) => {
 // Change unique email or password
 // TODO: check if session is valid before modifying account.
 
-router.put("/account/:id", async (req, res) => {
+router.put("/accounts/:id", async (req, res) => {
   let confirmed = sessions.confirm(req.body.token);
   if(confirmed) {
     let db = database.open("accounts");
@@ -120,7 +120,7 @@ router.put("/account/:id", async (req, res) => {
 // Deactivate account instead of deleting it.
 // TODO: Check if session is valid before deleting account.
 
-router.delete("/account/:id", (req, res) => {
+router.delete("/accounts/:id", (req, res) => {
   let confirmed = sessions.confirm(req.body.token);
   if(confirmed) {
     let db = database.open("accounts");

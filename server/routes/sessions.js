@@ -23,7 +23,7 @@ const confirm = (token) => {
 }
 
 // Create session
-router.post("/session", (req, res) => {
+router.post("/sessions", (req, res) => {
   let account = accounts.getAccountByEmail(req.body.email);
   if (account === null) {
     res.status(400).json({ message: "Account does not exist." });
@@ -48,7 +48,7 @@ router.post("/session", (req, res) => {
 });
 
 // Update and session
-router.put("/session", (req, res) => {
+router.put("/sessions", (req, res) => {
   let db = database.open("sessions");
   let sql = `UPDATE sessions SET token = ? WHERE token = ?`;
   let token = crypto.generateString(32);
@@ -64,7 +64,7 @@ router.put("/session", (req, res) => {
 });
 
 // Delete session
-router.delete("/session", (req, res) => {
+router.delete("/sessions", (req, res) => {
   let db = database.open("sessions");
   let sql = `DELETE FROM sessions WHERE token = ?`;
   let data = [req.body.token];
