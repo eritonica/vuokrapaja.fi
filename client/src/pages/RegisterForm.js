@@ -35,6 +35,10 @@ const RegisterForm = (props) => {
       [event.target.name]: event.target.value });
   }
 
+  const validateEmail = (email) => {
+    return /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/.test(email);
+  }
+
   const handleRegister = async (event) => {
     event.preventDefault();
     if(registerState.username.length < 3) {
@@ -51,6 +55,9 @@ const RegisterForm = (props) => {
     }
     if(registerState.email.length < 5) {
       setRegisterState({ ...registerState, emailError: true, emailErrorMessage: "Email must be at least 5 characters." });
+    }
+    if(validateEmail(registerState.email) === false) {
+      setRegisterState({ ...registerState, emailError: true, emailErrorMessage: "Email is not valid." });
     }
     if(registerState.usernameError === false && registerState.passwordError === false && registerState.emailError === false) {
       let response = await fetch('http://localhost:8080/api/accounts', {
