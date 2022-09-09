@@ -1,4 +1,7 @@
 // Initialize Node.js express server
+import fs from "fs";
+import http from "http";
+import https from "https";
 import express from "express";
 import cors  from "cors";
 import dotenv from "dotenv";
@@ -31,8 +34,22 @@ app.use("/api", sessions.router);
 // Static route, serve client build if it exists.
 app.use(express.static('../client/build'));
 
-// Start server
-app.listen(port, () => {
-  console.log(`Server listening on port ${port}`);
-});
+if(process.env.PROTOCOL === "https") {
+  // Create https server
+  const httpsOptions = {
+    key: fs.readFileSync(process.env.HTTPS_KEY),
+    cert: fs.readFileSync(process.env.HTTPS_CERT),
+    ca: fs.readFileSync(process.env.HTTPS_CA),
+  };
+  const httpsServer = https.createServer(httpsOptions, app);
+  httpsServer.listen(port, () => {
+    console.log(`Server listening on port ${port} using https.`);
+  });
+} else {
+  // Create http server
+  const httpServer = http.createServer(app);
+  httpServer.listen(port, () => {
+    console.log(`Server listening on port ${port} using http.`);
+  });
+}
 
