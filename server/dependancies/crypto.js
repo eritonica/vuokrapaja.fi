@@ -1,4 +1,4 @@
-const bcrypt = require("bcrypt");
+import bcrypt from "bcrypt";
 
 // Encrypt password
 const encrypt = (password) => {
@@ -21,7 +21,7 @@ const generateString = (length) => {
   return result;
 }
 
-module.exports = {
+export default {
   encrypt,
   compare,
   generateString,

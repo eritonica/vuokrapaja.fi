@@ -1,8 +1,8 @@
 // Initialize Node.js express server
-const express = require('express');
+import express from "express";
+import dotenv from "dotenv";
 const app = express();
-
-require('dotenv').config();
+dotenv.config();
 
 let port = process.env.PORT || 4000;
 
@@ -15,14 +15,16 @@ app.get("/", (req, res) => {
 });
 
 // Check that databases and tables are created.
-const schema = require('./dependancies/schema');
-schema.createAccountTable();
+
+import schema from "./dependancies/schema.js";
 schema.createSessionTable();
+schema.createAccountTable();
 
 // Router routes
-const account = require('./routes/account');
-const session = require('./routes/session');
-app.use("/api", account.router);
+import accounts from './routes/accounts.js';
+app.use("/api", accounts.router);
+import sessions from './routes/sessions.js';
+app.use("/api", sessions.router);
 
 // Static route, serve client build if it exists.
 app.use(express.static('../client/build'));

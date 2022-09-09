@@ -1,10 +1,10 @@
-const sqlite3 = require("sqlite3").verbose();
+import Database from "sqlite3";
 
-const openDatabase = (dbName) => {
+const open = (dbName) => {
   if(dbName === undefined) {
-    return new sqlite3.Database(
+    return new Database.Database(
       ":memory:",
-      sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
+      Database.OPEN_READWRITE | Database.OPEN_CREATE,
       (err) => {
         if (err) {
           console.error(err.message);
@@ -13,9 +13,9 @@ const openDatabase = (dbName) => {
       }
     );
   } else {
-    return new sqlite3.Database(
+    return new Database.Database(
       `../database/${dbName}.db`,
-      sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE,
+      Database.OPEN_READWRITE | Database.OPEN_CREATE,
       (err) => {
         if (err) {
           console.error(err.message);
@@ -24,7 +24,7 @@ const openDatabase = (dbName) => {
       }
     );
   }
-}
+};
 
 const close = (db) => {
   db.close((err) => {
@@ -33,9 +33,6 @@ const close = (db) => {
     }
     console.log("Close the database connection.");
   });
-}
+};
 
-module.exports = {
-  openDatabase,
-  close,
-}
+export default { open, close }

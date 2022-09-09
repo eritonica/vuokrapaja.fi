@@ -1,8 +1,9 @@
-const database = require("./sqlite");
+import database from "./sqlite.js";
+
 
 let createAccountTable = () => {
-  let db = database.openDatabase("account");
-  let sql = `CREATE TABLE IF NOT EXISTS account (
+  let db = database.open("accounts");
+  let sql = `CREATE TABLE IF NOT EXISTS accounts (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT NOT NULL,
     email TEXT NOT NULL,
@@ -20,8 +21,8 @@ let createAccountTable = () => {
 };
 
 let createSessionTable = () => {
-  let db = database.openDatabase("session");
-  let sql = `CREATE TABLE IF NOT EXISTS session (
+  let db = database.open("sessions");
+  let sql = `CREATE TABLE IF NOT EXISTS sessions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     account_id INTEGER NOT NULL,
     token TEXT NOT NULL,
@@ -36,7 +37,8 @@ let createSessionTable = () => {
   });
 };
 
-module.exports = {
+
+export default { 
   createAccountTable,
-  createSessionTable,
+  createSessionTable
 }
