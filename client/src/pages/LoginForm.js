@@ -1,15 +1,18 @@
-import { useNavigate } from "react-router-dom";
-import { Container, Box, TextField, Button } from '@mui/material';
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { Container, Box, TextField, Button, Alert } from '@mui/material';
 import { Login, AppRegistration } from "@mui/icons-material";
 import Grid from '@mui/material/Unstable_Grid2';
 import { useState } from 'react';
 
 const LoginForm = (props) => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [appState, setAppState] = props.appState;
   const [loginState, setLoginState] = useState({
     email: '',
     password: '',
+    loginError: false,
+    loginErrorMessage: '',
   });
 
   const handleLogin = async (event) => {
@@ -26,6 +29,12 @@ const LoginForm = (props) => {
     if(body.token) {
       setAppState({ ...appState, token: body.token });
       navigate('/');
+    } else {
+      setLoginState({
+        ...loginState,
+        loginError: true,
+        loginErrorMessage: body.message,
+      })
     }
   }
 
@@ -41,6 +50,11 @@ const LoginForm = (props) => {
     <Container maxWidth="sm">
       <Box component={'form'} onSubmit={handleLogin} sx={{ marginTop: "30px", flexGrow: 1}}>
         <Grid container spacing={2}>
+          {searchParams.get("activated") && (
+            <Grid item xs={12}>
+              <Alert variant="filled" severity="success">Tervetuloa, nyt voit kirjautua uudella käyttäjätunnuksellasi.</Alert>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <TextField fullWidth name="email" type="text" label="Sähköpostiosoite:" onChange={handleChange} />
           </Grid>
@@ -53,10 +67,15 @@ const LoginForm = (props) => {
                 <Button fullWidth variant="contained" type="submit" startIcon={<Login />}>Kirjaudu</Button>
               </Grid>
               <Grid item xs={6}>
-                <Button fullWidth variant="contained" onClick={ onRegisterButton }startIcon={<AppRegistration />}>Rekisteröidy</Button>
+                <Button fullWidth variant="contained" onClick={ onRegisterButton } startIcon={<AppRegistration />}>Rekisteröidy</Button>
               </Grid>
             </Grid>
           </Grid>
+          {loginState.loginError && (
+            <Grid item xs={12}>
+              <Alert variant="filled" severity="error">{ loginState.loginErrorMessage }</Alert>
+            </Grid>
+          )}
         </Grid>
       </Box>
     </Container>

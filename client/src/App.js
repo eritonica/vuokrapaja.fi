@@ -10,6 +10,7 @@ import TopBar from './components/TopBar';
 import Landing from './pages/Landing';
 import LoginForm from './pages/LoginForm';
 import RegisterForm from './pages/RegisterForm';
+import ActivationForm from './pages/ActivationForm';
 
 // Theme selection
 import appTheme from './themes/AppTheme';
@@ -29,6 +30,7 @@ function App() {
           <Route path="/" element={<Landing />} />
           <Route path="/login" element={<LoginForm appState={[appState, setAppState]}/>} />
           <Route path="/register" element={<RegisterForm appState={[appState, setAppState]}/>} />
+          <Route path="/register/activation" element={<ActivationForm appState={[appState, setAppState]}/>} />
         </Routes>
       </ThemeProvider>
     </div>

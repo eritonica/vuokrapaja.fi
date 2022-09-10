@@ -22,7 +22,7 @@ const accountSchema = new mongoose.Schema(
       required: true,
       default: false,
     },
-    activationCode: {
+    code: {
       type: String,
       required: true,
     },

@@ -33,13 +33,13 @@ router.post("/accounts", async (req, res) => {
     email: req.body.email,
     password: crypto.encrypt(req.body.password),
     activated: false,
-    activationCode: activationCode,
+    code: activationCode,
   });
   await account.save();
   let header = `Your account has been created.`
   let message = `Hello.\r\n\r\n`;
   message += `Your account has been created. Please click the link below to activate your account.\r\n\r\n`;
-  message += `${process.env.ACTIVATION_LINK}/${activationCode}\r\n\r\n`;
+  message += `${process.env.ACTIVATION_LINK}${activationCode}\r\n\r\n`;
   message += `Thank you, sincerely for joining our service.`;
   console.log("To: " + req.body.email);
   console.log("Header: " + header);
@@ -48,11 +48,13 @@ router.post("/accounts", async (req, res) => {
   res.status(200).json({ message: "Account created, waiting for verification." });
 });
 
-// GET /accounts/activate/:activationCode
-router.get("/accounts/activate/:activationCode", async (req, res) => {
-  let account = await accountModel.findOne({ activationCode: req.params.activationCode }).exec();
+// GET /accounts/activate/:code
+router.get("/accounts/activate/:code", async (req, res) => {
+  console.log(req.params.code);
+  let account = await accountModel.findOne({ code: req.params.code }).exec();
+  console.log(account);
   if (account) {
-    account.activated = true;
+    account.active = true;
     account.save();
     res.status(200).json({ message: "Account activated, ready for use. Please add your profile information." });
   } else {
