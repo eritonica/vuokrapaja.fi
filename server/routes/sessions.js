@@ -38,7 +38,7 @@ router.post("/sessions", async (req, res) => {
       res.status(400).json({ message: "Password is incorrect." });
     }
   } else {
-    res.status(400).json({ message: "Account does not exist." });
+    res.status(400).json({ message: "Password is incorrect." });
   }
 });
 
@@ -68,7 +68,7 @@ router.delete("/sessions", async (req, res) => {
     res.status(200).json({ message: "Session deleted." });
   } else {
     res.status(400).json({ message: "Session not found." });
-  }
+  } 
 });
 
 export default {

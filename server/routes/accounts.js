@@ -62,6 +62,44 @@ router.get("/accounts/activate/:code", async (req, res) => {
   }
 });
 
+// GET /accounts/recovery/:email
+router.get("/accounts/recovery/:email", async (req, res) => {
+  let account = await accountModel.findOne({ email: req.params.email }).exec();
+  if (account) {
+    let recoveryCode = crypto.generateString(32);
+    account.recovery = recoveryCode;
+    account.save();
+    let header = `Password recovery request.`
+    let message = `Hello.\r\n\r\n`;
+    message += `You have requested a password recovery. Please click the link below to recover your account.\r\n\r\n`;
+    message += `${process.env.RECOVERY_LINK}${recoveryCode}\r\n\r\n`;
+    message += `Thank you, sincerely for joining our service.`;
+    console.log("To: " + req.params.email);
+    console.log("Header: " + header);
+    console.log("Message: \r\n" + message);
+    mailer.sendMail(req.params.email, header, message);
+    res.status(200).json({ message: "Recovery email sent." });
+  } else {
+    res.status(400).json({ message: "Account recovery failed." });
+  }
+});
+
+// PUT /accounts/recovery/:code
+// {
+//  "password": "string"
+// }
+router.put("/accounts/recovery/:code", async (req, res) => {
+  let account = await accountModel.findOne({ recovery: req.params.code }).exec();
+  if (account) {
+    account.password = crypto.encrypt(req.body.password);
+    account.recovery = "";
+    account.save();
+    res.status(200).json({ message: "Password changed." });
+  } else {
+    res.status(400).json({ message: "Password change failed." });
+  }
+});
+
 // GET /accounts/:id
 router.get("/accounts/:id", async (req, res) => {
   let account = await accountModel.findById(req.params.id).exec();

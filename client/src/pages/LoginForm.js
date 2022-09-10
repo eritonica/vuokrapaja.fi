@@ -1,6 +1,6 @@
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Container, Box, TextField, Button, Alert } from '@mui/material';
-import { Login, AppRegistration } from "@mui/icons-material";
+import { Login, AppRegistration, Password } from "@mui/icons-material";
 import Grid from '@mui/material/Unstable_Grid2';
 import { useState } from 'react';
 
@@ -13,6 +13,8 @@ const LoginForm = (props) => {
     password: '',
     loginError: false,
     loginErrorMessage: '',
+    passwordResetCount: 0,
+    resetPassword: false,
   });
 
   const handleLogin = async (event) => {
@@ -30,11 +32,30 @@ const LoginForm = (props) => {
       setAppState({ ...appState, token: body.token });
       navigate('/');
     } else {
-      setLoginState({
-        ...loginState,
-        loginError: true,
-        loginErrorMessage: body.message,
-      })
+      if (body.message == "Password is incorrect.") {
+        console.log(loginState.passwordResetCount)
+        if(loginState.passwordResetCount >= 3) {
+          setLoginState({ ...loginState, 
+            loginError: true, 
+            loginErrorMessage: 'Salasana on väärin.',
+            resetPassword: true,
+            passwordResetCount: loginState.passwordResetCount + 1 
+          });
+        } else {
+          setLoginState({
+            ...loginState,
+            loginError: true,
+            loginErrorMessage: 'Salasana on väärin.',
+            passwordResetCount: loginState.passwordResetCount + 1,
+          });
+        }
+      } else {
+        setLoginState({
+          ...loginState,
+          loginError: true,
+          loginErrorMessage: body.message,
+        })
+      }
     }
   }
 
@@ -44,6 +65,10 @@ const LoginForm = (props) => {
 
   const onRegisterButton = () => {
     navigate("/register");
+  }
+
+  const onResetPasswordButton = () => {
+    navigate("/recovery");
   }
 
   return (
@@ -75,6 +100,16 @@ const LoginForm = (props) => {
             <Grid item xs={12}>
               <Alert variant="filled" severity="error">{ loginState.loginErrorMessage }</Alert>
             </Grid>
+          )}
+          {loginState.resetPassword && (
+            <Grid item xs={12}>
+              <Alert variant="standard" severity="info">Jos olet unohtanut salasanasi, koita palauttaa se.</Alert>
+            </Grid>
+          )}
+          {loginState.resetPassword && (
+            <Grid item xs={12}>
+              <Button fullWidth variant="contained" onClick={ onResetPasswordButton } startIcon={<Password />}>Palauta salasana</Button>
+            </Grid> 
           )}
         </Grid>
       </Box>

@@ -9,17 +9,18 @@ import TopBar from './components/TopBar';
 // Pages
 import Landing from './pages/Landing';
 import LoginForm from './pages/LoginForm';
-import RegisterForm from './pages/RegisterForm';
-import ActivationForm from './pages/ActivationForm';
+import RegisterForm from './pages/registeration/RegisterForm';
+import ActivationForm from './pages/registeration/ActivationForm';
+import RecoveryRequestForm from './pages/recovery/RequestForm';
+import RecoveryPasswordForm from './pages/recovery/PasswordForm';
 
 // Theme selection
 import appTheme from './themes/AppTheme';
 
-
-
 function App() {
   const [appState, setAppState] = useState({
     token: false,
+    name: 'Asuntosi'
   });
   
   return (
@@ -27,10 +28,12 @@ function App() {
       <ThemeProvider theme={appTheme}>
         <TopBar appState={[appState, setAppState]} />
         <Routes>
-          <Route path="/" element={<Landing />} />
+          <Route path="/" element={<Landing appState={[appState, setAppState]}/>} />
           <Route path="/login" element={<LoginForm appState={[appState, setAppState]}/>} />
           <Route path="/register" element={<RegisterForm appState={[appState, setAppState]}/>} />
           <Route path="/register/activation" element={<ActivationForm appState={[appState, setAppState]}/>} />
+          <Route path="/recovery" element={<RecoveryRequestForm appState={[appState, setAppState]}/>} />
+          <Route path="/recovery/password" element={<RecoveryPasswordForm appState={[appState, setAppState]}/>} />
         </Routes>
       </ThemeProvider>
     </div>

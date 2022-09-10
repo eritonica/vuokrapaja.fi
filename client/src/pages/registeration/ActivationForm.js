@@ -17,6 +17,9 @@ const ActivationForm = (props) => {
     event.preventDefault();
     let result = await fetch('http://localhost:8080/api/accounts/activate/' + searchParams.get("code"), {
       method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
     let body = await result.json();
     console.log(body);

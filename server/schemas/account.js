@@ -26,6 +26,10 @@ const accountSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    recovery: {
+      type: String,
+      required: false,
+    },
     created: {
       type: Date,
       required: true,
