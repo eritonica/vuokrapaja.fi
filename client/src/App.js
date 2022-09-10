@@ -18,7 +18,7 @@ import appTheme from './themes/AppTheme';
 
 function App() {
   const [appState, setAppState] = useState({
-    authenticated: false,
+    token: false,
   });
   
   return (

@@ -7,9 +7,20 @@ const TopBar = (props) => {
   const navigate = useNavigate();
   const [appState, setAppState] = props.appState;
 
-  const onLogout = () => {
-    setAppState({ ...appState, authenticated: false });
-    navigate('/');
+  const onLogout = async () => {
+    let result = await fetch('http://localhost:8080/api/sessions', {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token: appState.token }),
+    });
+    let body = await result.json();
+    console.log(body);
+    if(body.message) {
+      setAppState({ ...appState, token: false });
+      navigate('/');
+    }
   }
 
   const onLogin = () => {
@@ -33,7 +44,7 @@ const TopBar = (props) => {
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           {
-            (appState.authenticated === false) 
+            (appState.token === false) 
               ? <Button color="inherit" onClick={onLogin} startIcon={<Login />}>Kirjaudu</Button>
               : <Button color="inherit" onClick={onLogout} startIcon={<Logout />}>Poistu</Button>
           }

@@ -12,10 +12,21 @@ const LoginForm = (props) => {
     password: '',
   });
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-    console.log(loginState);
-    setAppState({ ...appState, authenticated: true });
+    let result = await fetch('http://localhost:8080/api/sessions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(loginState),
+    });
+    let body = await result.json();
+    console.log(body);
+    if(body.token) {
+      setAppState({ ...appState, token: body.token });
+      navigate('/');
+    }
   }
 
   const handleChange = (event) => {
@@ -31,10 +42,10 @@ const LoginForm = (props) => {
       <Box component={'form'} onSubmit={handleLogin} sx={{ marginTop: "30px", flexGrow: 1}}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <TextField fullWidth name="email" label="Sähköpostiosoite:" onChange={handleChange} />
+            <TextField fullWidth name="email" type="text" label="Sähköpostiosoite:" onChange={handleChange} />
           </Grid>
           <Grid item xs={12}>
-            <TextField fullWidth name="password" label="Salasana:" onChange={handleChange} />
+            <TextField fullWidth name="password" type="password" label="Salasana:" onChange={handleChange} />
           </Grid>
           <Grid item xs={12} spacing={2}>
             <Grid container spacing={0.5}>
