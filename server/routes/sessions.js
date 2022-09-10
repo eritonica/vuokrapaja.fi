@@ -1,81 +1,78 @@
 import express from "express";
-import database from "../dependancies/sqlite.js";
 import crypto from "../dependancies/crypto.js";
 import accounts from "./accounts.js";
 
+import sessionModel from "../schemas/session.js";
+
 const router = express.Router();
 
-const confirm = (token) => {
-  let db = database.open("sessions");
-  let sql = `SELECT * FROM sessions WHERE token = ?`;
-  let data = [token];
-  db.get(sql, data, (err, row) => {
-    if (err) {
-      return console.error(err.message);
-    }
-    if (row === undefined) {
-      return null;
-    } else {
-      return row;
-    }
-  });
-  database.close(db);
+const confirm = async (token) => {
+  let account = await sessionModel.findOne({ token: token }).exec();
+  if (account) {
+    return true;
+  } else {
+    return false;
+  }
 }
 
-// Create session
-router.post("/sessions", (req, res) => {
-  let account = accounts.getAccountByEmail(req.body.email);
-  if (account === null) {
-    res.status(400).json({ message: "Account does not exist." });
-  }
-  if (account.activated === 0) {
-    res.status(400).json({ message: "Account is not activated." });
-  }
-  if(crypto.compare(req.body.password, account.password)) {
-    let db = database.open("sessions");
-    let sql = `INSERT INTO sessions (account_id, token) VALUES (?, ?)`;
-    let token = crypto.generateString(32);
-    let data = [account.id, token];
-    db.run(sql, data, (err) => {
+// POST /sessions
+// {
+//  "email": "string",
+//  "password": "string"
+// }
+router.post("/sessions", async (req, res) => {
+  let account = await accounts.getAccountByEmail(req.body.email);
+  if (account) {
+    if (account.active == false) {
+      res.status(400).json({ message: "Account not activated." });
+      return;
+    }
+    if (account.password !== crypto.hash(req.body.password)) {
+      res.status(400).json({ message: "Password is incorrect." });
+    } else {
+      let session = new sessionModel({
+        account: account._id,
+        token: crypto.generateString(32),
+      });
+      let err = await session.save();
       if (err) {
         res.status(400).json({ message: err.message });
         return console.error(err.message);
       }
-      res.status(200).json({ message: "Session created.", token: token });
-    });
-    database.close(db);
+      res.status(200).json({ token: session.token });
+    }
+  } else {
+    res.status(400).json({ message: "Account does not exist." });
   }
 });
 
-// Update and session
-router.put("/sessions", (req, res) => {
-  let db = database.open("sessions");
-  let sql = `UPDATE sessions SET token = ? WHERE token = ?`;
-  let token = crypto.generateString(32);
-  let data = [token, req.body.token];
-  db.run(sql, data, (err) => {
-    if (err) {
-      res.status(400).json({ message: err.message });
-      return console.error(err.message);
-    }
-    res.status(200).json({ message: "Session updated.", token: token });
-  });
-  database.close(db);
+// PUT /sessions
+// {
+//  "token": "string"
+// }
+router.put("/sessions", async (req, res) => {
+  let session = await sessionModel.findOne({ token: req.body.token }).exec();
+  if (session) {
+    session.token = crypto.generateString(32);
+    session.save();
+    res.status(200).json({ token: session.token });
+  } else {
+    res.status(400).json({ message: "Session not found." });
+  }
 });
 
-// Delete session
-router.delete("/sessions", (req, res) => {
-  let db = database.open("sessions");
-  let sql = `DELETE FROM sessions WHERE token = ?`;
-  let data = [req.body.token];
-  db.run(sql, data, (err) => {
-    if (err) {
-      res.status(400).json({ message: err.message });
-      return console.error(err.message);
-    }
+// DELETE /sessions
+// {
+//  "token": "string"
+// }
+router.delete("/sessions", async (req, res) => {
+  let session = await sessionModel.findOne({ token: req.body.token }).exec();
+  if (session) {
+    session.remove();
     res.status(200).json({ message: "Session deleted." });
-  });
-  database.close(db);
+  } else {
+    res.status(400).json({ message: "Session not found." });
+  }
 });
 
 export default {

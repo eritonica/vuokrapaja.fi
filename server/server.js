@@ -5,6 +5,7 @@ import https from "https";
 import express from "express";
 import cors  from "cors";
 import dotenv from "dotenv";
+import mongoose from 'mongoose';
 const app = express();
 dotenv.config();
 
@@ -13,7 +14,8 @@ let port = process.env.PORT || 8080;
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-let allowedDomains = process.env.CORS_ORIGIN || "http://localhost:3000";
+
+let allowedDomains = process.env.CORS_ORIGIN || [ "http://localhost:3000" ];
 app.use(cors({ origin : (origin, callback) => {
   if(!origin) return callback(null, true);
   if(allowedDomains.indexOf(origin) === -1) {
@@ -27,11 +29,11 @@ app.get("/", (req, res) => {
   res.send("How are you here! Get lost, but hello since you are here.");
 });
 
-// Check that databases and tables are created.
-
-import schema from "./dependancies/schema.js";
-schema.createSessionTable();
-schema.createAccountTable();
+const db = await mongoose.connect(process.env.ATLAS_URI, { 
+  useNewUrlParser: true,  
+  useUnifiedTopology: true 
+});
+  
 
 // Router routes
 import accounts from './routes/accounts.js';
