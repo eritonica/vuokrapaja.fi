@@ -27,19 +27,15 @@ router.post("/sessions", async (req, res) => {
       res.status(400).json({ message: "Account not activated." });
       return;
     }
-    if (account.password !== crypto.hash(req.body.password)) {
-      res.status(400).json({ message: "Password is incorrect." });
-    } else {
+    if (crypto.compare(req.body.password, account.password)) {
       let session = new sessionModel({
         account: account._id,
         token: crypto.generateString(32),
       });
-      let err = await session.save();
-      if (err) {
-        res.status(400).json({ message: err.message });
-        return console.error(err.message);
-      }
+      session.save();
       res.status(200).json({ token: session.token });
+    } else {
+      res.status(400).json({ message: "Password is incorrect." });
     }
   } else {
     res.status(400).json({ message: "Account does not exist." });
