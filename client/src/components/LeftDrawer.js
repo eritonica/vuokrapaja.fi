@@ -1,0 +1,83 @@
+import { useState, Link } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Box, SwipeableDrawer, IconButton, List, Divider, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Menu, Home, Login, Logout, AppRegistration } from "@mui/icons-material";
+
+
+const LeftDrawer = (props) => {
+  const [appState, setAppState] = props.appState;
+  const [drawerState, setDrawerState] = useState({
+    left: false,
+  });
+
+  const navigate = useNavigate();
+
+  const toggleDrawer = (open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    setDrawerState({ ...drawerState, left: open });
+  }
+
+  const list = (anchor) => (
+    <Box
+      sx={{ width: 250 }}
+      role="presentation"
+      onClick={toggleDrawer(false)}
+      onKeyDown={toggleDrawer(false)}
+    >
+      <List>
+        <ListItem button key="Home" component={Link} to="/" onClick={() => navigate("/")}>
+          <ListItemIcon>
+            <Home /> 
+          </ListItemIcon>
+          <ListItemText primary="Home" onClick={() => navigate("/")}/>
+        </ListItem>
+        <Divider />
+        { (appState.token === false) 
+          ? 
+            <>
+              <ListItem button key="Login" component={Link} to="/login" onClick={() => navigate("/login")}>
+                <ListItemIcon>
+                  <Login />
+                </ListItemIcon>
+                <ListItemText primary="Kirjaudu" onClick={() => navigate("/login")}/>
+              </ListItem>
+              <ListItem button key="Register" component={Link} to="/register" onClick={() => navigate("/register")}>
+                <ListItemIcon>
+                  <AppRegistration />
+                </ListItemIcon>
+                <ListItemText primary="Rekisteröidy" onClick={() => navigate("/register")}/>
+              </ListItem>
+            </>
+          : <ListItem button key="Logout" component={Link} to="/logout" onClick={() => props.onLogout() }>
+              <ListItemIcon>
+                <Logout />
+              </ListItemIcon>
+              <ListItemText primary="Poistu" onClick={() => props.onLogout() }/>
+            </ListItem>
+        }
+      </List>
+    </Box>
+  );
+
+
+  return (
+    <>
+      <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleDrawer(true)}>
+        <Menu />
+      </IconButton>
+      <SwipeableDrawer
+        anchor="left"
+        open={drawerState.left}
+        onClose={toggleDrawer(false)}
+        onOpen={toggleDrawer(true)}
+      >
+        {list('left')}
+      </SwipeableDrawer>
+    </>
+  )
+
+}
+
+export default LeftDrawer;

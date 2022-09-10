@@ -2,6 +2,8 @@ import { Box, AppBar, Toolbar, Typography, IconButton, Button } from "@mui/mater
 import { Menu, Login, Logout} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
+import LeftDrawer from "./LeftDrawer";
+
 
 const TopBar = (props) => {
   const navigate = useNavigate();
@@ -32,9 +34,7 @@ const TopBar = (props) => {
     <Box sx={ { flexGrow: 1 } }>
       <AppBar position="static">
         <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu">
-            <Menu />
-          </IconButton>
+          <LeftDrawer appState={ props.appState } onLogout={ onLogout }/>
           <Typography
             variant="h6"
             noWrap
