@@ -5,6 +5,7 @@ import { ThemeProvider } from '@mui/material/styles';
 
 // Components
 import TopBar from './components/TopBar';
+import Gdpr from './components/Gdpr';
 
 // Pages
 import Landing from './pages/Landing';
@@ -20,7 +21,8 @@ import appTheme from './themes/AppTheme';
 function App() {
   const [appState, setAppState] = useState({
     token: false,
-    name: 'Asuntosi'
+    name: 'Asuntosi',
+    cookiesAccepted: false,
   });
   
   return (
@@ -36,6 +38,7 @@ function App() {
           <Route path="/recovery/password" element={<RecoveryPasswordForm appState={[appState, setAppState]}/>} />
         </Routes>
       </ThemeProvider>
+      <Gdpr appState={[appState, setAppState]} />
     </div>
   );
 }

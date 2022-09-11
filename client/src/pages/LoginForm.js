@@ -6,7 +6,7 @@ import { useState } from 'react';
 
 const LoginForm = (props) => {
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams] = useSearchParams();
   const [appState, setAppState] = props.appState;
   const [loginState, setLoginState] = useState({
     email: '',
@@ -32,7 +32,7 @@ const LoginForm = (props) => {
       setAppState({ ...appState, token: body.token });
       navigate('/');
     } else {
-      if (body.message == "Password is incorrect.") {
+      if (body.message === "Password is incorrect.") {
         console.log(loginState.passwordResetCount)
         if(loginState.passwordResetCount >= 3) {
           setLoginState({ ...loginState, 

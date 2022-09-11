@@ -4,7 +4,6 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { AppRegistration } from "@mui/icons-material";
 
 const RegisterForm = (props) => {
-  const [appState, setAppState] = props.appState;
   const [registerState, setRegisterState] = useState({
     username: '',
     email: '',
@@ -36,7 +35,7 @@ const RegisterForm = (props) => {
   }
 
   const validateEmail = (email) => {
-    return /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()\.,;\s@\"]+\.{0,1})+([^<>()\.,;:\s@\"]{2,}|[\d\.]+))$/.test(email);
+    return /^(([^<>()[].,;:\s@"]+(.[^<>()[].,;:\s@"]+)*)|(".+"))@(([^<>().,;\s@"]+.{0,1})+([^<>().,;:\s@"]{2,}|[\d.]+))$/.test(email); 
   }
 
   const handleRegister = async (event) => {

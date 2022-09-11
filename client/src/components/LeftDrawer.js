@@ -5,7 +5,7 @@ import { Menu, Home, Login, Logout, AppRegistration } from "@mui/icons-material"
 
 
 const LeftDrawer = (props) => {
-  const [appState, setAppState] = props.appState;
+  const [appState] = props.appState;
   const [drawerState, setDrawerState] = useState({
     left: false,
   });
@@ -24,8 +24,7 @@ const LeftDrawer = (props) => {
       sx={{ width: 250 }}
       role="presentation"
       onClick={toggleDrawer(false)}
-      onKeyDown={toggleDrawer(false)}
-    >
+      onKeyDown={toggleDrawer(false)}>
       <List>
         <ListItem button key="Home" component={Link} to="/" onClick={() => navigate("/")}>
           <ListItemIcon>
