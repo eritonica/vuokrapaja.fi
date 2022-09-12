@@ -1,3 +1,9 @@
+
+import store from '../store';
+import { Provider } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { setToken } from '../appSlice';
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Container, Box, TextField, Button, Alert } from '@mui/material';
 import { Login, AppRegistration, Password } from "@mui/icons-material";
@@ -7,7 +13,7 @@ import { useState } from 'react';
 const LoginForm = (props) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [appState, setAppState] = props.appState;
+  const dispatch = useDispatch();
   const [loginState, setLoginState] = useState({
     email: '',
     password: '',
@@ -29,7 +35,7 @@ const LoginForm = (props) => {
     let body = await result.json();
     console.log(body);
     if(body.token) {
-      setAppState({ ...appState, token: body.token });
+      dispatch(setToken(body.token));
       navigate('/');
     } else {
       if (body.message === "Password is incorrect.") {

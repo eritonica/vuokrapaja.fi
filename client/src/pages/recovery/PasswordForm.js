@@ -18,7 +18,7 @@ const RecoveryPasswordForm = (props) => {
 
   const handleRecovery = async (event) => {
     event.preventDefault();
-    if(recoveryState.password != recoveryState.passwordconfirm) {
+    if(recoveryState.password !== recoveryState.passwordconfirm) {
       setRecoveryState({
         recoveryError: true,
         recoveryErrorMessage: "Salasanat eivät täsmää.",
@@ -37,7 +37,7 @@ const RecoveryPasswordForm = (props) => {
     });
     console.log(response);
     let body = await response.json();
-    if(body.message == "Password changed.") {
+    if(body.message === "Password changed.") {
       setRecoveryState({
         recoverySuccess: true,
         recoveryError: false,

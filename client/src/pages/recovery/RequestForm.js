@@ -22,7 +22,7 @@ const RequestForm = (props) => {
     console.log(response);
     let body = await response.json();
     console.log(body);
-    if(body.message == "Recovery email sent.") {
+    if(body.message === "Recovery email sent.") {
       setRecoveryState({
         recoverySuccess: true,
         recoveryError: false,

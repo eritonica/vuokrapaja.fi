@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import { useState, Link } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, SwipeableDrawer, IconButton, List, Divider, ListItem, ListItemIcon, ListItemText } from '@mui/material';
@@ -5,7 +6,7 @@ import { Menu, Home, Login, Logout, AppRegistration } from "@mui/icons-material"
 
 
 const LeftDrawer = (props) => {
-  const [appState] = props.appState;
+  const token = useSelector((state) => state.app.token);
   const [drawerState, setDrawerState] = useState({
     left: false,
   });
@@ -33,7 +34,7 @@ const LeftDrawer = (props) => {
           <ListItemText primary="Home" onClick={() => navigate("/")}/>
         </ListItem>
         <Divider />
-        { (appState.token === false) 
+        { (token === false) 
           ? 
             <>
               <ListItem button key="Login" component={Link} to="/login" onClick={() => navigate("/login")}>

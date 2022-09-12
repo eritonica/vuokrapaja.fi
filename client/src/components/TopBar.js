@@ -1,26 +1,30 @@
-import { Box, AppBar, Toolbar, Typography, IconButton, Button } from "@mui/material";
-import { Menu, Login, Logout} from "@mui/icons-material";
+import { Box, AppBar, Toolbar, Typography, Button } from "@mui/material";
+import { Login, Logout} from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+
+import { useSelector, useDispatch } from 'react-redux';
+import { setToken } from '../appSlice';
 
 import LeftDrawer from "./LeftDrawer";
 
 
 const TopBar = (props) => {
   const navigate = useNavigate();
-  const [appState, setAppState] = props.appState;
-
+  const dispatch = useDispatch();
+  const token = useSelector((state) => state.app.token);
+  const name = useSelector((state) => state.app.name);
   const onLogout = async () => {
     let result = await fetch('http://localhost:8080/api/sessions', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ token: appState.token }),
+      body: JSON.stringify({ token: token }),
     });
     let body = await result.json();
     console.log(body);
     if(body.message) {
-      setAppState({ ...appState, token: false });
+      dispatch(setToken(false));
       navigate('/');
     }
   }
@@ -34,17 +38,17 @@ const TopBar = (props) => {
     <Box sx={ { flexGrow: 1 } }>
       <AppBar position="static">
         <Toolbar>
-          <LeftDrawer appState={ props.appState } onLogout={ onLogout }/>
+          <LeftDrawer onLogout={ onLogout }/>
           <Typography
             variant="h6"
             noWrap
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' } }}>
-            { appState.name }
+            { name }
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           {
-            (appState.token === false) 
+            (token === false) 
               ? <Button color="inherit" onClick={onLogin} startIcon={<Login />}>Kirjaudu</Button>
               : <Button color="inherit" onClick={onLogout} startIcon={<Logout />}>Poistu</Button>
           }

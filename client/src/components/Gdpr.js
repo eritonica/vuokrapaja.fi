@@ -1,21 +1,20 @@
-import CookieConsent, { Cookies } from "react-cookie-consent";
-import { Container, Box, TextField, Button, Alert } from '@mui/material';
-import Grid from '@mui/material/Unstable_Grid2';
+import CookieConsent from "react-cookie-consent";
+import { useSelector, useDispatch } from 'react-redux';
+import { toggleCookies } from '../appSlice';
+
 
 const Gdpr = (props) => {
-  const [appState, setAppState] = props.appState;
+  const dispatch = useDispatch();
 
   const handleAcceptCookies = () => {
-    console.log('Cookies accepted');
-    // Enable tracking, etc..
-    setAppState({ ...appState, cookiesAccepted: true });
+    dispatch(toggleCookies());
   }
 
   return (
     <CookieConsent 
       location="bottom"
       buttonText="Hyväksy"
-      cookieName={ appState.name + "-GDPR-Cookie"}
+      cookieName={ useSelector((state) => state.app.name) + "-GDPR-Cookie"}
       cookieSecurity={true}
       style={{ background: "#2B373B" }}
       buttonStyle={{ color: "#4e503b", fontSize: "18px", margin: "15px" }}
