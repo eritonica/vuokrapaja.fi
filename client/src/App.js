@@ -1,7 +1,9 @@
 // React & Material UI
-import { useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
+
+// Redux store
+import { useSelector } from 'react-redux';
 
 // Components
 import TopBar from './components/TopBar';
@@ -19,29 +21,24 @@ import RecoveryPasswordForm from './pages/recovery/PasswordForm';
 import appTheme from './themes/AppTheme';
 
 function App() {
-  const [appState, setAppState] = useState({
-    token: false,
-    name: 'Asuntosi',
-    cookiesAccepted: false,
-  });
 
-  document.title = appState.name;
+  document.title = useSelector((state) => state.app.name);
   
   return (
-    <div className="App">
-      <ThemeProvider theme={appTheme}>
-        <TopBar appState={[appState, setAppState]} />
-        <Routes>
-          <Route path="/" element={<Landing appState={[appState, setAppState]}/>} />
-          <Route path="/login" element={<LoginForm appState={[appState, setAppState]}/>} />
-          <Route path="/register" element={<RegisterForm appState={[appState, setAppState]}/>} />
-          <Route path="/register/activation" element={<ActivationForm appState={[appState, setAppState]}/>} />
-          <Route path="/recovery" element={<RecoveryRequestForm appState={[appState, setAppState]}/>} />
-          <Route path="/recovery/password" element={<RecoveryPasswordForm appState={[appState, setAppState]}/>} />
-        </Routes>
-      </ThemeProvider>
-      <Gdpr appState={[appState, setAppState]} />
-    </div>
+      <div className="App">
+        <ThemeProvider theme={appTheme}>
+            <TopBar />
+            <Routes>
+              <Route path="/" element={<Landing/>} />
+              <Route path="/login" element={<LoginForm/>} />
+              <Route path="/register" element={<RegisterForm/>} />
+              <Route path="/register/activation" element={<ActivationForm/>} />
+              <Route path="/recovery" element={<RecoveryRequestForm/>} />
+              <Route path="/recovery/password" element={<RecoveryPasswordForm/>} />
+            </Routes>
+            <Gdpr />
+        </ThemeProvider>
+      </div>
   );
 }
 
