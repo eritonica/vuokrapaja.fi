@@ -24,6 +24,8 @@ function App() {
     name: 'Asuntosi',
     cookiesAccepted: false,
   });
+
+  document.title = appState.name;
   
   return (
     <div className="App">
