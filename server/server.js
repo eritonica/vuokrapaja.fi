@@ -33,7 +33,6 @@ const db = await mongoose.connect(process.env.ATLAS_URI, {
   useNewUrlParser: true,  
   useUnifiedTopology: true 
 });
-  
 
 // Router routes
 import accounts from './routes/accounts.js';

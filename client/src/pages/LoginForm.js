@@ -1,12 +1,8 @@
-
-import store from '../store';
-import { Provider } from 'react-redux';
-import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
 import { setToken } from '../appSlice';
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Container, Box, TextField, Button, Alert } from '@mui/material';
-import { Login, AppRegistration, Password } from "@mui/icons-material";
+import { Login, AppRegistration, Password, Google } from "@mui/icons-material";
 import Grid from '@mui/material/Unstable_Grid2';
 import { useState } from 'react';
 
@@ -99,6 +95,13 @@ const LoginForm = (props) => {
               </Grid>
               <Grid item xs={6}>
                 <Button fullWidth variant="contained" onClick={ onRegisterButton } startIcon={<AppRegistration />}>Rekisteröidy</Button>
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <Grid container spacing={0.5}>
+              <Grid item xs={12}>
+                <Button fullWidth variant="contained" startIcon={<Google />} onClick={() => alert("Tämä ei ole vielä käytössä.") }>Sign in with Google</Button>
               </Grid>
             </Grid>
           </Grid>

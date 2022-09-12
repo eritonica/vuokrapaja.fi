@@ -1,5 +1,6 @@
-import { Box, AppBar, Toolbar, Typography, Button } from "@mui/material";
-import { Login, Logout} from "@mui/icons-material";
+import { useState } from "react";
+import { Box, AppBar, Toolbar, Typography, Button, Snackbar } from "@mui/material";
+import { Login, Logout, Close } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -13,8 +14,35 @@ const TopBar = (props) => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.app.token);
   const name = useSelector((state) => state.app.name);
+  const [snackbarState, setSnackbarState] = useState({
+    open: false,
+    message: 'Kirjauduit onnistuneesti ulos.',
+  });
+
+  const handleSnackbarOpen = () => {
+    setSnackbarState({ ...snackbarState, open: true });
+  };
+
+  const handleSnackbarClose = (event, reason) => {
+    if(reason === 'clickaway') {
+      return;
+    }
+    setSnackbarState({ ...snackbarState, open: false });
+  };
+
+  const SnackbarAction = (
+    <>
+      <Button color="secondary" size="small" onClick={handleSnackbarClose} startIcon={<Close />}>
+        OK
+      </Button>
+      
+    </>
+  )
+
+
   const onLogout = async () => {
-    let result = await fetch('http://localhost:8080/api/sessions', {
+    handleSnackbarOpen();
+    let result = await fetch('/api/sessions', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -52,6 +80,13 @@ const TopBar = (props) => {
               ? <Button color="inherit" onClick={onLogin} startIcon={<Login />}>Kirjaudu</Button>
               : <Button color="inherit" onClick={onLogout} startIcon={<Logout />}>Poistu</Button>
           }
+          <Snackbar
+            open={snackbarState.open}
+            autoHideDuration={6000}
+            onClose={handleSnackbarClose}
+            message={snackbarState.message}
+            action={SnackbarAction}
+          />
         </Toolbar>
       </AppBar>
     </Box>
