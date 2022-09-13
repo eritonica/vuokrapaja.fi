@@ -31,18 +31,15 @@ const TopBar = (props) => {
   };
 
   const SnackbarAction = (
-    <>
-      <Button color="secondary" size="small" onClick={handleSnackbarClose} startIcon={<Close />}>
-        OK
-      </Button>
-      
-    </>
+    <Button color="secondary" size="small" onClick={handleSnackbarClose} startIcon={<Close />}>
+      OK
+    </Button>
   )
 
 
   const onLogout = async () => {
     handleSnackbarOpen();
-    let result = await fetch('/api/sessions', {
+    let result = await fetch('http://localhost:8080/api/sessions', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
