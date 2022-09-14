@@ -7,9 +7,9 @@ import sessionModel from "../schemas/session.js";
 const router = express.Router();
 
 const confirm = async (token) => {
-  let account = await sessionModel.findOne({ token: token }).exec();
-  if (account) {
-    return true;
+  let session = await sessionModel.findOne({ token: token }).exec();
+  if (session) {
+    return session;
   } else {
     return false;
   }

@@ -24,6 +24,7 @@ const getAccountByToken = async (token) => {
   }
 }
 
+
 // POST /accounts
 // {
 //  "email": "string",
