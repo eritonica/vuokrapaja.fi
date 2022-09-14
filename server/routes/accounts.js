@@ -11,6 +11,19 @@ const getAccountByEmail = async (email) => {
   return await accountModel.findOne({ email: email }).exec(); 
 }
 
+const getAccountById = async (id) => {
+  return await accountModel.findOne({ _id: id }).exec();
+}
+
+const getAccountByToken = async (token) => {
+  let session = await sessions.getSessionByToken(token);
+  if (session) {
+    return await getAccountById(session.account);
+  } else {
+    return null;
+  }
+}
+
 // POST /accounts
 // {
 //  "email": "string",
@@ -55,6 +68,7 @@ router.get("/accounts/activate/:code", async (req, res) => {
   console.log(account);
   if (account) {
     account.active = true;
+    account.updated = Date.now();
     account.save();
     res.status(200).json({ message: "Account activated, ready for use. Please add your profile information." });
   } else {
@@ -68,6 +82,7 @@ router.get("/accounts/recovery/:email", async (req, res) => {
   if (account) {
     let recoveryCode = crypto.generateString(32);
     account.recovery = recoveryCode;
+    account.updated = Date.now();
     account.save();
     let header = `Password recovery request.`
     let message = `Hello.\r\n\r\n`;
@@ -93,6 +108,7 @@ router.put("/accounts/recovery/:code", async (req, res) => {
   if (account) {
     account.password = crypto.encrypt(req.body.password);
     account.recovery = "";
+    account.updated = Date.now();
     account.save();
     res.status(200).json({ message: "Password changed." });
   } else {
@@ -122,6 +138,7 @@ router.put("/accounts/:id", async (req, res) => {
     account.username = req.body.username;
     account.email = req.body.email;
     account.password = crypto.hash(req.body.password);
+    account.updated = Date.now();
     account.save();
     res.status(200).json({ message: "Account updated." });
   } else {
@@ -138,6 +155,7 @@ router.delete("/accounts/:id", async (req, res) => {
   if (account) {
     account.activated = false;
     account.activationCode = crypto.generateString(32);
+    account.updated = Date.now();
     account.save();
     res.status(200).json({ message: "Account deleted." });
   } else {
@@ -148,4 +166,6 @@ router.delete("/accounts/:id", async (req, res) => {
 export default {
   router,
   getAccountByEmail,
+  getAccountById,
+  getAccountByToken,
 }

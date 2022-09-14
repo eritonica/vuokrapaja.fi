@@ -2,7 +2,8 @@
 import fs from "fs";
 import http from "http";
 import https from "https";
-import express from "express";
+import express, { urlencoded } from "express";
+
 import cors  from "cors";
 import dotenv from "dotenv";
 import mongoose from 'mongoose';
@@ -15,7 +16,14 @@ let port = process.env.PORT || 8080;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-let allowedDomains = process.env.CORS_ORIGIN || [ "http://localhost:3000" ];
+
+// Static route, serve client build if it exists.
+import path from 'path';
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname + '/../client/build')));
+
+let allowedDomains = JSON.parse(process.env.CORS_ORIGIN) || [ "http://localhost:3000" ];
+console.log("Allowed domains: ", allowedDomains);
 app.use(cors({ origin : (origin, callback) => {
   if(!origin) return callback(null, true);
   if(allowedDomains.indexOf(origin) === -1) {
@@ -25,9 +33,6 @@ app.use(cors({ origin : (origin, callback) => {
   return callback(null, true);
 }}));
 
-app.get("/", (req, res) => {
-  res.send("How are you here! Get lost, but hello since you are here.");
-});
 
 const db = await mongoose.connect(process.env.ATLAS_URI, { 
   useNewUrlParser: true,  
@@ -40,8 +45,12 @@ app.use("/api", accounts.router);
 import sessions from './routes/sessions.js';
 app.use("/api", sessions.router);
 
-// Static route, serve client build if it exists.
-app.use(express.static('../client/build'));
+import profiles from './routes/profiles.js';
+app.use("/api", sessions.checkSession, profiles.router);
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname+'/../client/build/index.html'));
+});
 
 if(process.env.PROTOCOL === "https") {
   // Create https server

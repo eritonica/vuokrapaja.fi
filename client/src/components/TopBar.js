@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Box, AppBar, Toolbar, Typography, Button, Snackbar } from "@mui/material";
-import { Login, Logout, Close } from "@mui/icons-material";
+import { Login, Logout, Close, Person } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
 import { useSelector, useDispatch } from 'react-redux';
@@ -58,6 +58,10 @@ const TopBar = (props) => {
     navigate("/login");
   }
 
+  const onProfile = () => {
+
+  }
+
 
   return (
     <Box sx={ { flexGrow: 1 } }>
@@ -72,6 +76,11 @@ const TopBar = (props) => {
             { name }
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
+          {
+            (token === false) 
+              ? null
+              : <Button color="inherit" onClick={onProfile} startIcon={<Person />}></Button>
+          }
           {
             (token === false) 
               ? <Button color="inherit" onClick={onLogin} startIcon={<Login />}>Kirjaudu</Button>

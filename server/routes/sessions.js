@@ -15,6 +15,28 @@ const confirm = async (token) => {
   }
 }
 
+// Session check middleware
+const checkSession = async (req, res, next) => {
+  let session = await sessionModel.findOne({ token: req.headers.token }).exec();
+  if (session) {
+    if(session.updated.getTime() + process.env.SESSION_TTL > Date.now()) {
+      req.session = {};
+      let account = await accounts.getAccountById(session.account);
+      if(account) {
+        req.session.account = account;
+        next();
+      } else {
+        res.status(401).json({ message: "Invalid session." });
+      }
+    } else {
+      
+      res.status(401).json({ message: "Session expired." });
+    }
+  } else {
+    res.status(401).json({ message: "Unauthorized" });
+  }
+}
+
 // POST /sessions
 // {
 //  "email": "string",
@@ -50,6 +72,7 @@ router.put("/sessions", async (req, res) => {
   let session = await sessionModel.findOne({ token: req.body.token }).exec();
   if (session) {
     session.token = crypto.generateString(32);
+    session.updated = Date.now();
     session.save();
     res.status(200).json({ token: session.token });
   } else {
@@ -61,10 +84,20 @@ router.put("/sessions", async (req, res) => {
 // {
 //  "token": "string"
 // }
+const deleteOldSessions = (account) => {
+  if(account) {
+    sessionModel.deleteMany({ account: account }).exec();
+  }
+}
+
+const deleteSession = (token) => {
+  return sessionModel.deleteOne({ token: token }).exec();
+}
+
 router.delete("/sessions", async (req, res) => {
   let session = await sessionModel.findOne({ token: req.body.token }).exec();
-  if (session) {
-    session.remove();
+  if (deleteSession(session.token)) {
+    deleteOldSessions(session.account);
     res.status(200).json({ message: "Session deleted." });
   } else {
     res.status(400).json({ message: "Session not found." });
@@ -73,5 +106,6 @@ router.delete("/sessions", async (req, res) => {
 
 export default {
   router,
-  confirm
+  confirm,
+  checkSession,
 }
