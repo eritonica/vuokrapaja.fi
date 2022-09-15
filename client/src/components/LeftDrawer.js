@@ -34,11 +34,11 @@ const LeftDrawer = (props) => {
           <ListItemText primary="Home" onClick={() => navigate("/")}/>
         </ListItem>
         { (token !== false) && (
-          <ListItem button key="Profile" component={Link} to="/" onClick={() => navigate("/profile")}>
+          <ListItem button key="Profiili" component={Link} to="/profile" onClick={() => navigate("/profile")}>
             <ListItemIcon>
               <Person /> 
             </ListItemIcon>
-            <ListItemText primary="Profile" onClick={() => navigate("/profile")}/>
+            <ListItemText primary="Profiili" onClick={() => navigate("/profile")}/>
           </ListItem>
         )}
         <Divider />
