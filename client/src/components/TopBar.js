@@ -59,9 +59,14 @@ const TopBar = (props) => {
   }
 
   const onProfile = () => {
-
+    navigate("/profile");
   }
 
+  // TODO:
+  // Poista logout ja profile buttons from topbar.
+  // Instead show user avatar for quick profile access
+  // and logout button in left drawer.
+  // Also badge for notifications.
 
   return (
     <Box sx={ { flexGrow: 1 } }>
@@ -79,7 +84,7 @@ const TopBar = (props) => {
           {
             (token === false) 
               ? null
-              : <Button color="inherit" onClick={onProfile} startIcon={<Person />}></Button>
+              : <Button color="inherit" onClick={onProfile} startIcon={<Person />}>Profiili</Button>
           }
           {
             (token === false) 

@@ -6,6 +6,8 @@ import { Login, AppRegistration, Password, Google } from "@mui/icons-material";
 import Grid from '@mui/material/Unstable_Grid2';
 import { useState } from 'react';
 
+// Needs rewriting to use Redux
+
 const LoginForm = (props) => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();

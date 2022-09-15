@@ -1,5 +1,5 @@
 import express from "express";
-import profileModel from "../schemas/profiles.js";
+import profileModel from "../schemas/profile.js";
 
 const router = express.Router();
 
@@ -14,15 +14,16 @@ router.post("/profiles", async (req, res) => {
             account: req.session.account._id,
             type: req.body.type,
             name: req.body.name,
+            profession: req.body.profession,
             birthday: req.body.birthday,
             security: req.body.security,
             address: req.body.address,
             description: req.body.description,
-            image: req.body.image,
-            location: req.body.location,
+            avatar: req.body.avatar,
             phone: req.body.phone,
             email: req.body.email,
             website: req.body.website,
+            active: true,
         });
         profile.save();
         res.status(200).json({ message: "Profile created." });
@@ -49,12 +50,12 @@ router.put("/profiles", async (req, res) => {
     if(profile) {
         profile.type = req.body.type;
         profile.name = req.body.name;
+        profile.profession = req.body.profession;
         profile.birthday = req.body.birthday;
         profile.security = req.body.security;
         profile.address = req.body.address;
         profile.description = req.body.description;
-        profile.image = req.body.image;
-        profile.location = req.body.location;
+        profile.avatar = req.body.avatar;
         profile.phone = req.body.phone;
         profile.email = req.body.email;
         profile.website = req.body.website;

@@ -28,6 +28,9 @@ ATLAS_URI = mongodb+srv://<username>:<password>@cluster0.mzhbh.mongodb.net/<coll
 # The account information for sending mail through the gmail service.
 GMAIL_USERNAME=gmail address
 GMAIL_PASSWORD=Your app password
+
+SESSION_TTL=3600000
+
 ```
 
 # Run server

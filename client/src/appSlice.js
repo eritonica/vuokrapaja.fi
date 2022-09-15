@@ -7,6 +7,20 @@ export const appSlice = createSlice({
         token: false,
         name: 'Asuntosi',
         cookies: false,
+        profile: {
+            type: "Rentee",
+            name: "",
+            birthday: "01/01/1985",
+            security: "",
+            address: "",
+            profession: "",
+            description: "",
+            avatar: "",
+            phone: "",
+            email: "",
+            website: "",
+            new: true,
+        }
     },
     reducers: {
         setToken: (state, action) => {
@@ -14,9 +28,12 @@ export const appSlice = createSlice({
         },
         toggleCookies: (state) => {
             state.cookies = !state.cookies;
+        },
+        setProfile: (state, action) => {
+            state.profile = action.payload;
         }
     },
 });
 
-export const { setToken, toggleCookies } = appSlice.actions;
+export const { setToken, toggleCookies, setProfile } = appSlice.actions;
 export default appSlice.reducer;

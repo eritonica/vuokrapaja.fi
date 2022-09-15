@@ -3,6 +3,8 @@ import { Container, Box, TextField, Button, Alert } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { AppRegistration } from "@mui/icons-material";
 
+// Needs rewriting to use Redux
+
 const RegisterForm = (props) => {
   const [registerState, setRegisterState] = useState({
     username: '',

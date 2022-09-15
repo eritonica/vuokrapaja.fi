@@ -18,6 +18,9 @@ const profileSchema = new mongoose.Schema(
     security: {
         type: String,
     },
+    profession: {
+        type: String,
+    },
     birthday: {
         type: Date,
     },
@@ -27,10 +30,7 @@ const profileSchema = new mongoose.Schema(
     description: {
         type: String,
     },
-    image: {
-        type: String,
-    },
-    location: {
+    avatar: {
         type: String,
     },
     phone: {
