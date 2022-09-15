@@ -16,7 +16,6 @@ router.post("/profiles", async (req, res) => {
             name: req.body.name,
             profession: req.body.profession,
             birthday: req.body.birthday,
-            security: req.body.security,
             address: req.body.address,
             description: req.body.description,
             avatar: req.body.avatar,
@@ -52,7 +51,6 @@ router.put("/profiles", async (req, res) => {
         profile.name = req.body.name;
         profile.profession = req.body.profession;
         profile.birthday = req.body.birthday;
-        profile.security = req.body.security;
         profile.address = req.body.address;
         profile.description = req.body.description;
         profile.avatar = req.body.avatar;

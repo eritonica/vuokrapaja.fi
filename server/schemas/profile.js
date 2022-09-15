@@ -15,9 +15,6 @@ const profileSchema = new mongoose.Schema(
     name: {
         type: String,
     },
-    security: {
-        type: String,
-    },
     profession: {
         type: String,
     },

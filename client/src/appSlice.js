@@ -11,7 +11,6 @@ export const appSlice = createSlice({
             type: "Rentee",
             name: "",
             birthday: "01/01/1985",
-            security: "",
             address: "",
             profession: "",
             description: "",

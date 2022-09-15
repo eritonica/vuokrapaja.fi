@@ -39,7 +39,6 @@ const Profile = (props) => {
           type: body.type,
           name: body.name,
           birthday: body.birthday,
-          security: body.security,
           address: body.address,
           profession: body.profession,
           description: body.description,
@@ -161,9 +160,6 @@ const Profile = (props) => {
                 renderInput={(params) => <TextField {...params} fullWidth helperText={params?.inputProps?.placeholder} />}
               />
             </LocalizationProvider>
-          </Grid>
-          <Grid item xs={12}>
-            <TextField fullWidth label="Henkilötunnus" name="security" value={profile.security} onChange={onChange} helperText="Ei ole pakollinen, mutta helpottaa asiointia." />
           </Grid>
         </Grid>
         <Grid container spacing={2} mt={4}>
