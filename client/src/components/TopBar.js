@@ -50,6 +50,7 @@ const TopBar = (props) => {
     console.log(body);
     if(body.message) {
       dispatch(setToken(false));
+      localStorage.removeItem('token');
       navigate('/');
     }
   }

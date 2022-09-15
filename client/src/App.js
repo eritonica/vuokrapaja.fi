@@ -1,9 +1,11 @@
 // React & Material UI
+import { useEffect } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from '@mui/material/styles';
 
 // Redux store
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { setToken } from './appSlice';
 
 // Components
 import TopBar from './components/TopBar';
@@ -22,7 +24,27 @@ import RecoveryPasswordForm from './pages/recovery/PasswordForm';
 import appTheme from './themes/AppTheme';
 
 function App() {
+  let dispatch = useDispatch();
   document.title = useSelector((state) => state.app.name);
+  let token = useSelector((state) => state.app.token);
+
+  useEffect(() => {
+    if(token === false) {
+      let tempToken = localStorage.getItem("token");
+      console.log("Found token from local storage " + tempToken);
+      if(tempToken !== false && tempToken !== null) {
+        console.log("Setting the found token in redux store");
+        dispatch(setToken(tempToken));
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    if(token !== false) {
+      localStorage.setItem("token", token);
+    }
+  }, [token]);
+
   // Keep router routes in most used order, so that the most used routes are at the top
   // and the least used routes are at the bottom. This way the most used routes are
   // rendered first and the least used routes are rendered last.
