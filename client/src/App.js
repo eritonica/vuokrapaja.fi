@@ -28,6 +28,8 @@ function App() {
   document.title = useSelector((state) => state.app.name);
   let token = useSelector((state) => state.app.token);
 
+  // Token update management is here since it is App level, 
+  // in logout action it is removed from localstorage and Redux state management.
   useEffect(() => {
     if(token === false) {
       let tempToken = localStorage.getItem("token");
