@@ -44,9 +44,12 @@ import accounts from './routes/accounts.js';
 app.use("/api", accounts.router);
 import sessions from './routes/sessions.js';
 app.use("/api", sessions.router);
-
 import profiles from './routes/profiles.js';
 app.use("/api", sessions.checkSession, profiles.router);
+import companies from './routes/companies.js';
+app.use("/api", sessions.checkSession, companies.router);
+import members from './routes/members.js';
+app.use("/api", sessions.checkSession, members.router);
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname+'/../client/build/index.html'));
