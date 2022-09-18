@@ -8,7 +8,7 @@ const router = express.Router();
 
 // GET /companies
 router.get('/companies', async (req, res) => {
-	let companies = await companyModel.find().exec();
+	let companies = await companyModel.findOne({manager: req.session.account._id}).exec();
 	res.status(200).json(companies);
 });
 
@@ -22,6 +22,16 @@ router.get('/companies', async (req, res) => {
 //  "description": "string"
 // }
 router.post('/companies', async (req, res) => {
+	let companyExists = await companyModel.findOne({ycode: req.body.ycode}).exec();
+	if(companyExists) {
+		res.status(400).json({message: "Company already exists"});
+		return;
+	}
+	companyExists = await companyModel.findOne({name: req.body.name}).exec();
+	if(companyExists) {
+		res.status(400).json({message: "Company already exists"});
+		return;
+	}
 	let company = new companyModel({
 		manager: req.session.account._id,
 		name: req.body.name,
@@ -29,6 +39,8 @@ router.post('/companies', async (req, res) => {
 		address: req.body.address,
 		website: req.body.website,
 		description: req.body.description,
+		email: req.body.email,
+		phone: req.body.phone
 	});
 	company.save();
 	res.status(200).json({ message: 'Company created.' });
@@ -46,6 +58,7 @@ router.get('/companies/:id', async (req, res) => {
 
 // UPDATE /companies/:id
 // {
+//  
 //  "manager": "string",
 //  "name": "string",
 //  "ycode": "string",
@@ -54,24 +67,21 @@ router.get('/companies/:id', async (req, res) => {
 //  "description": "string"
 // }
 router.put('/companies/:id', async (req, res) => {
-	if(req.session.account._id === req.body.manager) {
-		let company = await companyModel.findOne({ _id: req.params.id }).exec();
-		if (company) {
-			company.manager = req.body.manager;
-			company.name = req.body.name;
-			company.ycode = req.body.ycode;
-			company.address = req.body.address;
-			company.website = req.body.website;
-			company.description = req.body.description;
-			company.updated = Date.now();
-			company.save();
-			res.status(200).json({ message: 'Company updated.' });
-		} else {
-			res.status(404).json({ message: 'Company not found.' });
-		}
+	let company = await companyModel.findOne({ _id: req.params.id }).exec();
+	if (company) {
+		company.manager = req.body.manager;
+		company.name = req.body.name;
+		company.ycode = req.body.ycode;
+		company.address = req.body.address;
+		company.website = req.body.website;
+		company.description = req.body.description;
+		company.email = req.body.email;
+		company.phone = req.body.phone;
+		company.updated = Date.now();
+		company.save();
+		res.status(200).json({ message: 'Company updated.' });
 	} else {
-		// TODO: check if user is part of the company and has permission to edit
-		res.status(403).json({ message: 'Forbidden.' });
+		res.status(404).json({ message: 'Company not found.' });
 	}
 });
 

@@ -1,12 +1,13 @@
-import { useSelector } from 'react-redux';
+import { useSelector} from 'react-redux';
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Box, SwipeableDrawer, IconButton, List, Divider, ListItem, ListItemIcon, ListItemText } from '@mui/material';
-import { Menu, Home, Login, Logout, AppRegistration, Person } from "@mui/icons-material";
+import { Menu, Home, Login, Logout, AppRegistration, Person, Business } from "@mui/icons-material";
 
 
 const LeftDrawer = (props) => {
   const token = useSelector((state) => state.app.token);
+  const profile = useSelector((state) => state.app.profile);
   const [drawerState, setDrawerState] = useState({
     left: false,
   });
@@ -33,7 +34,7 @@ const LeftDrawer = (props) => {
           </ListItemIcon>
           <ListItemText primary="Home" onClick={() => navigate("/")}/>
         </ListItem>
-        { (token !== false) && (
+        {(token !== false) && (
           <ListItem button key="Profiili" component={Link} to="/profile" onClick={() => navigate("/profile")}>
             <ListItemIcon>
               <Person /> 
@@ -42,7 +43,18 @@ const LeftDrawer = (props) => {
           </ListItem>
         )}
         <Divider />
-        { (token === false) 
+        {(token !== false && profile.type !== "Rentee") && ( 
+          <>
+            <ListItem button key="Yritys" component={Link} to="/company" onClick={() => navigate("/company")}>
+              <ListItemIcon>
+                <Business /> 
+              </ListItemIcon>
+              <ListItemText primary="Yritys" onClick={() => navigate("/company")}/>
+            </ListItem>
+            <Divider />
+          </>
+        )}
+        {(token === false) 
           ? <>
               <ListItem button key="Login" component={Link} to="/login" onClick={() => navigate("/login")}>
                 <ListItemIcon>

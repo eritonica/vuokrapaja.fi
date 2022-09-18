@@ -19,7 +19,18 @@ export const appSlice = createSlice({
             email: "",
             website: "",
             new: true,
-        }
+        },
+        company: {
+            name: "",
+            address: "",
+            description: "",
+            avatar: "",
+            phone: "",
+            email: "",
+            website: "",
+            members : [],
+            new: true,
+        },
     },
     reducers: {
         setToken: (state, action) => {
@@ -30,9 +41,15 @@ export const appSlice = createSlice({
         },
         setProfile: (state, action) => {
             state.profile = action.payload;
+        },
+        setCompany: (state, action) => {
+            state.company = action.payload;
+        },
+        pushCompanyMember: (state, action) => {
+            state.company.members.push(action.payload);
         }
     },
 });
 
-export const { setToken, toggleCookies, setProfile } = appSlice.actions;
+export const { setToken, toggleCookies, setProfile, setCompany, pushCompanyMember } = appSlice.actions;
 export default appSlice.reducer;

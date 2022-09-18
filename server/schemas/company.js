@@ -9,16 +9,24 @@ const companySchema = new mongoose.Schema({
 	},
 	name: {
 		type: String,
+		unique: true,
 		required: true,
 	},
 	ycode: {
 		type: String,
+		unique: true,
 		required: true,
 	},
 	address: {
 		type: String,
 	},
 	website : {
+		type: String,
+	},
+	phone : {
+		type: String,
+	},
+	email : {
 		type: String,
 	},
 	description: {

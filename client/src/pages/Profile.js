@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Container, Box, TextField, Button, Alert, Typography, Avatar, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -36,16 +36,7 @@ const Profile = (props) => {
       if(!body.message) {
         dispatch(setProfile({
           ...profile,
-          type: body.type,
-          name: body.name,
-          birthday: body.birthday,
-          address: body.address,
-          profession: body.profession,
-          description: body.description,
-          avatar: body.avatar,
-          phone: body.phone,
-          email: body.email,
-          website: body.website,
+          ...body,
           new: false,
         }));
       } else if(body.message === "Unauthorized") {
@@ -76,9 +67,9 @@ const Profile = (props) => {
       let body = await result.json();
       console.log(body);
       if(body.message == "Profile created.") {
-        setSaved("Uusi profiili luotu sinulle.")
+        setSaved("Uusi profiili luotu sinulle.");
       } else {
-        setError("Odottamaton virhe tapahtui, yritä hetken kuluttua uudelleen.")
+        setError("Odottamaton virhe tapahtui, yritä hetken kuluttua uudelleen.");
       }
     } else if(profile.new === false) {
       let result = await fetch("http://localhost:8080/api/profiles", {
@@ -93,9 +84,9 @@ const Profile = (props) => {
       let body = await result.json();
       console.log(body);
       if(body.message == "Profile updated.") {
-        setSaved("Profiilisi päivitetty.")
+        setSaved("Profiilisi päivitetty.");
       } else {
-        setError("Odottamaton virhe tapahtui, yritä hetken kuluttua uudelleen.")
+        setError("Odottamaton virhe tapahtui, yritä hetken kuluttua uudelleen.");
       }
     }
 
@@ -198,6 +189,13 @@ const Profile = (props) => {
           <Grid item xs={12}>
             <Button type="submit" variant="contained" fullWidth> Tallenna </Button>
           </Grid>
+          { profile.type !== "Rentee" && (
+            <Grid item xs={12}>
+              <Alert severity="info">
+                Jos olet vuokranantaja tai asunnon välittäjä <Link to="/company">luo yritys profiilisi.</Link>
+              </Alert>
+            </Grid>
+          )}
         </Grid>
       </Box>
     </Container>
