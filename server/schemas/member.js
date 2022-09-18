@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 
-const companySchema = new mongoose.Schema({
+const memberSchema = new mongoose.Schema({
 	account: {
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Account',
@@ -32,4 +32,4 @@ const companySchema = new mongoose.Schema({
 	},
 });
 
-export default mongoose.model('Company', companySchema);
+export default mongoose.model('Member', memberSchema);
