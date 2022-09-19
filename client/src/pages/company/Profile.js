@@ -35,10 +35,10 @@ const Profile = (props) => {
 			});
 			let body = await response.json();
 			console.log(body);
-			if(body.message = "Company created.") {
+			if(body.message === "Company created.") {
 				dispatch(setCompany({...company, new: false}));
-			} else {
-				setError(body.message);
+			} else if(body.message === "Company already exists.") {
+				setError("Yritys on jo olemassa. Ota heihin yhteyttä.");
 			}
 		} else {
 			let response = await fetch("http://localhost:8080/api/companies/" + company._id, {
@@ -51,9 +51,9 @@ const Profile = (props) => {
 			});
 			let body = await response.json();
 			console.log(body);
-			if(body.message = "Company updated.") {
+			if(body.message === "Company updated.") {
 				dispatch(setCompany({...company, new: false}));
-			} else {
+			} else if(body.message === "Company not found.") {
 				setError(body.message);
 			}
 		}

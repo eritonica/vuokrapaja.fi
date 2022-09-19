@@ -24,12 +24,12 @@ router.get('/companies', async (req, res) => {
 router.post('/companies', async (req, res) => {
 	let companyExists = await companyModel.findOne({ycode: req.body.ycode}).exec();
 	if(companyExists) {
-		res.status(400).json({message: "Company already exists"});
+		res.status(400).json({message: "Company already exists."});
 		return;
 	}
 	companyExists = await companyModel.findOne({name: req.body.name}).exec();
 	if(companyExists) {
-		res.status(400).json({message: "Company already exists"});
+		res.status(400).json({message: "Company already exists."});
 		return;
 	}
 	let company = new companyModel({
