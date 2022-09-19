@@ -15,6 +15,10 @@ const getAccountById = async (id) => {
   return await accountModel.findOne({ _id: id }).exec();
 }
 
+const getAccountByUsername = async (username) => {
+  return await accountModel.findOne({ username: username }).exec();
+}
+
 const getAccountByToken = async (token) => {
   let session = await sessions.getSessionByToken(token);
   if (session) {
@@ -166,6 +170,7 @@ router.delete("/accounts/:id", async (req, res) => {
 
 export default {
   router,
+  getAccountByUsername,
   getAccountByEmail,
   getAccountById,
   getAccountByToken,

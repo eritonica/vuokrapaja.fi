@@ -20,7 +20,7 @@ const Profile = (props) => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if(company.new === true) {
-			let response = await fetch("http://localhost:8080/api/companies", {
+			let response = await fetch("/api/companies", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
@@ -36,7 +36,7 @@ const Profile = (props) => {
 				setError("Yritys on jo olemassa. Ota heihin yhteyttä.");
 			}
 		} else {
-			let response = await fetch("http://localhost:8080/api/companies/" + company._id, {
+			let response = await fetch("/api/companies/" + company._id, {
 				method: "PUT",
 				headers: {
 					"Content-Type": "application/json",

@@ -4,7 +4,7 @@ import { Login, Logout, Close, Person } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { setToken } from '../appSlice';
+import { setToken, setCompany, setProfile } from '../appSlice';
 
 import LeftDrawer from "./LeftDrawer";
 
@@ -39,7 +39,7 @@ const TopBar = (props) => {
 
   const onLogout = async () => {
     handleSnackbarOpen();
-    let result = await fetch('http://localhost:8080/api/sessions', {
+    let result = await fetch('/api/sessions', {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -50,6 +50,8 @@ const TopBar = (props) => {
     console.log(body);
     if(body.message) {
       dispatch(setToken(false));
+      dispatch(setCompany(false));
+      dispatch(setProfile(false));
       localStorage.removeItem('token');
       navigate('/');
     }

@@ -57,11 +57,8 @@ const RegisterForm = (props) => {
     if(registerState.email.length < 5) {
       setRegisterState({ ...registerState, emailError: true, emailErrorMessage: "Email must be at least 5 characters." });
     }
-    if(validateEmail(registerState.email) === false) {
-      setRegisterState({ ...registerState, emailError: true, emailErrorMessage: "Email is not valid." });
-    }
     if(registerState.usernameError === false && registerState.passwordError === false && registerState.emailError === false) {
-      let response = await fetch('http://localhost:8080/api/accounts', {
+      let response = await fetch('/api/accounts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -75,7 +72,7 @@ const RegisterForm = (props) => {
         if(data.message === "SQLITE_CONSTRAINT: UNIQUE constraint failed: accounts.email") {
           setRegisterState({ ...registerState, registerError: true, registerErrorMessage: "Email already in use." });
         } else {
-          setRegisterState({ ...registerState, registerError: true, registerErrorMessage: "data.message" });
+          setRegisterState({ ...registerState, registerError: true, registerErrorMessage: data.message });
         }
       }
     }

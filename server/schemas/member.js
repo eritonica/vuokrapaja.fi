@@ -14,11 +14,9 @@ const memberSchema = new mongoose.Schema({
 	},
 	role: {
 		type: String,
-		required: true,
 	},
-	persmissions: {
+	permissions: {
 		type: String,
-		required: true,
 	},
 	created: {
 		type: Date,

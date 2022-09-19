@@ -15,7 +15,7 @@ PORT=8080
 # Cors origin domain array
 CORS_ORIGIN=[http://localhost:3000]
 # The account activation link, where to send the user with activation code.
-ACTIVATION_LINK=http://localhost:8080/api/accounts/activate
+ACTIVATION_LINK=/api/accounts/activate
 
 # Certificate and key for https
 HTTPS_CERT=/etc/letsencrypt/live/localhost/cert.pem

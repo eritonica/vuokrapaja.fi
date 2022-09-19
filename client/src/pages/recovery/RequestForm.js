@@ -13,7 +13,7 @@ const RequestForm = (props) => {
 
   const handleRecovery = async (event) => {
     event.preventDefault();
-    let response = await fetch('http://localhost:8080/api/accounts/recovery/' + recoveryState.email, {
+    let response = await fetch('/api/accounts/recovery/' + recoveryState.email, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',

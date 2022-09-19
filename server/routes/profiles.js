@@ -3,6 +3,10 @@ import profileModel from "../schemas/profile.js";
 
 const router = express.Router();
 
+const getProfileById = async (id) => {
+    return await profileModel.findOne({ account: id }).exec();
+};
+
 // POST /profiles
 router.post("/profiles", async (req, res) => {
     let hasProfile = await profileModel.findOne({ account: req.session.account._id }).exec();
@@ -80,4 +84,5 @@ router.delete("/profiles", async (req, res) => {
 
 export default {
     router,
+    getProfileById,
 }

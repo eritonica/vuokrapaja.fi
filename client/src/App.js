@@ -16,6 +16,7 @@ import Landing from './pages/Landing';
 import LoginForm from './pages/LoginForm';
 import Profile from './pages/Profile';
 import Company from './pages/company/Profile';
+import Member from './pages/company/Member';
 import RegisterForm from './pages/registeration/RegisterForm';
 import ActivationForm from './pages/registeration/ActivationForm';
 import RecoveryRequestForm from './pages/recovery/RequestForm';
@@ -32,7 +33,7 @@ function App() {
   let company = useSelector((state) => state.app.company);
 
   const getProfile = async (token) => {
-    let response = await fetch("http://localhost:8080/api/profiles", {
+    let response = await fetch("/api/profiles", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -41,8 +42,6 @@ function App() {
       },
     });
     let body = await response.json();
-    console.log("Get profile at App.js");
-    console.log(body);
     if(!body.message) {
       dispatch(setProfile({
         ...profile,
@@ -52,7 +51,7 @@ function App() {
     }
   }
   const getCompany = async(token) => {
-    let response = await fetch("http://localhost:8080/api/companies", {
+    let response = await fetch("/api/companies", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -61,8 +60,6 @@ function App() {
       },
     });
     let body = await response.json();
-    console.log("Get company at App.js");
-    console.log(body);
     if(!body.message) {
       dispatch(setCompany({
         ...company,
@@ -77,15 +74,12 @@ function App() {
   useEffect(() => {
     let tmpToken = localStorage.getItem("token");
     if(tmpToken) {
-      console.log("Found token from local storage " + tmpToken);
       dispatch(setToken(tmpToken))
-      console.log("Setting the found token in redux store");
     }
   }, []);
 
   useEffect(() => {
     if(token !== false) {
-      console.log("Setting token to localStorage");
       localStorage.setItem("token", token);
       getProfile(token);
       getCompany(token);
@@ -103,11 +97,12 @@ function App() {
               <Route path="/" element={<Landing/>} />
               <Route path="/login" element={<LoginForm/>} />
               <Route path="/profile" element={<Profile/>} />
-              <Route path="/company" element={<Company/>} />
               <Route path="/register" element={<RegisterForm/>} />
               <Route path="/register/activation" element={<ActivationForm/>} />
               <Route path="/recovery" element={<RecoveryRequestForm/>} />
               <Route path="/recovery/password" element={<RecoveryPasswordForm/>} />
+              <Route path="/company" element={<Company/>} />
+              <Route path="/member" element={<Member/>} />
             </Routes>
             <Gdpr />
         </ThemeProvider>

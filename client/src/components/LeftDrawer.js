@@ -2,7 +2,7 @@ import { useSelector} from 'react-redux';
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Box, SwipeableDrawer, IconButton, List, Divider, ListItem, ListItemIcon, ListItemText } from '@mui/material';
-import { Menu, Home, Login, Logout, AppRegistration, Person, Business } from "@mui/icons-material";
+import { Menu, Home, Login, Logout, AppRegistration, Person, Business, Groups3 } from "@mui/icons-material";
 
 
 const LeftDrawer = (props) => {
@@ -50,6 +50,12 @@ const LeftDrawer = (props) => {
                 <Business /> 
               </ListItemIcon>
               <ListItemText primary="Yritys" onClick={() => navigate("/company")}/>
+            </ListItem>
+            <ListItem button key="Työntekijät" component={Link} to="/member" onClick={() => navigate("/member")}>
+              <ListItemIcon>
+                <Groups3 /> 
+              </ListItemIcon>
+              <ListItemText primary="Työntekijät" onClick={() => navigate("/member")}/>
             </ListItem>
             <Divider />
           </>

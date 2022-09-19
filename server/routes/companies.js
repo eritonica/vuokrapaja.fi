@@ -9,7 +9,7 @@ const router = express.Router();
 // GET /companies
 router.get('/companies', async (req, res) => {
 	let companies = await companyModel.findOne({manager: req.session.account._id}).exec();
-	res.status(200).json(companies);
+	return res.status(200).json(companies);
 });
 
 // POST /companies
@@ -43,16 +43,16 @@ router.post('/companies', async (req, res) => {
 		phone: req.body.phone
 	});
 	company.save();
-	res.status(200).json({ message: 'Company created.' });
+	return res.status(200).json({ message: 'Company created.' });
 });
 
 // GET /companies/:id
 router.get('/companies/:id', async (req, res) => {
 	let company = await companyModel.findOne({ _id: req.params.id }).exec();
 	if (company) {
-		res.status(200).json(company);
+		return res.status(200).json(company);
 	} else {
-		res.status(404).json({ message: 'Company not found.' });
+		return res.status(404).json({ message: 'Company not found.' });
 	}
 });
 
@@ -79,9 +79,9 @@ router.put('/companies/:id', async (req, res) => {
 		company.phone = req.body.phone;
 		company.updated = Date.now();
 		company.save();
-		res.status(200).json({ message: 'Company updated.' });
+		return res.status(200).json({ message: 'Company updated.' });
 	} else {
-		res.status(404).json({ message: 'Company not found.' });
+		return res.status(404).json({ message: 'Company not found.' });
 	}
 });
 
@@ -91,18 +91,14 @@ router.put('/companies/:id', async (req, res) => {
 		let company = await companyModel.findOne({ _id: req.params.id }).exec();
 		if (company) {
 			company.remove();
-			res.status(200).json({ message: 'Company deleted.' });
+			return res.status(200).json({ message: 'Company deleted.' });
 		} else {
-			res.status(404).json({ message: 'Company not found.' });
+			return res.status(404).json({ message: 'Company not found.' });
 		}
 	} else {
-		res.status(401).json({ message: 'Unauthorized.' });
+		return res.status(401).json({ message: 'Unauthorized.' });
 	}
 });
-
-
-
-
 
 export default {
 	router

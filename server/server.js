@@ -33,7 +33,7 @@ app.use(cors({ origin : (origin, callback) => {
 }}));
 
 // Open MongoDB connection
-const db = await mongoose.connect(process.env.ATLAS_URI, { 
+mongoose.connect(process.env.ATLAS_URI, { 
   useNewUrlParser: true,  
   useUnifiedTopology: true 
 });
@@ -74,4 +74,3 @@ if(process.env.PROTOCOL === "https") {
     console.log(`Server listening on port ${port} using http.`);
   });
 }
-

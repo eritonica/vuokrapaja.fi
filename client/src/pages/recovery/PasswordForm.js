@@ -26,7 +26,7 @@ const RecoveryPasswordForm = (props) => {
       return;
     }
     let code = searchParams.get('code');
-    let response = await fetch('http://localhost:8080/api/accounts/recovery/' + code, {
+    let response = await fetch('/api/accounts/recovery/' + code, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',

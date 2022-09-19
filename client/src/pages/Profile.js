@@ -23,7 +23,7 @@ const Profile = (props) => {
   useEffect(() => {
     let getData = async () => {
       // Get Profile from server
-      let result = await fetch("http://localhost:8080/api/profiles", {
+      let result = await fetch("/api/profiles", {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +55,7 @@ const Profile = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if(profile.new === true) {
-      let result = await fetch("http://localhost:8080/api/profiles", {
+      let result = await fetch("/api/profiles", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -72,7 +72,7 @@ const Profile = (props) => {
         setError("Odottamaton virhe tapahtui, yritä hetken kuluttua uudelleen.");
       }
     } else if(profile.new === false) {
-      let result = await fetch("http://localhost:8080/api/profiles", {
+      let result = await fetch("/api/profiles", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -23,7 +23,7 @@ const LoginForm = (props) => {
 
   const handleLogin = async (event) => {
     event.preventDefault();
-    let result = await fetch('http://localhost:8080/api/sessions', {
+    let result = await fetch('/api/sessions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
