@@ -104,6 +104,7 @@ const Profile = (props) => {
 					<Grid item xs={12}>
 						<TextField
 							fullWidth
+							type="email"
 							label="Asiakaspalvelun sähköposti"
 							name="email"
 							onChange={onChange}
@@ -113,6 +114,7 @@ const Profile = (props) => {
 					<Grid item xs={12}>
 						<TextField
 							fullWidth
+							type="tel"
 							label="Asiakaspalvelun puhelinnumero"
 							name="phone"
 							onChange={onChange}
@@ -122,6 +124,7 @@ const Profile = (props) => {
 					<Grid item xs={12}>
 						<TextField
 							fullWidth
+							type="address"
 							label="Käyntiosoite"
 							name="address"
 							onChange={onChange}
