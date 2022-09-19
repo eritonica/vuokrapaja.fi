@@ -22,6 +22,7 @@ export const appSlice = createSlice({
         },
         company: {
             name: "",
+            ycode: "",
             address: "",
             description: "",
             avatar: "",
