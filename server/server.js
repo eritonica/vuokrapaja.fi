@@ -1,5 +1,5 @@
 // Initialize Node.js express server
-import fs from "fs";
+import fs, { readdir } from "fs";
 import http from "http";
 import https from "https";
 import express, { urlencoded } from "express";
@@ -16,14 +16,13 @@ let port = process.env.PORT || 8080;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
 // Static route, serve client build if it exists.
 import path from 'path';
 const __dirname = path.resolve();
 app.use(express.static(path.join(__dirname + '/../client/build')));
 
 let allowedDomains = JSON.parse(process.env.CORS_ORIGIN) || [ "http://localhost:3000" ];
-console.log("Allowed domains: ", allowedDomains);
+console.log("Allowed CORS domains: ", allowedDomains);
 app.use(cors({ origin : (origin, callback) => {
   if(!origin) return callback(null, true);
   if(allowedDomains.indexOf(origin) === -1) {
@@ -33,13 +32,14 @@ app.use(cors({ origin : (origin, callback) => {
   return callback(null, true);
 }}));
 
-
+// Open MongoDB connection
 const db = await mongoose.connect(process.env.ATLAS_URI, { 
   useNewUrlParser: true,  
   useUnifiedTopology: true 
 });
 
-// Router routes
+
+// Routes, loading these could be automated without ES6 import/export support
 import accounts from './routes/accounts.js';
 app.use("/api", accounts.router);
 import sessions from './routes/sessions.js';
@@ -51,6 +51,7 @@ app.use("/api", sessions.checkSession, companies.router);
 import members from './routes/members.js';
 app.use("/api", sessions.checkSession, members.router);
 
+// Catch all routes, serve client build if it exists.
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname+'/../client/build/index.html'));
 });

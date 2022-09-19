@@ -16,6 +16,7 @@ const Profile = (props) => {
 	const dispatch = useDispatch();
 	const token = useSelector((state) => state.app.token);
 	const company = useSelector((state) => ( state.app.company ));
+	const [error, setError] = useState("");
 
 	const onChange = (e) => {
 		dispatch(setCompany({...company, [e.target.name]: e.target.value}));
@@ -36,6 +37,8 @@ const Profile = (props) => {
 			console.log(body);
 			if(body.message = "Company created.") {
 				dispatch(setCompany({...company, new: false}));
+			} else {
+				setError(body.message);
 			}
 		} else {
 			let response = await fetch("http://localhost:8080/api/companies/" + company._id, {
@@ -50,6 +53,8 @@ const Profile = (props) => {
 			console.log(body);
 			if(body.message = "Company updated.") {
 				dispatch(setCompany({...company, new: false}));
+			} else {
+				setError(body.message);
 			}
 		}
 	}
@@ -129,6 +134,11 @@ const Profile = (props) => {
 						/>
 					</Grid>
 				</Grid>
+				{ error && ( 
+					<Grid item xs={12}>
+						<Alert severity="error">{error}</Alert>
+					</Grid>
+				)}
 				<Grid container spacing={2} mt={1} mb={4}>
 					<Grid item xs={12}>
 						<Button type="submit" variant="contained" fullWidth> Tallenna </Button>
