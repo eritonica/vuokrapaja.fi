@@ -96,11 +96,14 @@ const deleteSession = (token) => {
 
 router.delete("/sessions", async (req, res) => {
   let session = await sessionModel.findOne({ token: req.body.token }).exec();
+  if(!session.token) {
+    return res.status(400).json({ message: "Session not found." });
+  }
   if (deleteSession(session.token)) {
     deleteOldSessions(session.account);
-    res.status(200).json({ message: "Session deleted." });
+    return res.status(200).json({ message: "Session deleted." });
   } else {
-    res.status(400).json({ message: "Session not found." });
+    return res.status(400).json({ message: "Session not found." });
   } 
 });
 

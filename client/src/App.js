@@ -32,8 +32,6 @@ function App() {
   let profile = useSelector((state) => state.app.profile);
   let company = useSelector((state) => state.app.company);
 
-  
-
   // Token update management is here since it is App level, 
   // in logout action it is removed from localstorage and Redux state management.
   useEffect(() => {
@@ -41,6 +39,8 @@ function App() {
     if(tmpToken) {
       dispatch(setToken(tmpToken))
     }
+    // Don't know yet how to handle dispatch with useEffect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -85,6 +85,8 @@ function App() {
       getProfile(token);
       getCompany(token);
     }
+    // Don't know yet how to handle dispatch with useEffect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
   // Keep router routes in most used order, so that the most used routes are at the top

@@ -11,7 +11,10 @@ const Profile = (props) => {
 	const dispatch = useDispatch();
 	const token = useSelector((state) => state.app.token);
 	const company = useSelector((state) => ( state.app.company ));
-	const [error, setError] = useState("");
+	const [message, setMessage] = useState({
+		error: "",
+		success: ""
+	});
 
 	const onChange = (e) => {
 		dispatch(setCompany({...company, [e.target.name]: e.target.value}));
@@ -31,9 +34,10 @@ const Profile = (props) => {
 			let body = await response.json();
 			console.log(body);
 			if(body.message === "Company created.") {
+				setMessage({ success: "Tiedot päivitetty."});
 				dispatch(setCompany({...company, new: false}));
 			} else if(body.message === "Company already exists.") {
-				setError("Yritys on jo olemassa. Ota heihin yhteyttä.");
+				setMessage({ error: "Yritys on jo olemassa. Ota heihin yhteyttä."});
 			}
 		} else {
 			let response = await fetch("/api/companies/" + company._id, {
@@ -47,9 +51,10 @@ const Profile = (props) => {
 			let body = await response.json();
 			console.log(body);
 			if(body.message === "Company updated.") {
+				setMessage({ success: "Tiedot päivitetty."});
 				dispatch(setCompany({...company, new: false}));
 			} else if(body.message === "Company not found.") {
-				setError(body.message);
+				setMessage({ error: body.message});
 			}
 		}
 	}
@@ -132,12 +137,17 @@ const Profile = (props) => {
 						/>
 					</Grid>
 				</Grid>
-				{ error && ( 
-					<Grid item xs={12}>
-						<Alert severity="error">{error}</Alert>
-					</Grid>
-				)}
 				<Grid container spacing={2} mt={1} mb={4}>
+					{ message.error && ( 
+						<Grid item xs={12}>
+							<Alert severity="error">{message.error}</Alert>
+						</Grid>
+					)}
+					{ message.success && (
+						<Grid item xs={12}>
+							<Alert severity="success">{message.success}</Alert>
+						</Grid>
+					)}
 					<Grid item xs={12}>
 						<Button type="submit" variant="contained" fullWidth> Tallenna </Button>
 					</Grid>

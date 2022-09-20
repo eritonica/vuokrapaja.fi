@@ -52,6 +52,9 @@ router.post("/companies/members", async (req, res) => {
 
 // GET /companies/members/:id
 router.get("/companies/members/:id", async (req, res) => {
+  if(req.params.id === "undefined") {
+    return res.status(404).json({ message: "Company not found." });
+  }
   let company = await companyModel.findOne({ _id: req.params.id }).exec();
   if (!company) {
     return res.status(404).json({ message: "Company not found." });
@@ -104,25 +107,38 @@ router.get("/companies/members/:id", async (req, res) => {
 //  "permissions" : "string"
 // }
 router.put("/companies/members/:id", async (req, res) => {
-  let company = await companyModel.findOne({ _id: req.params.id }).exec();
-  if (company) {
-    if(company.manager === req.session.account._id) {
-        let member = await memberModel.findOne({ account: req.body.account }).exec();
-        if (member) {
-          member.account = req.body.account;
-          member.company = req.body.company;
-          member.role = req.body.role;
-          member.permissions = req.body.permissions;
-          member.save();
-          res.status(200).json({ message: "Member updated." });
-        } else {
-          res.status(404).json({ message: "Member not found." });
-        }
-    } else {
-        res.status(403).json({ message: "You are not the manager of this company." });
-    }
+  let member = await memberModel.findOne({ _id: req.params.id }).exec();
+  if (!member) {
+    return res.status(404).json({ message: "Member not found." });
+  }
+  let company = await companyModel.findOne({ _id: member.company }).exec();
+  if (!company) {
+    return res.status(404).json({ message: "Company not found." });
+  }
+  let permissionToUpdate = false;
+  if (company.manager.toString() === req.session.account._id.toString()) {
+    permissionToUpdate = true;
   } else {
-    res.status(404).json({ message: "Company not found." });
+    let member = await memberModel.findOne({ account: req.session.account._id, company: req.body.company }).exec();
+    if(member) {
+      if(member.permissions.includes("update")) {
+        permissionToUpdate = true;
+      }
+    }
+  }
+  if (permissionToUpdate === false) {
+    return res.status(403).json({ message: "You do not have permission to update members." });
+  } else {
+    member.account = req.body.account;
+    member.company = req.body.company;
+    member.role = req.body.role;
+    member.permissions = req.body.permissions;
+    try {
+      member.save();
+      return res.status(200).json({ message: "Member updated." });
+    } catch (err) {
+      return res.status(400).json({ message: "Member could not be updated." });
+    }
   }
 });
 

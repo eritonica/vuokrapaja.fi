@@ -24,22 +24,12 @@ const modalStyle = {
 
 const Profile = (props) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const token = useSelector((state) => state.app.token);
   const profile = useSelector((state) => state.app.profile);
-  const dispatch = useDispatch();
-  const [error, setError] = useState(false);
-  const [saved, setSaved] = useState(false);
-
-  const [password, setPassword] = useState("");
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => {
-    setError(false);
-    setOpen(true);
-  }
-  const handleClose = () => {
-    setError(false);
-    setOpen(false);
-  };
+  const [message, setMessage] = useState(false);
+  const [passwordForm, setPasswordForm] = useState(false);
+  const [modal, setModal] = useState({ username: false, password: false, email: false});
 
   useEffect(() => {
     let getData = async () => {
@@ -64,59 +54,57 @@ const Profile = (props) => {
         navigate("/login");
       }
     }
-    getData();
+    if(token !== false) {
+      getData();
+    }
+    // Don't know yet how to handle dispatch with useEffect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  const handleOpenUsernameModal = () => {
+    setMessage(false);
+    setModal({ ...modal, username: true });
+  }
+  const handleCloseUsernameModal = () => {
+    setMessage(false);
+    setModal({ ...modal, username: false });
+  };
+  const handleOpenEmailModal = () => {
+    setMessage(false);
+    setModal({ ...modal, email: true });
+  }
+  const handleCloseEmailModal = () => {
+    setMessage(false);
+    setModal({ ...modal, email: false });
+  };
+  const handleOpenPasswordModal = () => {
+    setMessage(false);
+    setModal({ ...modal, password: true });
+  }
+  const handleClosePasswordModal = () => {
+    setMessage(false);
+    setModal({ ...modal, password: false });
+  };
 
-  const onProfileChange = (e) => {
-    setError(false);
-    setSaved(false);
+  const onProfileFormChange = (e) => {
+    setMessage(false);
     dispatch(setProfile({ ...profile, [e.target.name]: e.target.value }));
   };
 
-  const onPasswordChange = (e) => {
-    setPassword({ ...password, [e.target.name]: e.target.value });
+  const onPasswordFormChange = (e) => {
+    setPasswordForm({ ...passwordForm, [e.target.name]: e.target.value });
   }
 
-  const handlePasswordSubmit = async (e) => {
-    e.preventDefault();
-    if(password.new.length < 8) {
-      setError("Salasanan tarvitsee olla vähintään 8 merkkiä pitkä.");
-      return;
-    }
-    if(/\d/.test(password.new) === false) {
-      setError("Salasanan tarvitsee sisältää vähintään yksi numero.");
-      return;
-    }
-    if(password.new !== password.confirm) {
-      setError("Salasanat eivät vastaa toisiaan.");
-      return;
-    }
-    let data = {
-      username: profile.username,
-      email: profile.remail,
-      password: password.new,
-    }
-    let res = await fetch("/api/accounts", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "token": token
-      },
-      body: JSON.stringify(data)
-    });
-    let result = await res.json();
-    if(result.message === "Unauthorized") {
-      navigate("/login");
-    }
-    if(result.message === "Account updated.") {
-      setPassword("");
-      setError(false);
-      handleClose();
-    }
-  }
+  const onUsernameFormChange = (e) => {
+    setMessage(false);
+    dispatch(setProfile({ ...profile, [e.target.name]: e.target.value }));
+  };
 
-  const handleSubmit = async (e) => {
+  const onEmailFormChange = (e) => {
+    setMessage(false);
+    dispatch(setProfile({ ...profile, [e.target.name]: e.target.value }));
+  };
+
+  const handleProfileFormSubmit = async (e) => {
     e.preventDefault();
     if(profile.new === true) {
       let result = await fetch("/api/profiles", {
@@ -131,9 +119,9 @@ const Profile = (props) => {
       let body = await result.json();
       console.log(body);
       if(body.message === "Profile created.") {
-        setSaved("Uusi profiili luotu sinulle.");
+        setMessage({ success: "Uusi profiili luotu sinulle."});
       } else {
-        setError("Odottamaton virhe tapahtui, yritä hetken kuluttua uudelleen.");
+        setMessage({ error :"Odottamaton virhe tapahtui, yritä hetken kuluttua uudelleen." });
       }
     } else if(profile.new === false) {
       let result = await fetch("/api/profiles", {
@@ -148,17 +136,83 @@ const Profile = (props) => {
       let body = await result.json();
       console.log(body);
       if(body.message === "Profile updated.") {
-        setSaved("Profiilisi päivitetty.");
+        setMessage({ success :"Profiilisi päivitetty."});
       } else {
-        setError("Odottamaton virhe tapahtui, yritä hetken kuluttua uudelleen.");
+        setMessage({ error :"Odottamaton virhe tapahtui, yritä hetken kuluttua uudelleen."});
       }
     }
+  }
 
+  const updateAccount = async (data) => {
+    let result = await fetch("/api/profiles", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "token": token
+      },
+      body: JSON.stringify(profile),
+    });
+    let body = await result.json();
+    console.log(body);
+    return body;
+  }
+
+  const handlePasswordFormSubmit = async (e) => {
+    e.preventDefault();
+    if(passwordForm.new.length < 8) {
+      setMessage({ error : "Salasanan tarvitsee olla vähintään 8 merkkiä pitkä."});
+      return;
+    }
+    if(/\d/.test(passwordForm.new) === false) {
+      setMessage({ error : "Salasanan tarvitsee sisältää vähintään yksi numero."});
+      return;
+    }
+    if(passwordForm.new !== passwordForm.confirm) {
+      setMessage({ error : "Salasanat eivät vastaa toisiaan."});
+      return;
+    }
+    let data = {
+      username: profile.username,
+      email: profile.remail,
+      password: passwordForm.new,
+    }
+    let result = await updateAccount(data);
+    if(result.message === "Profile updated.") {
+      setMessage({ success :"Salasanasi päivitetty."});
+    } else {
+      setMessage({ error :"Odottamaton virhe tapahtui, yritä hetken kuluttua uudelleen."});
+    }
+  }
+
+  const handleUsernameFormSubmit = async (e) => {
+    e.preventDefault();
+    let data = {
+      username: profile.username,
+    }
+    let result = await updateAccount(data);
+    if(result.message === "Profile updated.") {
+      setMessage({ success :"Käyttäjätunnuksesi päivitetty."});
+    } else {
+      setMessage({ error :"Odottamaton virhe tapahtui, yritä hetken kuluttua uudelleen."});
+    }
+  }
+  const handleEmailFormSubmit = async (e) => {
+    e.preventDefault();
+    let data = {
+      email: profile.remail,
+    }
+    let result = await updateAccount(data);
+    if(result.message === "Profile updated.") {
+      setMessage({ success :"Sähköpostisi päivitetty."});
+    } else {
+      setMessage({ error :"Odottamaton virhe tapahtui, yritä hetken kuluttua uudelleen."});
+    }
   }
 
   return (
     <Container maxWidth="sm">
-      <Box component={'form'} onSubmit={handleSubmit}  sx={{ mt: 4 }}>
+      <Box component={'form'} onSubmit={handleProfileFormSubmit}  sx={{ mt: 4 }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h4" component="h1" gutterBottom>Profiili</Typography>
@@ -179,17 +233,103 @@ const Profile = (props) => {
           <Grid item xs={12}>
             <Typography variant="h6" component="h2" gutterBottom>Käyttäjätiedot</Typography>
           </Grid>
-          <Grid item xs={12}>
-            <TextField fullWidth disabled label="Käyttäjätunnus" name="username" value={profile.username} onChange={onProfileChange} />
+          <Grid item xs={6}>
+            <TextField fullWidth disabled label="Käyttäjätunnus" name="username" value={profile.username} onChange={onProfileFormChange} />
           </Grid>
-          <Grid item xs={12}>
-            <TextField fullWidth disabled label="Sähköposti" name="email" value={ profile.remail } onChange={onProfileChange} />
-          </Grid>
-          <Grid item xs={12}>
-            <Button fullWidth variant="contained" color="primary" onClick={handleOpen}>Vaihda salasana</Button>
+          <Grid item xs={6}>
+            <Button fullWidth sx={{p:1.9}} variant="contained" color="primary" onClick={handleOpenUsernameModal}>Vaihda käyttäjätunnus</Button>
             <Modal
-              open={open}
-              onClose={handleClose}
+              open={modal.username}
+              onClose={handleCloseUsernameModal}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description">
+              <Box sx={modalStyle} component="form">
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Typography variant="h6" component="h1" gutterBottom>
+                      Valitse uusi käyttäjätunnus
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      type="text"
+                      label="Käyttäjätunnus"
+                      name="username"
+                      autoComplete="nothing"
+                      onChange={onUsernameFormChange}
+                    />
+                  </Grid>
+                  {message.error && 
+                    <Grid item xs={12}>
+                      <Alert severity="error">{message.error}</Alert>
+                    </Grid>
+                  }
+                  {message.success && 
+                    <Grid item xs={12}>
+                      <Alert severity="success" onClick={handleCloseUsernameModal}>{message.success}</Alert>
+                    </Grid>
+                  }
+                  <Grid item xs={12}>
+                    <Button fullWidth type="submit" variant="contained" color="primary" onClick={handleUsernameFormSubmit}>
+                      Tallenna
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Modal>
+          </Grid>
+          <Grid item xs={6}>
+            <TextField fullWidth disabled label="Sähköposti" name="email" value={ profile.remail } onChange={onProfileFormChange} />
+          </Grid>
+          <Grid item xs={6}>
+            <Button fullWidth sx={{p:1.9}} variant="contained" color="primary" onClick={handleOpenEmailModal}>Vaihda sähköposti</Button>
+            <Modal
+              open={modal.email}
+              onClose={handleCloseEmailModal}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description">
+              <Box sx={modalStyle} component="form">
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Typography variant="h6" component="h1" gutterBottom>
+                      Valitse uusi sähköpostiosoite
+                    </Typography>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <TextField
+                      fullWidth
+                      type="email"
+                      label="Sähköposti"
+                      name="remail"
+                      autoComplete="nothing"
+                      onChange={onEmailFormChange}
+                    />
+                  </Grid>
+                  {message.error && 
+                    <Grid item xs={12}>
+                      <Alert severity="error">{message.error}</Alert>
+                    </Grid>
+                  }
+                  {message.success && 
+                    <Grid item xs={12}>
+                      <Alert severity="success" onClick={handleCloseEmailModal}>{message.success}</Alert>
+                    </Grid>
+                  }
+                  <Grid item xs={12}>
+                    <Button fullWidth type="submit" variant="contained" color="primary" onClick={handleEmailFormSubmit}>
+                      Tallenna
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Modal>
+          </Grid>
+          <Grid item xs={12}>
+            <Button fullWidth variant="contained" color="warning" onClick={handleOpenPasswordModal}>Vaihda salasana</Button>
+            <Modal
+              open={modal.password}
+              onClose={handleClosePasswordModal}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description">
               <Box sx={modalStyle} component="form">
@@ -206,7 +346,7 @@ const Profile = (props) => {
                       label="Salasana"
                       name="new"
                       autoComplete="nothing"
-                      onChange={onPasswordChange}
+                      onChange={onPasswordFormChange}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -216,16 +356,21 @@ const Profile = (props) => {
                       label="Salasana varmistus"
                       name="confirm"
                       autoComplete="nothing"
-                      onChange={onPasswordChange}
+                      onChange={onPasswordFormChange}
                     />
                   </Grid>
-                  {error && 
+                  {message.error && 
                     <Grid item xs={12}>
-                      <Alert severity="error">{error}</Alert>
+                      <Alert severity="error">{message.error}</Alert>
+                    </Grid>
+                  }
+                  {message.success && 
+                    <Grid item xs={12}>
+                      <Alert severity="success" onClick={handleClosePasswordModal}>{message.success}</Alert>
                     </Grid>
                   }
                   <Grid item xs={12}>
-                    <Button fullWidth type="submit" variant="contained" color="primary" onClick={handlePasswordSubmit}>
+                    <Button fullWidth type="submit" variant="contained" color="primary" onClick={handlePasswordFormSubmit}>
                       Tallenna
                     </Button>
                   </Grid>
@@ -245,7 +390,7 @@ const Profile = (props) => {
                 labelId="type-label"
                 name="type"
                 value={profile.type}
-                onChange={onProfileChange}
+                onChange={onProfileFormChange}
                 label="Tyyppi">
                 <MenuItem value={"Rentee"}>Vuokralainen</MenuItem>
                 <MenuItem value={"Renter"}>Vuokranantaja</MenuItem>
@@ -254,13 +399,13 @@ const Profile = (props) => {
             </FormControl>
           </Grid>
           <Grid item xs={12}>
-            <TextField fullWidth label="Nimi" name="name" value={profile.name} onChange={onProfileChange} helperText="Sinun etu ja sukunimesi." />
+            <TextField fullWidth label="Nimi" name="name" value={profile.name} onChange={onProfileFormChange} helperText="Sinun etu ja sukunimesi." />
           </Grid>
           <Grid item xs={12}>
-            <TextField fullWidth multiline label="Kuvaus" rows={4} name="description" value={profile.description} onChange={onProfileChange} />
+            <TextField fullWidth multiline label="Kuvaus" rows={4} name="description" value={profile.description} onChange={onProfileFormChange} />
           </Grid>
           <Grid item xs={12}>
-            <TextField fullWidth label="Ammatti" name="profession" value={profile.profession} onChange={onProfileChange} />
+            <TextField fullWidth label="Ammatti" name="profession" value={profile.profession} onChange={onProfileFormChange} />
           </Grid>
           <Grid item xs={12}>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -280,13 +425,13 @@ const Profile = (props) => {
             <Typography variant="h6" component="h2" gutterBottom>Yhteystiedot</Typography>
           </Grid>
           <Grid item xs={12}>
-            <TextField fullWidth label="Kotiosoite" name="address" value={profile.address} onChange={onProfileChange} helperText="Mäkiläisenkuja 2, 25230 Kartano" />
+            <TextField fullWidth label="Kotiosoite" name="address" value={profile.address} onChange={onProfileFormChange} helperText="Mäkiläisenkuja 2, 25230 Kartano" />
           </Grid>
           <Grid item xs={12}>
-            <TextField fullWidth label="Puhelinnumero" name="phone" value={profile.phone} onChange={onProfileChange} />
+            <TextField fullWidth label="Puhelinnumero" name="phone" value={profile.phone} onChange={onProfileFormChange} />
           </Grid>
           <Grid item xs={12}>
-            <TextField fullWidth label="Sähköposti" name="email" value={profile.email} onChange={onProfileChange} />
+            <TextField fullWidth label="Sähköposti" name="email" value={profile.email} onChange={onProfileFormChange} />
           </Grid>
         </Grid>
         <Grid container spacing={2} mt={4}>
@@ -294,18 +439,18 @@ const Profile = (props) => {
             <Typography variant="h6" component="h2" gutterBottom>Muut tiedot:</Typography>
           </Grid>
           <Grid item xs={12}>
-            <TextField fullWidth label="Kotisivu" name="website" value={profile.website} onChange={onProfileChange} />
+            <TextField fullWidth label="Kotisivu" name="website" value={profile.website} onChange={onProfileFormChange} />
           </Grid>
         </Grid>
         <Grid container spacing={2} mt={1} mb={4}>
-          { error && ( 
+          { message.error && ( 
             <Grid item xs={12}>
-              <Alert severity="error">{error}</Alert>
+              <Alert severity="error">{message.error}</Alert>
             </Grid>
           )}
-          { saved && (
+          { message.success && (
             <Grid item xs={12}>
-              <Alert severity="success">{saved}</Alert>
+              <Alert severity="success">{message.success}</Alert>
             </Grid>
           )}
           <Grid item xs={12}>

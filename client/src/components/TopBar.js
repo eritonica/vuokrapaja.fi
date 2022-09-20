@@ -35,8 +35,7 @@ const TopBar = (props) => {
       OK
     </Button>
   )
-
-
+  
   const onLogout = async () => {
     handleSnackbarOpen();
     let result = await fetch('/api/sessions', {
@@ -49,11 +48,9 @@ const TopBar = (props) => {
     let body = await result.json();
     console.log(body);
     if(body.message) {
-      dispatch(setToken(false));
-      dispatch(setCompany(false));
-      dispatch(setProfile(false));
-      localStorage.removeItem('token');
       navigate('/');
+      localStorage.removeItem('token');
+      dispatch(setToken(false));
     }
   }
 

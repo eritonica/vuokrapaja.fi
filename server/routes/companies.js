@@ -5,7 +5,6 @@ import companyModel from '../schemas/company.js';
 
 const router = express.Router();
 
-
 // GET /companies
 router.get('/companies', async (req, res) => {
 	let companies = await companyModel.findOne({manager: req.session.account._id}).exec();

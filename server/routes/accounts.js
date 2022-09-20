@@ -142,9 +142,15 @@ router.put("/accounts/", async (req, res) => {
   sessions.checkSession(req, res, async () => {
     let account = await accountModel.findById(req.session.account._id).exec();
     if (account) {
-      account.username = req.body.username;
-      account.email = req.body.email;
-      account.password = crypto.encrypt(req.body.password);
+      if(req.body.username) {
+        account.username = req.body.username;
+      }
+      if(req.body.email) {
+        account.email = req.body.email;
+      }
+      if(req.body.password) {
+        account.password = crypto.encrypt(req.body.password);
+      }
       account.updated = Date.now();
       account.save();
       res.status(200).json({ message: "Account updated." });

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Box, TextField, Button, Modal, Typography, Alert } from '@mui/material';
+import { Container, Box, TextField, Button, Modal, Typography, Alert, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 import Grid from '@mui/material/Unstable_Grid2';
@@ -22,19 +22,35 @@ const Member = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.app.token);
   const company = useSelector((state) => state.app.company);
-  const [form, setForm] = useState("");
+  const [memberAddForm, setMemberAddForm] = useState("");
+  const [memberModForm, setMemberModForm] = useState({});
   const [error, setError] = useState('');
 
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [modal, setModal] = useState({
+    add: false,
+    mod: false,
+  });
+  const handleOpenMemberAddModal = () => setModal({...modal, add: true});
+  const handleCloseMemberAddModal = () => setModal({...modal, add: false});
+
+  const handleOpenMemberModModal = (member) => {
+    setMemberModForm({
+      ...member
+    });
+    console.log(memberModForm);
+    setModal({...modal, mod: true});
+  }
+
+  const handleCloseMemberModModal = () => {
+    setModal({...modal, mod: false});
+  }
 
   const onChange = (e) => {
-    setForm({...form, [e.target.name]: e.target.value});
+    setMemberAddForm({...memberAddForm, [e.target.name]: e.target.value});
 	}
 
-  const changeMember = async (e) => {
-
+  const onChangeMember = async (e) => {
+    setMemberModForm({...memberModForm, [e.target.name]: e.target.value});
   }
 
   const getMembers = async () => {
@@ -67,7 +83,6 @@ const Member = () => {
     } else {
       setError(body.message);
     }
-
   }
 
   useEffect(() => {
@@ -75,12 +90,12 @@ const Member = () => {
       let members = await getMembers();
       dispatch(setCompany({...company, members: members}));
     }
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    console.log("company members:", company.members);
-  }, [company]);
+    if(token !== false) {
+      fetchData();
+    }
+    // Don't know yet how to handle dispatch with useEffect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [company._id]);
 
   const addMember = async () => {
     setError("");
@@ -91,7 +106,7 @@ const Member = () => {
         token: token,
       },
       body: JSON.stringify({
-           username: form.addition,
+           username: memberAddForm.member,
            company: company._id,
            role: "",
            permissions : "",
@@ -101,14 +116,32 @@ const Member = () => {
     return body;
   }
 
-  const handleAddMember = async (e) => {
+  const modMember = async () => {
+    setError("");
+    let response = await fetch('/api/companies/members/' + memberModForm._id, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+      body: JSON.stringify({
+        account: memberModForm.account,
+        company: company._id,
+        role: memberModForm.role,
+        permissions : memberModForm.permissions,
+      }),
+    });
+    let body = await response.json();
+    return body;
+  }
+
+  const handleMemberAddForm = async (e) => {
     e.preventDefault();
     let res = await addMember();
     if (res.message === 'Member created.') {
       let members = await getMembers();
       dispatch(setCompany({...company, members: members}));
-      handleClose();
-      
+      handleCloseMemberAddModal();
     } else if (res.message === 'Member already exists.') {
       setError('Käyttäjä on jo yrityksen jäsen.');
     } else if (res.message === 'You do not have permission to create members.') {
@@ -120,7 +153,23 @@ const Member = () => {
     }
   };
 
-  // username, email, name, role, persmissions, actions
+  const handleMemberModForm = async (e) => {
+    e.preventDefault();
+    let res = await modMember();
+    if (res.message === 'Member updated.') {
+      let members = await getMembers();
+      dispatch(setCompany({...company, members: members}));
+      handleCloseMemberModModal();
+    } else if (res.message === 'Member not found.') {
+      setError('Jäsentä ei löytynyt.');
+    } else if (res.message === 'You do not have permission to update members.') {
+      setError('Sinulla ei ole oikeutta muokata jäsentä.');
+    } else if (res.message === 'Company not found.') {
+      setError("Yritystä ei löytynyt");
+    }
+  }
+
+  // username, email, name, role, permissions, actions
   return (
     <Container maxWidth="md">
       <Box component="form" sx={{ mt: 4 }}>
@@ -131,12 +180,12 @@ const Member = () => {
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Button variant="contained" color="primary" onClick={handleOpen}>
+            <Button variant="contained" color="primary" onClick={handleOpenMemberAddModal}>
               Lisää työntekijä
             </Button>
             <Modal
-              open={open}
-              onClose={handleClose}
+              open={modal.add}
+              onClose={handleCloseMemberAddModal}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description">
               <Box sx={modalStyle} component="form">
@@ -150,7 +199,7 @@ const Member = () => {
                     <TextField
                       fullWidth
                       label="Käyttäjätunnus"
-                      name="addition"
+                      name="member"
                       autoComplete="nothing"
                       onChange={onChange}
                     />
@@ -161,7 +210,7 @@ const Member = () => {
                     </Grid>
                   }
                   <Grid item xs={12}>
-                    <Button fullWidth type="submit" variant="contained" color="primary" onClick={handleAddMember}>
+                    <Button fullWidth type="submit" variant="contained" color="primary" onClick={handleMemberAddForm}>
                       Lisää
                     </Button>
                   </Grid>
@@ -208,9 +257,66 @@ const Member = () => {
                     {member.permissions}
                   </TableCell>
                   <TableCell align="right">
-                    <Button fullWidth sx={{mb:1}} variant="contained" color="primary" onClick={changeMember}>
+                    <Button fullWidth sx={{mb:1}} variant="contained" color="primary" onClick={() => handleOpenMemberModModal(member)}>
                       Muokkaa
                     </Button>
+                    <Modal
+                      open={modal.mod}
+                      onClose={handleCloseMemberModModal}
+                      aria-labelledby="modal-modal-title"
+                      aria-describedby="modal-modal-description">
+                      <Box sx={modalStyle} component="form">
+                        <Grid container spacing={2}>
+                          <Grid item xs={12}>
+                            <Typography variant="h6" component="h1" gutterBottom>
+                              Valitse työntekijän rooli ja oikeudet
+                            </Typography>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <FormControl fullWidth>
+                              <InputLabel id="select-label">Rooli</InputLabel>
+                              <Select
+                                fullWidth
+                                labelId="select-label"
+                                id="role-select"
+                                value={memberModForm.role}
+                                label="Rooli"
+                                name="role"
+                                onChange={onChangeMember}>
+                                <MenuItem value="boss">Johtaja</MenuItem>
+                                <MenuItem value="admin">Ylläpitäjä</MenuItem>
+                                <MenuItem value="worker">Työntekijä</MenuItem>
+                                <MenuItem value="customer">Asiakas</MenuItem>
+                                <MenuItem value="">Ei mikään</MenuItem>
+                              </Select>
+                            </FormControl>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <FormControl fullWidth>
+                              <InputLabel id="select-label">Oikeudet</InputLabel>
+                              <Select
+                                fullWidth
+                                labelId="select-label"
+                                id="permissions-select"
+                                value={memberModForm.permissions}
+                                label="Oikeudet"
+                                name="permissions"
+                                onChange={onChangeMember}>
+                                <MenuItem value="read | write | delete">Luku/Kirjoitus/Poisto</MenuItem>
+                                <MenuItem value="read | write">Luku/Kirjoitus</MenuItem>
+                                <MenuItem value="read">Luku</MenuItem>
+                                <MenuItem value="">Ei mitään</MenuItem>
+                              </Select>
+                            </FormControl>
+                          </Grid>
+                          <Grid item xs={12}>
+                            <Button fullWidth type="submit" variant="contained" color="primary" onClick={handleMemberModForm}>
+                              Tallenna
+                            </Button>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    </Modal>
                     <Button fullWidth variant="contained" color="secondary" onClick={() => { deleteMember(member)} }>
                       Poista
                     </Button>
