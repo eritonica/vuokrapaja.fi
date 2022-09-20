@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Container, Box, TextField, Button, Modal, Typography, Alert, Select, MenuItem } from '@mui/material';
+import { Container, Box, TextField, Button, Modal, Typography, Alert } from '@mui/material';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 import Grid from '@mui/material/Unstable_Grid2';
@@ -35,6 +35,19 @@ const Member = () => {
 
   const changeMember = async (e) => {
 
+  }
+
+  const getMembers = async () => {
+    setError("");
+    let response = await fetch('/api/companies/members/' + company._id, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        token: token,
+      },
+    });
+    let body = await response.json();
+    return body.members;
   }
 
   const deleteMember = async (member) => {
@@ -86,19 +99,6 @@ const Member = () => {
     });
     let body = await response.json();
     return body;
-  }
-
-  const getMembers = async () => {
-    setError("");
-    let response = await fetch('/api/companies/members/' + company._id, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        token: token,
-      },
-    });
-    let body = await response.json();
-    return body.members;
   }
 
   const handleAddMember = async (e) => {

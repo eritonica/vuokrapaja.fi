@@ -18,6 +18,8 @@ export const appSlice = createSlice({
             phone: "",
             email: "",
             website: "",
+            username: "",
+            remail: "",
             new: true,
         },
         company: {
@@ -52,5 +54,5 @@ export const appSlice = createSlice({
     },
 });
 
-export const { setToken, toggleCookies, setProfile, setCompany, pushCompanyMember } = appSlice.actions;
+export const { setToken, toggleCookies, setProfile, setAccount, setCompany, pushCompanyMember } = appSlice.actions;
 export default appSlice.reducer;

@@ -125,6 +125,7 @@ router.put("/accounts/recovery/:code", async (req, res) => {
 router.get("/accounts/:id", async (req, res) => {
   let account = await accountModel.findById(req.params.id).exec();
   if (account) {
+    account.password = "";
     res.status(200).json(account);
   } else {
     res.status(404).json({ message: "Account not found." });
@@ -137,35 +138,36 @@ router.get("/accounts/:id", async (req, res) => {
 //  "email": "string",
 //  "password": "string"
 // }
-router.put("/accounts/:id", async (req, res) => {
-  let account = await accountModel.findById(req.params.id).exec();
-  if (account) {
-    account.username = req.body.username;
-    account.email = req.body.email;
-    account.password = crypto.hash(req.body.password);
-    account.updated = Date.now();
-    account.save();
-    res.status(200).json({ message: "Account updated." });
-  } else {
-    res.status(404).json({ message: "Account not found." });
-  }
+router.put("/accounts/", async (req, res) => {
+  sessions.checkSession(req, res, async () => {
+    let account = await accountModel.findById(req.session.account._id).exec();
+    if (account) {
+      account.username = req.body.username;
+      account.email = req.body.email;
+      account.password = crypto.encrypt(req.body.password);
+      account.updated = Date.now();
+      account.save();
+      res.status(200).json({ message: "Account updated." });
+    } else {
+      res.status(404).json({ message: "Account not found." });
+    }
+  });
 });
 
-// DELETE accounts/:id
-// {
-//   "token": "token"
-// }
-router.delete("/accounts/:id", async (req, res) => {
-  let account = await accountModel.findById(req.params.id).exec();
-  if (account) {
-    account.activated = false;
-    account.activationCode = crypto.generateString(32);
-    account.updated = Date.now();
-    account.save();
-    res.status(200).json({ message: "Account deleted." });
-  } else {
-    res.status(404).json({ message: "Account not found." });
-  }
+// DELETE accounts/
+router.delete("/accounts/", async (req, res) => {
+  sessions.checkSession(req, res, async () => {
+    let account = await accountModel.findById(req.session.account._id).exec();
+    if (account) {
+      account.activated = false;
+      account.activationCode = "";
+      account.updated = Date.now();
+      account.save();
+      res.status(200).json({ message: "Account deleted." });
+    } else {
+      res.status(404).json({ message: "Account not found." });
+    }
+  });
 });
 
 export default {

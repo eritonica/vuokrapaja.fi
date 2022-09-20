@@ -32,42 +32,7 @@ function App() {
   let profile = useSelector((state) => state.app.profile);
   let company = useSelector((state) => state.app.company);
 
-  const getProfile = async (token) => {
-    let response = await fetch("/api/profiles", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "token": token
-      },
-    });
-    let body = await response.json();
-    if(!body.message) {
-      dispatch(setProfile({
-        ...profile,
-        ...body,
-        new: false,
-      }));
-    }
-  }
-  const getCompany = async(token) => {
-    let response = await fetch("/api/companies", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "token": token
-      },
-    });
-    let body = await response.json();
-    if(!body.message) {
-      dispatch(setCompany({
-        ...company,
-        ...body,
-        new: false,
-      }));
-    }
-  }
+  
 
   // Token update management is here since it is App level, 
   // in logout action it is removed from localstorage and Redux state management.
@@ -79,6 +44,42 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const getProfile = async (token) => {
+      let response = await fetch("/api/profiles", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "token": token
+        },
+      });
+      let body = await response.json();
+      if(!body.message) {
+        dispatch(setProfile({
+          ...profile,
+          ...body,
+          new: false,
+        }));
+      }
+    }
+    const getCompany = async(token) => {
+      let response = await fetch("/api/companies", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
+          "token": token
+        },
+      });
+      let body = await response.json();
+      if(!body.message) {
+        dispatch(setCompany({
+          ...company,
+          ...body,
+          new: false,
+        }));
+      }
+    }
     if(token !== false) {
       localStorage.setItem("token", token);
       getProfile(token);

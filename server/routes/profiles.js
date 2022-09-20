@@ -1,6 +1,8 @@
 import express from "express";
 import profileModel from "../schemas/profile.js";
 
+import accounts from "./accounts.js";
+
 const router = express.Router();
 
 const getProfileById = async (id) => {
@@ -36,15 +38,30 @@ router.post("/profiles", async (req, res) => {
 // GET /profiles
 router.get("/profiles", async (req, res) => {
     let profile = await profileModel.findOne({ account: req.session.account._id }).exec();
-    if(profile) {
-        if(profile.active) {
-            res.status(200).json(profile);
-        } else {
-            res.status(400).json({ message: "Profile not found." });
-        }
-    } else {
+    if(!profile) {
         res.status(400).json({ message: "Profile not found." });
     }
+    if(profile.active === false) {
+        res.status(400).json({ message: "Profile not found." });
+    }
+    let account = await accounts.getAccountById(profile.account);
+    let tmpProfile = {
+        id: profile._id,
+        type: profile.type,
+        name: profile.name,
+        profession: profile.profession,
+        birthday: profile.birthday,
+        address: profile.address,
+        description: profile.description,
+        avatar: profile.avatar,
+        phone: profile.phone,
+        email: profile.email,
+        website: profile.website,
+        active: profile.active,
+        username: account.username,
+        remail: account.email,
+    };
+    res.status(200).json(tmpProfile);
 });
 
 // PUT /profiles

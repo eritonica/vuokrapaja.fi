@@ -37,25 +37,35 @@ const RegisterForm = (props) => {
   }
 
   const validateEmail = (email) => {
-    return /^(([^<>()[].,;:\s@"]+(.[^<>()[].,;:\s@"]+)*)|(".+"))@(([^<>().,;\s@"]+.{0,1})+([^<>().,;:\s@"]{2,}|[\d.]+))$/.test(email); 
+    var re = /\S+@\S+\.\S+/;
+    return re.test(email);
   }
 
   const handleRegister = async (event) => {
     event.preventDefault();
     if(registerState.username.length < 3) {
-      setRegisterState({ ...registerState, usernameError: true, usernameErrorMessage: "Username must be at least 3 characters." });
+      setRegisterState({ ...registerState, usernameError: true, usernameErrorMessage: "Käyttäjätunnuksen tarvitsee olla vähintään 3 merkkiä pitkä." });
+      return;
     }
     if(registerState.password.length < 8) {
-      setRegisterState({ ...registerState, passwordError: true, passwordErrorMessage: "Password must be at least 8 characters." });
+      setRegisterState({ ...registerState, passwordError: true, passwordErrorMessage: "Salasanan tarvitsee olla vähintään 8 merkkiä pitkä." });
+      return;
     }
     if(/\d/.test(registerState.password) === false) {
-      setRegisterState({ ...registerState, passwordError: true, passwordErrorMessage: "Password must contain at least one number." });
+      setRegisterState({ ...registerState, passwordError: true, passwordErrorMessage: "Salasanan tarvitsee sisältää ainakin 1 numero." });
+      return;
     }
     if(registerState.password !== registerState.passwordConfirm) {
-      setRegisterState({ ...registerState, passwordConfirmError: true, passwordConfirmErrorMessage: "Passwords do not match." });
+      setRegisterState({ ...registerState, passwordConfirmError: true, passwordConfirmErrorMessage: "Salasanat eivät vastaa toisiaan." });
+      return;
+    }
+    if(validateEmail(registerState.email) === false) {
+      setRegisterState({ ...registerState, emailError: true, emailErrorMessage: "Sähköpostiosoite ei ole validi." });
+      return;
     }
     if(registerState.email.length < 5) {
-      setRegisterState({ ...registerState, emailError: true, emailErrorMessage: "Email must be at least 5 characters." });
+      setRegisterState({ ...registerState, emailError: true, emailErrorMessage: "Sähköpostiosoitteen tarvitsee olla vähintään 5 merkkiä pitkä." });
+      return;
     }
     if(registerState.usernameError === false && registerState.passwordError === false && registerState.emailError === false) {
       let response = await fetch('/api/accounts', {
