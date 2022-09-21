@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Container, Box, TextField, Button, Alert, Typography, Avatar } from '@mui/material';
+import { Container, Box, TextField, Button, Alert, Typography, Avatar} from '@mui/material';
 import { FormControl, Modal, InputLabel, Select, MenuItem, Paper, Tooltip } from '@mui/material';
+import AspectRatioBox from '../components/AspectRatioBox.js';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -118,8 +119,7 @@ const Profile = (props) => {
     dispatch(setProfile({ ...profile, [e.target.name]: e.target.value }));
   };
 
-  const handleProfileFormSubmit = async (e) => {
-    if(e) e.preventDefault();
+  const updateProfile = async (profile) => {
     if(profile.new === true) {
       let result = await fetch("/api/profiles", {
         method: "POST",
@@ -155,6 +155,11 @@ const Profile = (props) => {
         setMessage({ error :"Odottamaton virhe tapahtui, yritä hetken kuluttua uudelleen."});
       }
     }
+  }
+
+  const handleProfileFormSubmit = async (e) => {
+    if(e) e.preventDefault();
+    updateProfile(profile);
   }
 
   const updateAccount = async (data) => {
@@ -225,6 +230,17 @@ const Profile = (props) => {
     }
   }
 
+  const handleAvatarFormSubmit = async (data) => {
+    console.log(data);
+    dispatch(setProfile({ ...profile, avatar: "http://localhost:8080/" + data.file.path }));
+    handleCloseAvatarModal();
+    
+    updateProfile({
+      ...profile,
+      avatar: "http://localhost:8080/" + data.file.path
+    })
+  }
+
   return (
     <Container maxWidth="md" component={Paper}>
       <Box component={'form'} onSubmit={handleProfileFormSubmit} sx={{ mt: 4, pb: 4, mb: 4 }}>
@@ -236,7 +252,11 @@ const Profile = (props) => {
         <Grid container spacing={2}>
           <Grid item xs={4}>
             <Tooltip title="Vaihda profiilikuvaa">
-              <Avatar sx={{ width: 96*2, height: 96*2 }} alt={profile.username} src={profile.avatar} onClick={handleOpenAvatarModal} />
+              <Box component="div" sx={{ width: "100%" }}>
+                <AspectRatioBox ratio={1}>
+                    <Avatar alt={profile.username} src={profile.avatar} onClick={handleOpenAvatarModal} />
+                </AspectRatioBox>
+              </Box>
             </Tooltip>
             <Modal
               open={modal.avatar}
@@ -244,30 +264,7 @@ const Profile = (props) => {
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description">
                 <Box sx={modalStyle}>
-                  <FileUploader fileUploadCallback={async (data) => {
-                    console.log(data);
-                    dispatch(setProfile({ ...profile, avatar: "http://localhost:8080/" + data.file.path }));
-                    handleCloseAvatarModal();
-                    let result = await fetch("/api/profiles", {
-                      method: "PUT",
-                      headers: {
-                        "Content-Type": "application/json",
-                        "Accept": "application/json",
-                        "token": token
-                      },
-                      body: JSON.stringify({
-                        ...profile,
-                        avatar: "http://localhost:8080/" + data.file.path
-                      }),
-                    });
-                    let body = await result.json();
-                    console.log(body);
-                    if(body.message === "Profile updated.") {
-                      setMessage({ success :"Profiilisi päivitetty."});
-                    } else {
-                      setMessage({ error :"Odottamaton virhe tapahtui, yritä hetken kuluttua uudelleen."});
-                    }
-                  }} />
+                  <FileUploader fileUploadCallback={handleAvatarFormSubmit} />
                 </Box>
             </Modal>
           </Grid>

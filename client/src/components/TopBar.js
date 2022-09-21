@@ -15,6 +15,7 @@ const TopBar = (props) => {
   const token = useSelector((state) => state.app.token);
   const name = useSelector((state) => state.app.name);
   const profile = useSelector((state) => state.app.profile);
+  const [anchorEl, setAnchorEl] = useState(null);
   const [snackbarState, setSnackbarState] = useState({
     open: false,
     message: 'Kirjauduit onnistuneesti ulos.',
@@ -63,7 +64,6 @@ const TopBar = (props) => {
     navigate("/profile");
   };
 
-  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleOpenUsermenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -117,8 +117,14 @@ const TopBar = (props) => {
                     }}
                     open={Boolean(anchorEl)}
                     onClose={handleCloseUsermenu}>
-                    <MenuItem onClick={onProfile} startIcon={<Person />}>Profiili</MenuItem>
-                    <MenuItem onClick={onLogout} startIcon={<Logout />}>Poistu</MenuItem>
+                    <MenuItem onClick={onProfile}>
+                      <Person sx={{ mr: 1 }} />
+                      Profiili
+                    </MenuItem>
+                    <MenuItem onClick={onLogout}>
+                      <Logout sx={{ mr: 1 }} />
+                      Poistu
+                    </MenuItem>
                   </Menu>
                 </Box>
           }
