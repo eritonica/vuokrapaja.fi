@@ -7,6 +7,8 @@ import express, { urlencoded } from "express";
 import cors  from "cors";
 import dotenv from "dotenv";
 import mongoose from 'mongoose';
+import multer from 'multer';
+
 const app = express();
 dotenv.config();
 
@@ -19,6 +21,9 @@ app.use(express.urlencoded({ extended: true }));
 // Static route, serve client build if it exists.
 import path from 'path';
 const __dirname = path.resolve();
+
+app.use("/uploads", express.static("uploads"));
+
 app.use(express.static(path.join(__dirname + '/../client/build')));
 
 let allowedDomains = JSON.parse(process.env.CORS_ORIGIN) || [ "http://localhost:3000" ];
@@ -37,6 +42,33 @@ mongoose.connect(process.env.ATLAS_URI, {
   useNewUrlParser: true,  
   useUnifiedTopology: true 
 });
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, './uploads/');
+  },
+  filename: (req, file, cb) => {
+    let randomToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    cb(null, randomToken + "-" + file.originalname);
+  }
+});
+
+const upload = multer({ storage: storage });
+
+app.post("/api/uploads/single", upload.single("file"), (req, res) => {
+  sessions.checkSession(req, res, async () => {
+    console.log(req.file);
+    return res.status(200).json({ message: "File uploaded successfully.", file: req.file });
+  });
+});
+
+app.post("/api/uploads/multiple", upload.array("files", 25), (req, res) => {
+  sessions.checkSession(req, res, async () => {
+    console.log(req.files);
+    return res.status(200).json({ message: "Files uploaded successfully.", files: req.files });
+  });
+});
+
 
 
 // Routes, loading these could be automated without ES6 import/export support

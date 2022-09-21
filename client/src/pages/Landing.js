@@ -3,7 +3,6 @@ import { Container, Box, Paper, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 
 import SearchApartments from './apartments/Search.js';
-import FileUploader from '../components/FileUploader.js';
 
 const Landing = (props) => {
   const name = useSelector((state) => state.app.name);
@@ -20,7 +19,6 @@ const Landing = (props) => {
         </Box>
       </Container>
       <SearchApartments landing={true} />
-      <FileUploader />
     </>
   )
 }

@@ -1,50 +1,68 @@
 import { useState, useEffect } from 'react';
-import { Container, Box, Typography, Button, Paper, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Container, Box, Typography, Button, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import Grid from '@mui/material/Unstable_Grid2';
 
+import { useSelector } from 'react-redux';
+
 const FileUploader = (props) => {
+  const token = useSelector((state) => state.app.token);
   const [files, setFiles] = useState([]);
 
   const handleFileChange = (e) => {
     setFiles(Array.from(e.target.files));
   };
 
-  useEffect(() => {
-    console.log(files[0]);
-  }, [files]);
-
-  const handleFileUpload = () => {
+  const handleFileUpload = async () => {
+    console.log("Uploading files: ", files);
     const formData = new FormData();
-    formData.append('files', files);
+   
+    let uri = 'http://localhost:8080/api/uploads';
+    if(props.multiple) {
+      formData.append('files', files);
+      uri += '/multiple';
+    } else {
+      formData.append('file', files[0]);
+      uri += '/single';
+    }
+    let result = await fetch(uri, {
+      method: 'POST',
+      headers: {
+        'token': token,
+      },
+      body: formData,
+    });
+    let body = await result.json();
+    props.fileUploadCallback(body);
+    return body;
   };
 
   return (
-    <Container maxWidth="md" component={Paper}>
-      <Box sx={{ p: 2 }}>
+    <Container maxWidth="md">
+      <Box component="form">
         <Typography variant="h4" component="h1" gutterBottom>
           File Uploader
         </Typography>
         <Grid container spacing={2}>
-          <Grid item xs={2}>
-            <Button variant="contained" component="label" sx={{mt:2}}>
+          <Grid item xs={3}>
+            <Button variant="contained" component="label" sx={{mt:2,}}>
               Select files
               { (props.multiple) 
                 ? <input hidden
                     type="file"
+                    name="file"
                     multiple
                     onChange={handleFileChange}
-                    sx={{ display: 'none' }}
-                  /> 
+                    sx={{ display: 'none' }} /> 
                 : <input hidden
                     type="file"
+                    name="file"
                     onChange={handleFileChange}
-                    sx={{ display: 'none' }}
-                  /> 
+                    sx={{ display: 'none' }} /> 
               }
             </Button>
           </Grid>
-          <Grid item xs={10}>
+          <Grid item xs={9}>
             <List dense={true}>
               { files.length > 0 ? files.map((file) => {
                 return (
@@ -72,7 +90,7 @@ const FileUploader = (props) => {
             </List>
           </Grid>
           <Grid item xs={12}>
-            <Button fullWidth variant="contained" color="primary" onClick={handleFileUpload}>
+            <Button fullWidth variant="contained" color="primary" type="button" onClick={handleFileUpload}>
               Upload
             </Button>
           </Grid>

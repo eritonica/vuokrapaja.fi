@@ -1,13 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Container, Box, TextField, Button, Alert, Typography, Avatar } from '@mui/material';
-import { FormControl, Modal, InputLabel, Select, MenuItem, Paper } from '@mui/material';
+import { FormControl, Modal, InputLabel, Select, MenuItem, Paper, Tooltip } from '@mui/material';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import Grid from '@mui/material/Unstable_Grid2';
+
+import FileUploader from '../components/FileUploader.js';
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setProfile } from '../appSlice';
@@ -17,7 +19,6 @@ const modalStyle = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
@@ -30,7 +31,7 @@ const Profile = (props) => {
   const profile = useSelector((state) => state.app.profile);
   const [message, setMessage] = useState(false);
   const [passwordForm, setPasswordForm] = useState(false);
-  const [modal, setModal] = useState({ username: false, password: false, email: false});
+  const [modal, setModal] = useState({ username: false, password: false, email: false, avatar: false});
 
   useEffect(() => {
     let getData = async () => {
@@ -91,6 +92,13 @@ const Profile = (props) => {
     handleCloseModal("password");
   };
 
+  const handleOpenAvatarModal = () => {
+    handleOpenModal("avatar");
+  }
+  const handleCloseAvatarModal = () => {
+    handleCloseModal("avatar");
+  };
+
   const onProfileFormChange = (e) => {
     setMessage(false);
     dispatch(setProfile({ ...profile, [e.target.name]: e.target.value }));
@@ -111,7 +119,7 @@ const Profile = (props) => {
   };
 
   const handleProfileFormSubmit = async (e) => {
-    e.preventDefault();
+    if(e) e.preventDefault();
     if(profile.new === true) {
       let result = await fetch("/api/profiles", {
         method: "POST",
@@ -227,7 +235,41 @@ const Profile = (props) => {
         </Grid>
         <Grid container spacing={2}>
           <Grid item xs={4}>
-            <Avatar sx={{ width: 96, height: 96 }} src={profile.avatar}>{profile.name.charAt(0)}</Avatar>
+            <Tooltip title="Vaihda profiilikuvaa">
+              <Avatar sx={{ width: 96*2, height: 96*2 }} alt={profile.username} src={profile.avatar} onClick={handleOpenAvatarModal} />
+            </Tooltip>
+            <Modal
+              open={modal.avatar}
+              onClose={handleCloseAvatarModal}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description">
+                <Box sx={modalStyle}>
+                  <FileUploader fileUploadCallback={async (data) => {
+                    console.log(data);
+                    dispatch(setProfile({ ...profile, avatar: "http://localhost:8080/" + data.file.path }));
+                    handleCloseAvatarModal();
+                    let result = await fetch("/api/profiles", {
+                      method: "PUT",
+                      headers: {
+                        "Content-Type": "application/json",
+                        "Accept": "application/json",
+                        "token": token
+                      },
+                      body: JSON.stringify({
+                        ...profile,
+                        avatar: "http://localhost:8080/" + data.file.path
+                      }),
+                    });
+                    let body = await result.json();
+                    console.log(body);
+                    if(body.message === "Profile updated.") {
+                      setMessage({ success :"Profiilisi päivitetty."});
+                    } else {
+                      setMessage({ error :"Odottamaton virhe tapahtui, yritä hetken kuluttua uudelleen."});
+                    }
+                  }} />
+                </Box>
+            </Modal>
           </Grid>
           <Grid item xs={8}>
             <Typography variant="h6" component="h2" gutterBottom>{profile.name}</Typography>
