@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Box, AppBar, Toolbar, Typography, Button, Snackbar } from "@mui/material";
+import { Box, AppBar, Toolbar, Typography, Button, Snackbar, Avatar, Menu, Tooltip, IconButton, MenuItem } from "@mui/material";
 import { Login, Logout, Close, Person } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
@@ -14,6 +14,7 @@ const TopBar = (props) => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.app.token);
   const name = useSelector((state) => state.app.name);
+  const profile = useSelector((state) => state.app.profile);
   const [snackbarState, setSnackbarState] = useState({
     open: false,
     message: 'Kirjauduit onnistuneesti ulos.',
@@ -34,7 +35,7 @@ const TopBar = (props) => {
     <Button color="secondary" size="small" onClick={handleSnackbarClose} startIcon={<Close />}>
       OK
     </Button>
-  )
+  );
   
   const onLogout = async () => {
     handleSnackbarOpen();
@@ -52,15 +53,26 @@ const TopBar = (props) => {
       localStorage.removeItem('token');
       dispatch(setToken(false));
     }
-  }
+  };
 
   const onLogin = () => {
     navigate("/login");
-  }
+  };
 
   const onProfile = () => {
     navigate("/profile");
-  }
+  };
+
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleOpenUsermenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseUsermenu = () => {
+    setAnchorEl(null);
+  };
+
 
   // TODO:
   // Poista logout ja profile buttons from topbar.
@@ -82,14 +94,33 @@ const TopBar = (props) => {
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           {
-            (token === false) 
-              ? null
-              : <Button color="inherit" onClick={onProfile} startIcon={<Person />}>Profiili</Button>
-          }
-          {
-            (token === false) 
+            (token === false)
               ? <Button color="inherit" onClick={onLogin} startIcon={<Login />}>Kirjaudu</Button>
-              : <Button color="inherit" onClick={onLogout} startIcon={<Logout />}>Poistu</Button>
+              : <Box sx={{ flexGrow: 0 }} >
+                  <Tooltip title="Käyttäjä asetukset" placement="bottom">
+                    <IconButton onClick={handleOpenUsermenu} sx={{ p: 0}}>
+                      <Avatar alt={profile.username} src={profile.avatar} />
+                    </IconButton>
+                  </Tooltip>
+                  <Menu 
+                    sx={{ mt: '45px' }}
+                    id="appbarUserMenu"
+                    anchorEl={anchorEl}
+                    anchorOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    keepMounted
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    open={Boolean(anchorEl)}
+                    onClose={handleCloseUsermenu}>
+                    <MenuItem onClick={onProfile} startIcon={<Person />}>Profiili</MenuItem>
+                    <MenuItem onClick={onLogout} startIcon={<Logout />}>Poistu</MenuItem>
+                  </Menu>
+                </Box>
           }
           <Snackbar
             open={snackbarState.open}
