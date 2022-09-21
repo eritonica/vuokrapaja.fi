@@ -169,10 +169,36 @@ const Member = () => {
     }
   }
 
+  const translateRole = (role) => {
+    if(role === "admin") {
+      return "Ylläpitäjä";
+    } else if(role === "boss") {
+      return "Johtaja";
+    } else if(role === "worker") {
+      return "Työntekijä";
+    } else if(role === "customer") {
+      return "Asiakas";
+    } else {
+      return "Ei roolia";
+    }
+  }
+
+  const translatePermissions = (permissions) => {
+    if(permissions === "read | write | delete") {
+      return "Luku, kirjoitus ja poisto";
+    } else if(permissions === "read | write") {
+      return "Luku ja kirjoitus";
+    } else if(permissions === "read") {
+      return "Luku";
+    } else {
+      return "Ei oikeuksia";
+    }
+  }
+
   // username, email, name, role, permissions, actions
   return (
-    <Container maxWidth="md">
-      <Box component="form" sx={{ mt: 4 }}>
+    <Container maxWidth="md" component={Paper}>
+      <Box component="form" sx={{ mt: 4, pb: 4, mb: 4 }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h6" component="h1" gutterBottom>
@@ -242,19 +268,29 @@ const Member = () => {
               { (company.members && company.members.length > 0) ? company.members.map((member) => (
                 <TableRow key={member._id}>
                   <TableCell component="td" scope="row">
-                    {member.username}
+                    {
+                      (member.username) ? member.username : "Ei käyttäjätunnusta"
+                    }
                   </TableCell>
                   <TableCell align="right">
-                    {member.email}
+                    {
+                      (member.email) ? member.email : "Ei sähköpostia"
+                    }
                   </TableCell>
                   <TableCell align="right">
-                    {member.name}
+                    {
+                      (member.name) ? member.name : "Ei nimeä"
+                    }
                   </TableCell>
                   <TableCell align="right">
-                    {member.role}
+                    {
+                      translateRole(member.role)
+                    }
                   </TableCell>
                   <TableCell align="right">
-                    {member.permissions}
+                    {
+                      translatePermissions(member.permissions)
+                    }
                   </TableCell>
                   <TableCell align="right">
                     <Button fullWidth sx={{mb:1}} variant="contained" color="primary" onClick={() => handleOpenMemberModModal(member)}>

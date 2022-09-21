@@ -2,8 +2,7 @@ import { useSelector} from 'react-redux';
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Box, SwipeableDrawer, IconButton, List, Divider, ListItem, ListItemIcon, ListItemText } from '@mui/material';
-import { Menu, Home, Login, Logout, AppRegistration, Person, Business, Groups3 } from "@mui/icons-material";
-
+import { Menu, Home, Login, Logout, AppRegistration, Person, Business, Groups3, Apartment } from "@mui/icons-material";
 
 const LeftDrawer = (props) => {
   const token = useSelector((state) => state.app.token);
@@ -33,6 +32,12 @@ const LeftDrawer = (props) => {
             <Home /> 
           </ListItemIcon>
           <ListItemText primary="Home" onClick={() => navigate("/")}/>
+        </ListItem>
+        <ListItem button key="Hae asuntoa" component={Link} to="/apartments/search" onClick={() => navigate("/apartments/search")}>
+          <ListItemIcon>
+            <Apartment /> 
+          </ListItemIcon>
+          <ListItemText primary="Hae asuntoa" onClick={() => navigate("/apartments/search")}/>
         </ListItem>
         {(token !== false) && (
           <ListItem button key="Profiili" component={Link} to="/profile" onClick={() => navigate("/profile")}>

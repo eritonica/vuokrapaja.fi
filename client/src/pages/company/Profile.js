@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Container, Box, TextField, Button, Alert, Typography } from '@mui/material';
+import { Container, Box, TextField, Button, Alert, Typography, Paper } from '@mui/material';
 
 import Grid from '@mui/material/Unstable_Grid2';
 
@@ -60,8 +60,8 @@ const Profile = (props) => {
 	}
 
 	return (
-		<Container maxWidth="sm">
-			<Box component="form" onSubmit={handleSubmit} sx={{ mt: 4 }}>
+		<Container maxWidth="md" component={Paper}>
+			<Box component="form" onSubmit={handleSubmit} sx={{ mt: 4, pb: 4, mb: 4 }}>
 				<Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h4" component="h1" gutterBottom>Yritys</Typography>

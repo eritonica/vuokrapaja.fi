@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Container, Box, TextField, Button, Alert, Typography, Avatar, FormControl, Modal, InputLabel, Select, MenuItem } from '@mui/material';
+import { Container, Box, TextField, Button, Alert, Typography, Avatar } from '@mui/material';
+import { FormControl, Modal, InputLabel, Select, MenuItem, Paper } from '@mui/material';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -60,29 +61,34 @@ const Profile = (props) => {
     // Don't know yet how to handle dispatch with useEffect
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const handleOpenUsernameModal = () => {
+
+  const handleOpenModal = (which) => {
     setMessage(false);
-    setModal({ ...modal, username: true });
+    setModal({ ...modal, [which]: true });
+  }
+
+  const handleCloseModal = (which) => {
+    setMessage(false);
+    setModal({ ...modal, [which]: false });
+  }
+
+  const handleOpenUsernameModal = () => {
+    handleOpenModal("username");
   }
   const handleCloseUsernameModal = () => {
-    setMessage(false);
-    setModal({ ...modal, username: false });
+    handleCloseModal("username");
   };
   const handleOpenEmailModal = () => {
-    setMessage(false);
-    setModal({ ...modal, email: true });
+    handleOpenModal("email");
   }
   const handleCloseEmailModal = () => {
-    setMessage(false);
-    setModal({ ...modal, email: false });
+    handleCloseModal("email");
   };
   const handleOpenPasswordModal = () => {
-    setMessage(false);
-    setModal({ ...modal, password: true });
+    handleOpenModal("password");
   }
   const handleClosePasswordModal = () => {
-    setMessage(false);
-    setModal({ ...modal, password: false });
+    handleCloseModal("password");
   };
 
   const onProfileFormChange = (e) => {
@@ -179,7 +185,7 @@ const Profile = (props) => {
     }
     let result = await updateAccount(data);
     if(result.message === "Profile updated.") {
-      setMessage({ success :"Salasanasi päivitetty."});
+      setMessage({ success :"Salasanasi päivitetty. Sulje ikkuna tästä."});
     } else {
       setMessage({ error :"Odottamaton virhe tapahtui, yritä hetken kuluttua uudelleen."});
     }
@@ -192,11 +198,12 @@ const Profile = (props) => {
     }
     let result = await updateAccount(data);
     if(result.message === "Profile updated.") {
-      setMessage({ success :"Käyttäjätunnuksesi päivitetty."});
+      setMessage({ success :"Käyttäjätunnuksesi päivitetty. Sulje ikkuna tästä."});
     } else {
       setMessage({ error :"Odottamaton virhe tapahtui, yritä hetken kuluttua uudelleen."});
     }
   }
+
   const handleEmailFormSubmit = async (e) => {
     e.preventDefault();
     let data = {
@@ -204,15 +211,15 @@ const Profile = (props) => {
     }
     let result = await updateAccount(data);
     if(result.message === "Profile updated.") {
-      setMessage({ success :"Sähköpostisi päivitetty."});
+      setMessage({ success :"Sähköpostisi päivitetty. Sulje ikkuna tästä."});
     } else {
       setMessage({ error :"Odottamaton virhe tapahtui, yritä hetken kuluttua uudelleen."});
     }
   }
 
   return (
-    <Container maxWidth="sm">
-      <Box component={'form'} onSubmit={handleProfileFormSubmit}  sx={{ mt: 4 }}>
+    <Container maxWidth="md" component={Paper}>
+      <Box component={'form'} onSubmit={handleProfileFormSubmit} sx={{ mt: 4, pb: 4, mb: 4 }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h4" component="h1" gutterBottom>Profiili</Typography>
