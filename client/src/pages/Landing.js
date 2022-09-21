@@ -3,13 +3,14 @@ import { Container, Box, Paper, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 
 import SearchApartments from './apartments/Search.js';
+import FileUploader from '../components/FileUploader.js';
 
 const Landing = (props) => {
   const name = useSelector((state) => state.app.name);
 
   return (
     <>
-      <Container maxWidth="md" sx={{mt: 4, pb: 4, mt: 4}} component={Paper}>
+      <Container maxWidth="md" sx={{mt: 4, pb: 4, mb: 4}} component={Paper}>
         <Box sx={{ marginTop: "40px", flexGrow: 1}}>
           <Grid container spacing={2}>
             <Grid item xs={12} sx={{ textAlign: "center"}}>
@@ -19,6 +20,7 @@ const Landing = (props) => {
         </Box>
       </Container>
       <SearchApartments landing={true} />
+      <FileUploader />
     </>
   )
 }

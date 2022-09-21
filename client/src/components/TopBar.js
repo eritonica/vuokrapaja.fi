@@ -4,7 +4,7 @@ import { Login, Logout, Close, Person } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { setToken, setCompany, setProfile } from '../appSlice';
+import { setToken } from '../appSlice';
 
 import LeftDrawer from "./LeftDrawer";
 
