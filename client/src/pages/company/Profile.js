@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Container, Box, TextField, Button, Alert, Typography, Paper } from '@mui/material';
 
 import Grid from '@mui/material/Unstable_Grid2';
@@ -9,12 +10,23 @@ import { setCompany } from '../../appSlice';
 
 const Profile = (props) => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const token = useSelector((state) => state.app.token);
+	const profile = useSelector((state) => state.app.profile);
 	const company = useSelector((state) => ( state.app.company ));
 	const [message, setMessage] = useState({
 		error: "",
 		success: ""
 	});
+
+	useEffect(() => {
+    if(token === false) {
+      navigate("/login");
+    }
+    if(profile.role === 'Rentee') {
+      navigate("/");
+    }
+  }, []);
 
 	const onChange = (e) => {
 		dispatch(setCompany({...company, [e.target.name]: e.target.value}));

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Container, Box, TextField, Button, Modal, Typography, Alert, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
@@ -20,16 +21,28 @@ const modalStyle = {
 
 const Member = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const token = useSelector((state) => state.app.token);
+  const profile = useSelector((state) => state.app.profile);
   const company = useSelector((state) => state.app.company);
   const [memberAddForm, setMemberAddForm] = useState("");
   const [memberModForm, setMemberModForm] = useState({});
   const [error, setError] = useState('');
 
+  useEffect(() => {
+    if(token === false) {
+      navigate("/login");
+    }
+    if(profile.role === 'Rentee') {
+      navigate("/");
+    }
+  }, []);
+
   const [modal, setModal] = useState({
     add: false,
     mod: false,
   });
+
   const handleOpenMemberAddModal = () => setModal({...modal, add: true});
   const handleCloseMemberAddModal = () => setModal({...modal, add: false});
 
@@ -201,7 +214,7 @@ const Member = () => {
       <Box component="form" sx={{ mt: 4, pb: 4, mb: 4 }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h6" component="h1" gutterBottom>
+            <Typography variant="h4" component="h1" gutterBottom>
               Yrityksen työntekijät
             </Typography>
           </Grid>

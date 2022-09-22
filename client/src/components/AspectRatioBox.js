@@ -1,3 +1,5 @@
+// Stolen from : https://codesandbox.io/s/1106l?file=/AspectRatioBox.js
+
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles(() => ({

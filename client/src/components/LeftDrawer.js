@@ -56,6 +56,12 @@ const LeftDrawer = (props) => {
               </ListItemIcon>
               <ListItemText primary="Yritys" onClick={() => navigate("/company")}/>
             </ListItem>
+            <ListItem button key="Tee ilmoitus" component={Link} to="/apartments/new" onClick={() => navigate("/apartments/new")}>
+              <ListItemIcon>
+                <Apartment />
+              </ListItemIcon>
+              <ListItemText primary="Tee ilmoitus" onClick={() => navigate("/apartments/new")}/>
+            </ListItem>
             <ListItem button key="Työntekijät" component={Link} to="/member" onClick={() => navigate("/member")}>
               <ListItemIcon>
                 <Groups3 /> 

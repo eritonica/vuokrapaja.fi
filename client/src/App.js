@@ -13,7 +13,8 @@ import Gdpr from './components/Gdpr';
 
 // Pages
 import Landing from './pages/Landing';
-import AparmentsSearch from './pages/apartments/Search';
+import ApartmentsSearch from './pages/apartments/Search';
+import NewApartment from './pages/company/NewApartment';
 import LoginForm from './pages/LoginForm';
 import Profile from './pages/Profile';
 import Company from './pages/company/Profile';
@@ -99,7 +100,8 @@ function App() {
             <TopBar />
             <Routes>
               <Route path="/" element={<Landing/>} />
-              <Route path="/apartments/search" element={<AparmentsSearch/>} />
+              <Route path="/apartments/search" element={<ApartmentsSearch/>} />
+              <Route path="/apartments/new" element={<NewApartment/>} />
               <Route path="/login" element={<LoginForm/>} />
               <Route path="/profile" element={<Profile/>} />
               <Route path="/register" element={<RegisterForm/>} />

@@ -97,7 +97,7 @@ const Search = (props) => {
               options={searchCities}
               getOptionLabel={(option) => option.name}
               value={{ name : form.city}}
-              isOptionEqualToValue={(option, value) => option.name === value.name}
+              isOptionEqualToValue={(option, value) => option.name.includes(value.name)}
               onChange={onSearchCityChange}
               renderInput={(params) => <TextField {...params} label="Kaupunki" name="city" onChange={onSearchChange} />}
             />
@@ -181,16 +181,16 @@ const Search = (props) => {
             </FormControl>
           </Grid>
           <Grid item xs={3}>
-            <TextField fullWidth id="minPrice" name="minPrice" label="Min hinta" type="number" value={form.minPrice} onChange={onSearchChange} />
+            <TextField fullWidth id="minPrice" name="minPrice" label="Min hinta" type="number" value={form.minPrice} onChange={onSearchChange} onClick={(e) => { e.target.select() }}/>
           </Grid>
           <Grid item xs={3}>
-            <TextField fullWidth id="maxPrice" name="maxPrice" label="Max hinta" type="number" value={form.maxPrice} onChange={onSearchChange} />
+            <TextField fullWidth id="maxPrice" name="maxPrice" label="Max hinta" type="number" value={form.maxPrice} onChange={onSearchChange} onClick={(e) => { e.target.select() }}/>
           </Grid>
           <Grid item xs={3}>
-            <TextField fullWidth id="minSize" name="minSize" label="Min koko m²" type="number"  value={form.minSize} onChange={onSearchChange} />
+            <TextField fullWidth id="minSize" name="minSize" label="Min koko m²" type="number"  value={form.minSize} onChange={onSearchChange} onClick={(e) => { e.target.select() }}/>
           </Grid>
           <Grid item xs={3}>
-            <TextField fullWidth id="maxSize" name="maxSize" label="Max koko m²" type="number" value={form.maxSize} onChange={onSearchChange} />
+            <TextField fullWidth id="maxSize" name="maxSize" label="Max koko m²" type="number" value={form.maxSize} onChange={onSearchChange} onClick={(e) => { e.target.select() }}/>
           </Grid>
           <Grid item xs={12}>
             <FormControlLabel control={<Checkbox name="more" onChange={onSearchChange} checked={form.more}/>} label="Näytä lisää hakuvalintoja" />
