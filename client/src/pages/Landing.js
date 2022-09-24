@@ -13,7 +13,7 @@ const Landing = (props) => {
         <Box sx={{ marginTop: "40px", flexGrow: 1}}>
           <Grid container spacing={2}>
             <Grid item xs={12} sx={{ textAlign: "center"}}>
-              <Typography variant="h2" component="h1" gutterBottom>Tervetuloa {name} palveluun.</Typography>
+              <Typography variant="h4" component="h2" gutterBottom>Tervetuloa {name}an.</Typography>
             </Grid>
           </Grid>
         </Box>

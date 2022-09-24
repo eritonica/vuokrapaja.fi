@@ -212,21 +212,21 @@ const Search = (props) => {
                     <Checkbox checked={form.heating.indexOf('Kaukolämpö') > -1} />
                     <ListItemText primary="Kaukolämpö" />
                   </MenuItem>
-                  <MenuItem value="Sähkölämmitys">
-                    <Checkbox checked={form.heating.indexOf('Sähkölämmitys') > -1} />
-                    <ListItemText primary="Sähkölämmitys" />
+                  <MenuItem value="Sähkö">
+                    <Checkbox checked={form.heating.indexOf('Sähkö') > -1} />
+                    <ListItemText primary="Sähkö" />
                   </MenuItem>
                   <MenuItem value="Maalämpö">
                     <Checkbox checked={form.heating.indexOf('Maalämpö') > -1} />
                     <ListItemText primary="Maalämpö" />
                   </MenuItem>
-                  <MenuItem value="Öljylämmitys">
-                    <Checkbox checked={form.heating.indexOf('Öljylämmitys') > -1} />
-                    <ListItemText primary="Öljylämmitys" />
+                  <MenuItem value="Öljy">
+                    <Checkbox checked={form.heating.indexOf('Öljy') > -1} />
+                    <ListItemText primary="Öljy" />
                   </MenuItem>
-                  <MenuItem value="Puulämmitys">
-                    <Checkbox checked={form.heating.indexOf('Puulämmitys') > -1} />
-                    <ListItemText primary="Puulämmitys" />
+                  <MenuItem value="Puu">
+                    <Checkbox checked={form.heating.indexOf('Puu') > -1} />
+                    <ListItemText primary="Puu" />
                   </MenuItem>
                   <MenuItem value="Muu">
                     <Checkbox checked={form.heating.indexOf('Muu') > -1} />
@@ -246,8 +246,8 @@ const Search = (props) => {
                   name="has"
                   label="Varusteet"
                   multiple
-                  value={form.has}
                   renderValue={(selected) => selected.join(', ')}
+                  value={form.has}
                   onChange={onSearchChange}>
                   <MenuItem value="Oma Sauna">
                     <Checkbox checked={form.has.indexOf('Oma Sauna') > -1} />

@@ -97,7 +97,6 @@ const LeftDrawer = (props) => {
     </Box>
   );
 
-
   return (
     <>
       <IconButton edge="start" color="inherit" aria-label="menu" onClick={toggleDrawer(true)}>
@@ -107,8 +106,7 @@ const LeftDrawer = (props) => {
         anchor="left"
         open={drawerState.left}
         onClose={toggleDrawer(false)}
-        onOpen={toggleDrawer(true)}
-      >
+        onOpen={toggleDrawer(true)}>
         {list('left')}
       </SwipeableDrawer>
     </>

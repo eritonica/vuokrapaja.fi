@@ -5,7 +5,7 @@ export const appSlice = createSlice({
     name: 'app',
     initialState: {
         token: false,
-        name: 'Asuntosi',
+        name: 'Vuokrapaja',
         cookies: false,
         profile: {
             type: "Rentee",
