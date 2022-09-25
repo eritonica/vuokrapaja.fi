@@ -101,15 +101,6 @@ const NewApartment = () => {
     }
   }
 
-  const removeImage = (index) => {
-    let images = form.images;
-    images.splice(index, 1);
-    setForm({
-      ...form,
-      images: images
-    });
-  }
-
   const handleOpenFileUploader = () => {
     setFileModal({
       open: true
@@ -122,9 +113,18 @@ const NewApartment = () => {
     });
   }
 
+  const removeImage = (index) => {
+    let images = form.images;
+    images.splice(index, 1);
+    setForm({
+      ...form,
+      images: images
+    });
+  }
+
   const handleFileUpload = (body) => {
     if (body.message !== "Files uploaded successfully.") {
-      setError("Virhe tapahtui tiedostoja lähettäessä. Yritä uudelleen.");
+      setMessage({... message, error : "Virhe tapahtui tiedostoja lähettäessä. Yritä uudelleen."});
     }
     setForm({
       ...form,
