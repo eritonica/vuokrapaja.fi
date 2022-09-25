@@ -64,7 +64,6 @@ app.post("/api/uploads/single", upload.single("file"), (req, res) => {
 
 app.post("/api/uploads/multiple", upload.array("files", 25), (req, res) => {
   sessions.checkSession(req, res, async () => {
-    console.log(req.files);
     return res.status(200).json({ message: "Files uploaded successfully.", files: req.files });
   });
 });

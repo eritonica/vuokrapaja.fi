@@ -123,12 +123,14 @@ const NewApartment = () => {
   }
 
   const handleFileUpload = (body) => {
-    let images = form.images;
-    console.log(body);
+    if (body.message !== "Files uploaded successfully.") {
+      setError("Virhe tapahtui tiedostoja lähettäessä. Yritä uudelleen.");
+    }
     setForm({
       ...form,
-      images: images
+      images:  [...form.images, ...body.files]
     });
+    console.log(form.images);
     handleCloseFileUploader();
   }
 
@@ -463,7 +465,7 @@ const NewApartment = () => {
             </FormControl>
           </Grid>
         </Grid>
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{ mb: 4}}>
           <Grid item xs={12}>
             <Typography variant="h6" gutterBottom>
               Kuvat
@@ -479,25 +481,31 @@ const NewApartment = () => {
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description">
               <Box sx={modalStyle}>
-                <FileUploader fileUploadCallback={handleFileUpload} />
+                <FileUploader multiple={true} fileUploadCallback={handleFileUpload} />
               </Box>
             </Modal>
           </Grid>
 
-          <Grid item xs={12}>
-            {form.images.map((image, index) => (
-              <Card sx={{ maxWidth: 345 }} key={index}>
+          {form.images.map((image, index) => (
+            <Grid item xs={4} key={image.filename}>
+              <Card sx={{ maxWidth: 345, mb:2 }}>
                 <CardActionArea>
-                  <CardMedia component="img" height="140" image={image} alt="Kuva" />
+                  <CardMedia component="img" height="140" image={"http://localhost:8080/" + image.path} alt="Kuva" />
                 </CardActionArea>
                 <CardContent>
+                  <Typography gutterBottom variant="body2" component="div">
+                    {image.originalname}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    {(image.size / 1024 / 1024).toFixed(3) + ' MB'}
+                  </Typography>
                   <Button size="small" color="primary" onClick={() => removeImage(index)}>
                     Poista kuva
                   </Button>
                 </CardContent>
               </Card>
-            ))}
-          </Grid>
+            </Grid>
+          ))}
         </Grid>
         <Grid container spacing={2}>
           {(message.success) && (
