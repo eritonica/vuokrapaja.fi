@@ -2,8 +2,26 @@ import express from 'express';
 
 import companyModel from '../schemas/company.js';
 
+import members from './members.js';
+
 
 const router = express.Router();
+
+const checkPermission = (user, company, perm) => {
+	let members = getMembers(company);
+	for(let i = 0; i < members.length; i++) {
+		if(members[i].account === user) {
+			if(members[i].permissions.includes(perm)) {
+				return true;
+			}
+		}
+	}
+	let manager = companyModel.findOne({_id: company}).exec();
+	if(manager === user) {
+		return true;
+	}
+	return false;
+}
 
 // GET /companies
 router.get('/companies', async (req, res) => {
@@ -100,5 +118,6 @@ router.put('/companies/:id', async (req, res) => {
 });
 
 export default {
-	router
+	router,
+	checkPermission
 };

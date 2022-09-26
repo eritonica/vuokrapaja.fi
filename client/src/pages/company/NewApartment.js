@@ -40,19 +40,25 @@ const NewApartment = () => {
 
   const [form, setForm] = useState({
     address: "",
-    city: "",
     zip: "",
+    cityArea: "",
+    city: "",
     country: "",
     rent: 650,
+    rooms: 1,
+    size: 65,
+    type: "",
     rental: "",
     release: Date.now(),
-    waterPrice: 0,
     waterSeperate: false,
+    waterPrice: 0,
     electricitySeperate: false,
+    electricityPrice: 0,
     heatingSeperate: false,
-    type: "",
     use: "",
+    description: "",
     condition: "",
+    buildingYear: 1975,
     kitchenType: "",
     heating: "",
     has: [],
@@ -314,7 +320,7 @@ const NewApartment = () => {
             </FormControl>
           </Grid>
           <Grid item xs={12}>
-            <TextField fullWidth label="Rakennusvuosi" name="buildingYear" type="number" onChange={onChange} value={form.size} onClick={(e) => { e.target.select() }} />
+            <TextField fullWidth label="Rakennusvuosi" name="buildingYear" type="number" onChange={onChange} value={form.buildingYear} onClick={(e) => { e.target.select() }} />
           </Grid>
           <Grid item xs={12}>
             <FormControl fullWidth>

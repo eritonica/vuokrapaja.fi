@@ -8,6 +8,24 @@ import memberModel from "../schemas/member.js";
 
 const router = express.Router();
 
+const getMembers = async (company) => {
+  let members = await memberModel.find({ company: company }).exec();
+  let memberList = [];
+  for (let i = 0; i < members.length; i++) {
+    let member = members[i];
+    let account = await accounts.getAccountById(member.account);
+    let profile = await profiles.getProfileById(member.account);
+    memberList.push({
+      _id: member._id,
+      username: account.username,
+      role: member.role,
+      permissions: member.permissions,
+      profile: profile,
+    });
+  }
+  return memberList;
+};
+
 
 // POST /companies/members
 // {
@@ -171,5 +189,6 @@ router.delete("/companies/members/:id", async (req, res) => {
 });
 
 export default {
-  router
+  router,
+  getMembers
 };

@@ -18,14 +18,7 @@ let port = process.env.PORT || 8080;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static route, serve client build if it exists.
-import path from 'path';
-const __dirname = path.resolve();
-
-app.use("/uploads", express.static("uploads"));
-
-app.use(express.static(path.join(__dirname + '/../client/build')));
-
+// CORS
 let allowedDomains = JSON.parse(process.env.CORS_ORIGIN) || [ "http://localhost:3000" ];
 console.log("Allowed CORS domains: ", allowedDomains);
 app.use(cors({ origin : (origin, callback) => {
@@ -37,12 +30,19 @@ app.use(cors({ origin : (origin, callback) => {
   return callback(null, true);
 }}));
 
+// Static route, serve client build if it exists.
+import path from 'path';
+const __dirname = path.resolve();
+app.use("/uploads", express.static("uploads"));
+app.use(express.static(path.join(__dirname + '/../client/build')));
+
 // Open MongoDB connection
 mongoose.connect(process.env.ATLAS_URI, { 
   useNewUrlParser: true,  
   useUnifiedTopology: true 
 });
 
+// File uploading multipart form data
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, './uploads/');
@@ -68,8 +68,6 @@ app.post("/api/uploads/multiple", upload.array("files", 25), (req, res) => {
   });
 });
 
-
-
 // Routes, loading these could be automated without ES6 import/export support
 import accounts from './routes/accounts.js';
 app.use("/api", accounts.router);
@@ -81,6 +79,10 @@ import companies from './routes/companies.js';
 app.use("/api", sessions.checkSession, companies.router);
 import members from './routes/members.js';
 app.use("/api", sessions.checkSession, members.router);
+import aparments from './routes/apartments.js';
+app.use("/api", sessions.checkSession, aparments.router);
+import locations from './routes/locations.js';
+app.use("/api", sessions.checkSession, locations.router);
 
 // Catch all routes, serve client build if it exists.
 app.get('*', (req, res) => {
