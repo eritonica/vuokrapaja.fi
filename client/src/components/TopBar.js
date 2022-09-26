@@ -57,10 +57,12 @@ const TopBar = (props) => {
   };
 
   const onLogin = () => {
+    handleCloseUsermenu();
     navigate("/login");
   };
 
   const onProfile = () => {
+    handleCloseUsermenu();
     navigate("/profile");
   };
 
@@ -118,7 +120,7 @@ const TopBar = (props) => {
                     open={Boolean(anchorEl)}
                     onClose={handleCloseUsermenu}>
                     <MenuItem onClick={onProfile}>
-                      <Person sx={{ mr: 1 }} />
+                      <Person sx={{ mr: 1 }}/>
                       Profiili
                     </MenuItem>
                     <MenuItem onClick={onLogout}>

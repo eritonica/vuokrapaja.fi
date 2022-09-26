@@ -14,11 +14,12 @@ import Gdpr from './components/Gdpr';
 // Pages
 import Landing from './pages/Landing';
 import ApartmentsSearch from './pages/apartments/Search';
-import NewApartment from './pages/company/NewApartment';
 import LoginForm from './pages/LoginForm';
 import Profile from './pages/Profile';
 import Company from './pages/company/Profile';
 import Member from './pages/company/Member';
+import NewApartment from './pages/company/NewApartment';
+import Apartments from './pages/company/Apartments';
 import RegisterForm from './pages/registeration/RegisterForm';
 import ActivationForm from './pages/registeration/ActivationForm';
 import RecoveryRequestForm from './pages/recovery/RequestForm';
@@ -101,15 +102,16 @@ function App() {
             <Routes>
               <Route path="/" element={<Landing/>} />
               <Route path="/apartments/search" element={<ApartmentsSearch/>} />
-              <Route path="/apartments/new" element={<NewApartment/>} />
+              <Route path="/company" element={<Company/>} />
+              <Route path="/company/member" element={<Member/>} />
+              <Route path="/company/apartments" element={<Apartments/>} />
+              <Route path="/company/apartments/new" element={<NewApartment/>} />
               <Route path="/login" element={<LoginForm/>} />
               <Route path="/profile" element={<Profile/>} />
               <Route path="/register" element={<RegisterForm/>} />
               <Route path="/register/activation" element={<ActivationForm/>} />
               <Route path="/recovery" element={<RecoveryRequestForm/>} />
               <Route path="/recovery/password" element={<RecoveryPasswordForm/>} />
-              <Route path="/company" element={<Company/>} />
-              <Route path="/member" element={<Member/>} />
             </Routes>
             <Gdpr />
         </ThemeProvider>

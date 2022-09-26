@@ -7,16 +7,16 @@ import members from './members.js';
 
 const router = express.Router();
 
-const checkPermission = (user, company, perm) => {
-	let members = getMembers(company);
-	for(let i = 0; i < members.length; i++) {
-		if(members[i].account === user) {
-			if(members[i].permissions.includes(perm)) {
+const checkPermission = async (user, company, perm) => {
+	let companyMembers = await members.getMembers(company);
+	for(let i = 0; i < companyMembers.length; i++) {
+		if(companyMembers[i].account === user) {
+			if(companyMembers[i].permissions.includes(perm)) {
 				return true;
 			}
 		}
 	}
-	let manager = companyModel.findOne({_id: company}).exec();
+	let manager = await companyModel.findOne({_id: company}).exec();
 	if(manager === user) {
 		return true;
 	}

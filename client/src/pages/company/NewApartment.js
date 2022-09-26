@@ -29,12 +29,17 @@ const NewApartment = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = useSelector((state) => state.app.token);
+  const server = useSelector((state) => state.app.server);
   const profile = useSelector((state) => state.app.profile);
+  const company = useSelector((state) => state.app.company);
   const [message, setMessage] = useState({
     success: false,
     error: false,
   });
-  const [FileModal, setFileModal] = useState({
+  const [fileModal, setFileModal] = useState({
+    open: false,
+  });
+  const [saveModal, setSaveModal] = useState({
     open: false,
   });
 
@@ -43,7 +48,7 @@ const NewApartment = () => {
     zip: "",
     cityArea: "",
     city: "",
-    country: "",
+    country: "Suomi",
     rent: 650,
     rooms: 1,
     size: 65,
@@ -51,9 +56,9 @@ const NewApartment = () => {
     rental: "",
     release: Date.now(),
     waterSeperate: false,
-    waterPrice: 0,
+    water: 0,
     electricitySeperate: false,
-    electricityPrice: 0,
+    electricity: 0,
     heatingSeperate: false,
     use: "",
     description: "",
@@ -119,6 +124,18 @@ const NewApartment = () => {
     });
   }
 
+  const handleOpenSaveModal = () => {
+    setSaveModal({
+      open: true
+    });
+  }
+
+  const handleCloseSaveModal = () => {
+    setSaveModal({
+      open: false
+    });
+  }
+
   const removeImage = (index) => {
     let images = form.images;
     images.splice(index, 1);
@@ -138,6 +155,43 @@ const NewApartment = () => {
     });
     console.log(form.images);
     handleCloseFileUploader();
+  }
+
+  const handleNewApartmentSubmit =  async(e) => {
+    e.preventDefault();
+    if (token === false) {
+      setMessage({...message, error : "Kirjaudu sisään jatkaaksesi."});
+      return;
+    }
+    if (company === null) {
+      setMessage({...message, error : "Sinulla ei ole yritystä. Luo yritys jatkaaksesi."});
+      return;
+    }
+    const newApartment = {
+      company: company._id,
+      ...form,
+    }
+    const response = await fetch(server + "/api/apartments", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "token": token
+      },
+      body: JSON.stringify(newApartment)
+    });
+    const body = await response.json();
+    console.log(body);
+    // Implement stripe payment here, if needed. Otherwise just close the modal.
+    handleCloseSaveModal();
+    if (body.message === "Apartment created.") {
+      setMessage({...message, success : "Ilmoitus lisätty onnistuneesti.", error: ""});
+    } else if(body.message === "Apartment already exists.") {
+      setMessage({...message, error : "Ilmoitus on jo olemassa."});
+    } else if(body.message === "You do not have permission to create this apartment.") {
+      setMessage({...message, error : "Sinulla ei ole oikeuksia luoda tätä ilmoitusta."});
+    } else {
+      setMessage({...message, error : "Virhe tapahtui. Yritä uudelleen."});
+    }
   }
 
   return (
@@ -257,17 +311,17 @@ const NewApartment = () => {
             </LocalizationProvider>
           </Grid>
           <Grid item xs={12}>
-            <FormControlLabel control={<Checkbox name="waterSeperate" onChange={(e) => { setForm({ ...form, waterSeperate: !form.waterSeperate, waterPrice: "" }) }} checked={form.waterSeperate} />} label="Vesimaksu on kulutuksen mukaan." />
+            <FormControlLabel control={<Checkbox name="waterSeperate" onChange={(e) => { setForm({ ...form, waterSeperate: !form.waterSeperate, water: "" }) }} checked={form.waterSeperate} />} label="Vesimaksu on kulutuksen mukaan." />
             {(form.waterSeperate)
               ? null
-              : <TextField fullWidth label="Vesimaksu per henkilö." name="waterPrice" type="number" onChange={onChange} value={form.water} onClick={(e) => { e.target.select() }} />
+              : <TextField fullWidth label="Vesimaksu per henkilö." name="water" type="number" onChange={onChange} value={form.water} onClick={(e) => { e.target.select() }} />
             }
           </Grid>
           <Grid item xs={12}>
-            <FormControlLabel control={<Checkbox name="electricitySeperate" onChange={(e) => { setForm({ ...form, electricitySeperate: !form.electricitySeperate, electricityPrice: "" }) }} checked={form.electricitySeperate} />} label="Erillinen sähkösopimus." />
+            <FormControlLabel control={<Checkbox name="electricitySeperate" onChange={(e) => { setForm({ ...form, electricitySeperate: !form.electricitySeperate, electricity: "" }) }} checked={form.electricitySeperate} />} label="Erillinen sähkösopimus." />
             {(form.electricitySeperate)
               ? null
-              : <TextField fullWidth label="Sähkömaksu per kuukausi." name="electricityPrice" type="number" onChange={onChange} value={form.electricity} onClick={(e) => { e.target.select() }} />
+              : <TextField fullWidth label="Sähkömaksu per kuukausi." name="electricity" type="number" onChange={onChange} value={form.electricity} onClick={(e) => { e.target.select() }} />
             }
           </Grid>
           <Grid item xs={12}>
@@ -482,7 +536,7 @@ const NewApartment = () => {
               Lisää kuva
             </Button>
             <Modal
-              open={FileModal.open}
+              open={fileModal.open}
               onClose={handleCloseFileUploader}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description">
@@ -525,9 +579,32 @@ const NewApartment = () => {
             </Grid>
           )}
           <Grid item xs={12}>
-            <Button fullWidth variant="contained" color="primary" type="submit">
+            <Button fullWidth variant="contained" color="primary" onClick={handleOpenSaveModal}>
               Tallenna ilmoitus
             </Button>
+            <Modal
+              open={saveModal.open}
+              onClose={handleCloseSaveModal}
+              aria-labelledby="modal-modal-title"
+              aria-describedby="modal-modal-description">
+              <Box sx={modalStyle}>
+                <Typography id="modal-modal-title" variant="h6" component="h2">
+                  Tallennetaanko ilmoitus?
+                </Typography>
+                <Typography id="modal-modal-description" sx={{ mt: 2, mb: 2 }}>
+                  Asunnon osoite on: {form.address}, {form.zip} {form.cityArea} {form.city}, {form.country}.
+                </Typography>
+                <Typography id="modal-modal-description" sx={{ mt: 2, mb: 2 }}>
+                  Varmista, että osoite on oikein ja jatka maksamaan.
+                </Typography>
+                <Button sx={{ mb: 2}} fullWidth variant="contained" color="warning" onClick={handleCloseSaveModal}>
+                  Peruuta ja muokkaa.
+                </Button>
+                <Button fullWidth variant="contained" color="primary" onClick={handleNewApartmentSubmit}>
+                  Tallenna ja maksa
+                </Button>
+              </Box>
+            </Modal>
           </Grid>
         </Grid>
       </Box>

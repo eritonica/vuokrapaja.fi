@@ -2,7 +2,7 @@ import { useSelector} from 'react-redux';
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Box, SwipeableDrawer, IconButton, List, Divider, ListItem, ListItemIcon, ListItemText } from '@mui/material';
-import { Menu, Home, Login, Logout, AppRegistration, Person, Business, Groups3, Apartment } from "@mui/icons-material";
+import { Menu, Home, Login, Logout, AppRegistration, Search, Person, AddBusiness, Groups3, Domain, DomainAdd } from "@mui/icons-material";
 
 const LeftDrawer = (props) => {
   const token = useSelector((state) => state.app.token);
@@ -35,10 +35,41 @@ const LeftDrawer = (props) => {
         </ListItem>
         <ListItem button key="Hae asuntoa" component={Link} to="/apartments/search" onClick={() => navigate("/apartments/search")}>
           <ListItemIcon>
-            <Apartment /> 
+            <Search /> 
           </ListItemIcon>
           <ListItemText primary="Hae asuntoa" onClick={() => navigate("/apartments/search")}/>
         </ListItem>
+        
+        <Divider />
+        {(token !== false && profile.type !== "Rentee") && ( 
+          <>
+            <ListItem button key="Yritys" component={Link} to="/company" onClick={() => navigate("/company")}>
+              <ListItemIcon>
+                <AddBusiness /> 
+              </ListItemIcon>
+              <ListItemText primary="Yritys" onClick={() => navigate("/company")}/>
+            </ListItem>
+            <ListItem button key="Tee ilmoitus" component={Link} to="/company/apartments/new" onClick={() => navigate("/company/apartments/new")}>
+              <ListItemIcon>
+                <DomainAdd />
+              </ListItemIcon>
+              <ListItemText primary="Tee ilmoitus" onClick={() => navigate("/company/apartments/new")}/>
+            </ListItem>
+            <ListItem button key="Ilmoitukset" component={Link} to="/company/apartments" onClick={() => navigate("/company/apartments")}>
+              <ListItemIcon>
+                <Domain />
+              </ListItemIcon>
+              <ListItemText primary="Ilmoitukset" onClick={() => navigate("/company/apartments")}/>
+            </ListItem>
+            <ListItem button key="Työntekijät" component={Link} to="/company/member" onClick={() => navigate("/company/member")}>
+              <ListItemIcon>
+                <Groups3 /> 
+              </ListItemIcon>
+              <ListItemText primary="Työntekijät" onClick={() => navigate("/company/member")}/>
+            </ListItem>
+            <Divider />
+          </>
+        )}
         {(token !== false) && (
           <ListItem button key="Profiili" component={Link} to="/profile" onClick={() => navigate("/profile")}>
             <ListItemIcon>
@@ -46,30 +77,6 @@ const LeftDrawer = (props) => {
             </ListItemIcon>
             <ListItemText primary="Profiili" onClick={() => navigate("/profile")}/>
           </ListItem>
-        )}
-        <Divider />
-        {(token !== false && profile.type !== "Rentee") && ( 
-          <>
-            <ListItem button key="Yritys" component={Link} to="/company" onClick={() => navigate("/company")}>
-              <ListItemIcon>
-                <Business /> 
-              </ListItemIcon>
-              <ListItemText primary="Yritys" onClick={() => navigate("/company")}/>
-            </ListItem>
-            <ListItem button key="Tee ilmoitus" component={Link} to="/apartments/new" onClick={() => navigate("/apartments/new")}>
-              <ListItemIcon>
-                <Apartment />
-              </ListItemIcon>
-              <ListItemText primary="Tee ilmoitus" onClick={() => navigate("/apartments/new")}/>
-            </ListItem>
-            <ListItem button key="Työntekijät" component={Link} to="/member" onClick={() => navigate("/member")}>
-              <ListItemIcon>
-                <Groups3 /> 
-              </ListItemIcon>
-              <ListItemText primary="Työntekijät" onClick={() => navigate("/member")}/>
-            </ListItem>
-            <Divider />
-          </>
         )}
         {(token === false) 
           ? <>
