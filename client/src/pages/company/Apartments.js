@@ -58,6 +58,7 @@ const Aparments = () => {
     const data = await response.json();
     if(data.message === "Apartment deleted.") {
       setApartments(apartments.filter(apartment => apartment._id !== id));
+      setMessage({ error: true, message: "Ilmoitus poistettu."})
     } else {
       setMessage({ error: true, message: data.message });
     }
@@ -78,7 +79,7 @@ const Aparments = () => {
             <Alert severity="error">{message.message}</Alert>
           </Grid>
         )}    
-        <TableContainer component={Paper}>
+        <TableContainer component={Paper} sx={{ mt : 2}}>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
@@ -105,7 +106,7 @@ const Aparments = () => {
                   <TableCell align="right">{apartment.size}</TableCell>
                   <TableCell align="right">{apartment.price}</TableCell>
                   <TableCell align="right">{apartment.available}</TableCell>
-                  <TableCell align="right">{ (apartment.paid) ? "Julkaistu" : <Button variant="contained" color="primary" size="small">Maksa</Button> }</TableCell>
+                  <TableCell align="right">{(apartment.paid) ? "Julkaistu" : <Button variant="contained" color="primary" size="small">Maksa</Button> }</TableCell>
                   <TableCell align="right">
                     <Button variant="contained" color="error" size="small" onClick={() => handleDelete(apartment._id)}>
                       Poista

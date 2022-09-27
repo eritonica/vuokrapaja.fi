@@ -78,6 +78,7 @@ const Apartment = () => {
     has: [],
     suitable: [],
     images: [],
+    new: true,
   });
 
   useEffect(() => {
@@ -180,27 +181,48 @@ const Apartment = () => {
       company: company._id,
       ...form,
     }
-    const response = await fetch(server + "/api/apartments", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "token": token
-      },
-      body: JSON.stringify(newApartment)
-    });
-    const body = await response.json();
-    console.log(body);
-    // Implement stripe payment here, if needed. Otherwise just close the modal.
-    handleCloseSaveModal();
-    if (body.message === "Apartment created.") {
-      // TODO: Redirect to apartment page.
-      setMessage({...message, success : "Ilmoitus lisätty onnistuneesti. ", error: ""});
-    } else if(body.message === "Apartment already exists.") {
-      setMessage({...message, error : "Ilmoitus on jo olemassa."});
-    } else if(body.message === "You do not have permission to create this apartment.") {
-      setMessage({...message, error : "Sinulla ei ole oikeuksia luoda tätä ilmoitusta."});
+    if(newApartment.new == true) {
+      const response = await fetch(server + "/api/apartments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "token": token
+        },
+        body: JSON.stringify(newApartment)
+      });
+      const body = await response.json();
+      console.log(body);
+      // Implement stripe payment here, if needed. Otherwise just close the modal.
+      handleCloseSaveModal();
+      if (body.message === "Apartment created.") {
+        // TODO: Redirect to apartment page.
+        setMessage({...message, success : "Ilmoitus lisätty onnistuneesti. ", error: "" });
+      } else if(body.message === "Apartment already exists.") {
+        setMessage({...message, error : "Ilmoitus on jo olemassa."});
+      } else if(body.message === "You do not have permission to create this apartment.") {
+        setMessage({...message, error : "Sinulla ei ole oikeuksia luoda tätä ilmoitusta."});
+      } else {
+        setMessage({...message, error : "Virhe tapahtui. Yritä uudelleen."});
+      }
     } else {
-      setMessage({...message, error : "Virhe tapahtui. Yritä uudelleen."});
+      const response = await fetch(server + "/api/apartments/" + location.state._id, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "token": token
+        },
+        body: JSON.stringify(newApartment)
+      });
+      const body = await response.json();
+      console.log(body);
+      handleCloseSaveModal();
+      if (body.message === "Apartment updated.") {
+        setMessage({...message, success : "Ilmoitus päivitetty onnistuneesti. ", error: "" });
+      } else if(body.message === "You do not have permission to edit this apartment.") {
+        setMessage({...message, error : "Sinulla ei ole oikeuksia muokata tätä ilmoitusta."});
+      } else {
+        setMessage({...message, error : "Virhe tapahtui. Yritä uudelleen."});
+      }
     }
   }
 
@@ -283,7 +305,7 @@ const Apartment = () => {
             <TextField fullWidth label="Vuokra" name="rent" type="number" onChange={onChange} value={form.rent} onClick={(e) => { e.target.select() }} />
           </Grid>
           <Grid item xs={12}>
-            <TextField fullWidth label="Huoneiden määrä" name="rooms" type="number" onChange={onChange} value={form.rooms} onClick={(e) => { e.target.select() }} />
+            <TextField fullWidth label="Huoneiden määrä" name="rooms" onChange={onChange} value={form.rooms} onClick={(e) => { e.target.select() }} />
           </Grid>
           <Grid item xs={12}>
             <TextField fullWidth label="Kohteen koko m²" name="size" type="number" onChange={onChange} value={form.size} onClick={(e) => { e.target.select() }} />
@@ -606,7 +628,7 @@ const Apartment = () => {
           )}
           <Grid item xs={12}>
             <Button fullWidth variant="contained" color="primary" onClick={handleOpenSaveModal}>
-              Tallenna ilmoitus
+              Tallenna
             </Button>
             <Modal
               open={saveModal.open}
@@ -623,10 +645,13 @@ const Apartment = () => {
                 <Typography id="modal-modal-description" sx={{ mt: 2, mb: 2 }}>
                   Varmista, että osoite on oikein ja jatka maksamaan.
                 </Typography>
-                <Button sx={{ mb: 2}} fullWidth variant="contained" color="warning" onClick={handleCloseSaveModal}>
+                <Button sx={{ mb: 2}} fullWidth variant="contained" color="info" onClick={handleCloseSaveModal}>
                   Peruuta ja muokkaa.
                 </Button>
-                <Button fullWidth variant="contained" color="primary" onClick={handleNewApartmentSubmit}>
+                <Button  sx={{ mb: 2 }}fullWidth variant="contained" color="primary" onClick={handleNewApartmentSubmit}>
+                  Tallenna
+                </Button>
+                <Button fullWidth variant="contained" color="secondary" onClick={handleNewApartmentSubmit}>
                   Tallenna ja maksa
                 </Button>
               </Box>

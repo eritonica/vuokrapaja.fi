@@ -37,7 +37,7 @@ const apartmentSchema = new mongoose.Schema({
     type: Date,
   },
   rooms: {
-    type: Number,
+    type: String,
   },
   size: {
     type: Number,

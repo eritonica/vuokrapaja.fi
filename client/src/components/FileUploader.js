@@ -54,11 +54,13 @@ const FileUploader = (props) => {
                     type="file"
                     name="file"
                     multiple
+                    accept = "image/*"
                     onChange={handleFileChange}
                     sx={{ display: 'none' }} /> 
                 : <input hidden
                     type="file"
                     name="file"
+                    accept = "image/*"
                     onChange={handleFileChange}
                     sx={{ display: 'none' }} /> 
               }
