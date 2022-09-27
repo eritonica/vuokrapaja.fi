@@ -18,7 +18,7 @@ import LoginForm from './pages/LoginForm';
 import Profile from './pages/Profile';
 import Company from './pages/company/Profile';
 import Member from './pages/company/Member';
-import NewApartment from './pages/company/NewApartment';
+import NewApartment from './pages/company/Apartment';
 import Apartments from './pages/company/Apartments';
 import RegisterForm from './pages/registeration/RegisterForm';
 import ActivationForm from './pages/registeration/ActivationForm';
@@ -105,7 +105,7 @@ function App() {
               <Route path="/company" element={<Company/>} />
               <Route path="/company/member" element={<Member/>} />
               <Route path="/company/apartments" element={<Apartments/>} />
-              <Route path="/company/apartments/new" element={<NewApartment/>} />
+              <Route path="/company/apartment" element={<NewApartment/>} />
               <Route path="/login" element={<LoginForm/>} />
               <Route path="/profile" element={<Profile/>} />
               <Route path="/register" element={<RegisterForm/>} />

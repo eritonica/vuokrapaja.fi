@@ -7,9 +7,9 @@ import locations from "./locations.js";
 const router = express.Router();
 
 // GET /apartments
-router.get("/apartments", async (req, res) => {
-  if(companies.checkPermission(req.session.account._id, req.body.company, "read")) {
-    let apartments = await apartmentModel.findById(req.params.id).exec();
+router.get("/apartments/:company", async (req, res) => {
+  if(companies.checkPermission(req.session.account._id, req.params.company, "read")) {
+    let apartments = await apartmentModel.find({ company: req.params.company }).exec();
     res.status(200).json({ message: "success", apartments: apartments });
   } else {
     res.status(401).json({ message: "You do not have permission to read these apartments." });
@@ -42,7 +42,11 @@ router.post("/apartments", async (req, res) => {
       description: req.body.description,
       condition: req.body.condition,
       buildingYear: req.body.buildingYear,
-      location: req.body.location,
+      kitchenType: req.body.kitchenType,
+      heating: req.body.heating,
+      has: req.body.has,
+      suitable: req.body.suitable,
+      images: req.body.images,
       paid: false,
     });
     apartment.save();
@@ -86,6 +90,11 @@ router.put("/apartments/:id", async (req, res) => {
     apartment.condition = req.body.condition;
     apartment.buildingYear = req.body.buildingYear;
     apartment.location = req.body.location;
+    apartment.kitchenType = req.body.kitchenType;
+    apartment.heating = req.body.heating;
+    apartment.has = req.body.has;
+    apartment.suitable = req.body.suitable;
+    apartment.images = req.body.images;
     apartment.paid = req.body.paid;
     apartment.save();
     return res.status(200).json({ message: "Apartment updated." });
@@ -97,6 +106,7 @@ router.put("/apartments/:id", async (req, res) => {
 // DELETE /apartments/:id
 router.delete("/apartments/:id", async (req, res) => {
   let apartment = await apartmentModel.findById(req.params.id).exec();
+  if(!apartment) return res.status(404).json({ message: "Apartment not found." });
   if (companies.checkPermission(req.session.account._id, apartment.company, "delete")) {
     apartmentModel.findByIdAndDelete(req.params.id).exec();
     return res.status(200).json({ message: "Apartment deleted." });

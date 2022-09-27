@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Container, Box, Grid, TextField, Typography, Paper, Autocomplete, Button, Alert } from '@mui/material';
 import { FormControl, InputLabel, Select, MenuItem, ListItemText, Checkbox, FormControlLabel } from '@mui/material';
 import { Card, CardActionArea, CardMedia, CardContent, Modal } from '@mui/material';
@@ -25,25 +25,34 @@ const modalStyle = {
   p: 4,
 };
 
-const NewApartment = () => {
+const Apartment = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = useSelector((state) => state.app.token);
   const server = useSelector((state) => state.app.server);
   const profile = useSelector((state) => state.app.profile);
   const company = useSelector((state) => state.app.company);
+
+  const location = useLocation();
+
   const [message, setMessage] = useState({
     success: false,
     error: false,
   });
+
   const [fileModal, setFileModal] = useState({
     open: false,
   });
+
   const [saveModal, setSaveModal] = useState({
     open: false,
   });
 
-  const [form, setForm] = useState({
+  if(location.state) {
+    console.log(location.state);
+  }
+
+  const [form, setForm] = useState((location.state) ? location.state : {
     address: "",
     zip: "",
     cityArea: "",
@@ -184,7 +193,8 @@ const NewApartment = () => {
     // Implement stripe payment here, if needed. Otherwise just close the modal.
     handleCloseSaveModal();
     if (body.message === "Apartment created.") {
-      setMessage({...message, success : "Ilmoitus lisätty onnistuneesti.", error: ""});
+      // TODO: Redirect to apartment page.
+      setMessage({...message, success : "Ilmoitus lisätty onnistuneesti. ", error: ""});
     } else if(body.message === "Apartment already exists.") {
       setMessage({...message, error : "Ilmoitus on jo olemassa."});
     } else if(body.message === "You do not have permission to create this apartment.") {
@@ -199,9 +209,16 @@ const NewApartment = () => {
       <Box component="form" sx={{ mt: 4, pb: 4, mb: 4 }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h4" component="h1" gutterBottom>
-              Lisää uusi ilmoitus
-            </Typography>
+            {(location.state === null) ? (
+              <Typography variant="h4" component="h1" gutterBottom>
+                Lisää uusi ilmoitus
+              </Typography>
+            ) : (
+              <Typography variant="h4" component="h1" gutterBottom>
+                Muokkaa ilmoitusta
+              </Typography>
+            )}
+            
           </Grid>
         </Grid>
         <Grid container spacing={2} sx={{ mb: 4 }}>
@@ -209,24 +226,32 @@ const NewApartment = () => {
             <Typography variant="h6" component="h2" gutterBottom>
               Kohteen osoitetiedot
             </Typography>
-            <Typography variant="body2" gutterBottom>
-              Täytä uuden kohteen osoitetiedot huolellisesti ja tarkasti. Et pääse niitä muuttamaan ilmoituksen jälkeen.
-            </Typography>
+            {(location.state === null) ? (
+              <Typography variant="body2" gutterBottom>
+                Täytä uuden kohteen osoitetiedot huolellisesti ja tarkasti. Et pääse niitä muuttamaan ilmoituksen jälkeen.
+              </Typography>
+            ) : (
+              <Typography variant="body2" gutterBottom>
+                Valitettavasti osoitetietojen muuttaminen ei ole mahdollista. 
+              </Typography>
+            )}
+            
           </Grid>
           <Grid item xs={12}>
-            <TextField fullWidth label="Kohteen postiosoite" name="address" onChange={onChange} value={form.address} />
+            <TextField fullWidth disabled={(location.state === null ? false : true)} label="Kohteen postiosoite" name="address" onChange={onChange} value={form.address} />
           </Grid>
           <Grid item xs={12}>
-            <TextField fullWidth label="Postinumero" name="zip" onChange={onChange} value={form.zip} />
+            <TextField fullWidth disabled={(location.state === null ? false : true)} label="Postinumero" name="zip" onChange={onChange} value={form.zip} />
           </Grid>
           <Grid item xs={12}>
-            <TextField fullWidth label="Kaupunginosa" name="cityArea" onChange={onChange} value={form.cityArea} />
+            <TextField fullWidth disabled={(location.state === null ? false : true)} label="Kaupunginosa" name="cityArea" onChange={onChange} value={form.cityArea} />
           </Grid>
           <Grid item xs={12}>
             <Autocomplete
               name="city"
               id="city"
               options={cities}
+              disabled={(location.state === null ? false : true)} 
               getOptionLabel={(option) => option.name}
               value={{ name: form.city }}
               isOptionEqualToValue={(option, value) => option.name.includes(value.name)}
@@ -239,6 +264,7 @@ const NewApartment = () => {
               name="country"
               id="country"
               options={countries}
+              disabled={(location.state === null ? false : true)} 
               getOptionLabel={(option) => option.name}
               value={{ name: form.country }}
               isOptionEqualToValue={(option, value) => option.name.includes(value.name)}
@@ -386,7 +412,7 @@ const NewApartment = () => {
                 value={form.kitchenType}
                 label="Keittiön tyyppi"
                 onChange={onChange}>
-
+                <MenuItem value="">Ei tietoa</MenuItem>
                 <MenuItem value="Erillinen keittiö">Erillinen keittiö</MenuItem>
                 <MenuItem value="Tupakeittiö">Tupakeittiö</MenuItem>
                 <MenuItem value="Keittiökomero">Keittiökomero</MenuItem>
@@ -404,6 +430,7 @@ const NewApartment = () => {
                 value={form.heating}
                 label="Lämmitys"
                 onChange={onChange}>
+                <MenuItem value="">Ei tietoa</MenuItem>
                 <MenuItem value="Kaukolämpö">Kaukolämpö</MenuItem>
                 <MenuItem value="Sähkö">Sähkö</MenuItem>
                 <MenuItem value="Maalämpö">Maalämpö</MenuItem>
@@ -545,7 +572,6 @@ const NewApartment = () => {
               </Box>
             </Modal>
           </Grid>
-
           {form.images.map((image, index) => (
             <Grid item xs={4} key={image.filename}>
               <Card sx={{ maxWidth: 345, mb:2 }}>
@@ -592,7 +618,7 @@ const NewApartment = () => {
                   Tallennetaanko ilmoitus?
                 </Typography>
                 <Typography id="modal-modal-description" sx={{ mt: 2, mb: 2 }}>
-                  Asunnon osoite on: {form.address}, {form.zip} {form.cityArea} {form.city}, {form.country}.
+                  Asunnon osoite on: {(form.address) ? form.address + ", " : null} {(form.zip) ? form.zip + ", " : null} {(form.cityArea) ? form.cityArea + ", " : null} {(form.city) ? form.city + ", " : null} {form.country}.
                 </Typography>
                 <Typography id="modal-modal-description" sx={{ mt: 2, mb: 2 }}>
                   Varmista, että osoite on oikein ja jatka maksamaan.
@@ -612,4 +638,4 @@ const NewApartment = () => {
   );
 }
 
-export default NewApartment
+export default Apartment
