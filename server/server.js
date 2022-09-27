@@ -55,25 +55,38 @@ const storage = multer.diskStorage({
 
 const upload = multer({ 
   storage: storage,
-  fileFilter: function (req, file, callback) {
-    var ext = path.extname(file.originalname);
-    if(ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
-        return callback(new Error('Only images are allowed'))
-    }
-    callback(null, true)
-  },
+  fileFilter: function (req, file, cb) {
+    const allowedExt = /jpg|jpeg|png/;
+    let checkExt = allowedExt.test(path.extname(file.originalname).toLowerCase());
+    let checkMimeType = allowedExt.test(file.mimetype);
+    req.isFileValid = checkExt && checkMimeType;
+    cb(null, checkExt && checkMimeType);
+  }
 });
 
-app.post("/api/uploads/single", upload.single("file"), (req, res) => {
-  sessions.checkSession(req, res, async () => {
-    console.log(req.file);
-    return res.status(200).json({ message: "File uploaded successfully.", file: req.file });
+let single = upload.single("file")
+
+app.post("/api/uploads/single", (req, res) => {
+  single(req, res, (err) => {
+    if (err) {
+      return res.status(500).json({ message: "File type not allowed." });
+    }
+    sessions.checkSession(req, res, async () => {
+      return res.status(200).json({ message: "File uploaded successfully.", file: req.file });
+    });
   });
 });
 
-app.post("/api/uploads/multiple", upload.array("files", 25), (req, res) => {
-  sessions.checkSession(req, res, async () => {
-    return res.status(200).json({ message: "Files uploaded successfully.", files: req.files });
+let multiple = upload.array("files", 25);
+
+app.post("/api/uploads/multiple", (req, res) => {
+  multiple(req, res, (err) => {
+    if (err) {
+      return res.status(500).json({ message: "File type not allowed." });
+    }
+    sessions.checkSession(req, res, async () => {
+      return res.status(200).json({ message: "Files uploaded successfully.", files: req.files });
+    });
   });
 });
 

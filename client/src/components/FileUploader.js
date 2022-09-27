@@ -34,9 +34,15 @@ const FileUploader = (props) => {
       },
       body: formData,
     });
+    console.log(result);
     let body = await result.json();
-    props.fileUploadCallback(body);
-    return body;
+    if(body.message === "File type not allowed.") {
+      console.log("File type not allowed.");
+      return;
+    } else {
+      props.fileUploadCallback(body);
+      return body;
+    }
   };
 
   return (
