@@ -5,7 +5,7 @@ export const appSlice = createSlice({
     name: 'app',
     initialState: {
         token: false,
-        server: "http://localhost:8080",
+        server: "http://localhost:8080/",
         beta: true,
         
         name: 'Vuokrapaja',

@@ -29,7 +29,6 @@ const Apartment = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = useSelector((state) => state.app.token);
-  const server = useSelector((state) => state.app.server);
   const profile = useSelector((state) => state.app.profile);
   const company = useSelector((state) => state.app.company);
 
@@ -182,7 +181,7 @@ const Apartment = () => {
       ...form,
     }
     if(newApartment.new == true) {
-      const response = await fetch(server + "/api/apartments", {
+      const response = await fetch("/api/apartments", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -205,7 +204,7 @@ const Apartment = () => {
         setMessage({...message, error : "Virhe tapahtui. Yritä uudelleen."});
       }
     } else {
-      const response = await fetch(server + "/api/apartments/" + location.state._id, {
+      const response = await fetch("/api/apartments/" + location.state._id, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
