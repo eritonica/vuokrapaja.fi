@@ -29,7 +29,7 @@ const Aparments = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch(`${server}/api/apartments/${company._id}`, {
+      const response = await fetch(`/api/apartments/${company._id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -48,7 +48,7 @@ const Aparments = () => {
   }, [])
 
   const handleDelete = async (id) => {
-    const response = await fetch(`${server}/api/apartments/${id}`, {
+    const response = await fetch(`/api/apartments/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

@@ -17,7 +17,7 @@ const FileUploader = (props) => {
     console.log("Uploading files: ", files);
     const formData = new FormData();
    
-    let uri = 'http://localhost:8080/api/uploads';
+    let uri = '/api/uploads';
     if(props.multiple) {
       files.forEach((file, i) => {
         formData.append('files', file);

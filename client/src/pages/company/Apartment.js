@@ -598,7 +598,7 @@ const Apartment = () => {
             <Grid item xs={4} key={image.filename}>
               <Card sx={{ maxWidth: 345, mb:2 }}>
                 <CardActionArea>
-                  <CardMedia component="img" height="140" image={"http://localhost:8080/" + image.path} alt="Kuva" />
+                  <CardMedia component="img" height="140" image={image.path} alt="Kuva" />
                 </CardActionArea>
                 <CardContent>
                   <Typography gutterBottom variant="body2" component="div">

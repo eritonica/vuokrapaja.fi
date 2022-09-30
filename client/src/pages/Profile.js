@@ -28,6 +28,7 @@ const modalStyle = {
 const Profile = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const server = useSelector((state) => state.app.server);
   const token = useSelector((state) => state.app.token);
   const profile = useSelector((state) => state.app.profile);
   const [message, setMessage] = useState(false);
@@ -232,12 +233,12 @@ const Profile = (props) => {
 
   const handleAvatarFormSubmit = async (data) => {
     console.log(data);
-    dispatch(setProfile({ ...profile, avatar: "http://localhost:8080/" + data.file.path }));
+    dispatch(setProfile({ ...profile, avatar: server + data.file.path }));
     handleCloseAvatarModal();
     
     updateProfile({
       ...profile,
-      avatar: "http://localhost:8080/" + data.file.path
+      avatar: server + data.file.path
     })
   }
 
