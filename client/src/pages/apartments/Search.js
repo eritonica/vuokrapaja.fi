@@ -1,18 +1,22 @@
 import { useEffect, useState} from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Container, Box, TextField, Button, Typography, Paper, Autocomplete, FormControlLabel } from '@mui/material';
+import { Container, Box, TextField, Button, Typography, Paper, Autocomplete, FormControlLabel, Alert } from '@mui/material';
 import { FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText } from '@mui/material';
 
 import Grid from '@mui/material/Unstable_Grid2';
 
+import ApartmentCard from './ApartmentCard';
 
-import searchCities from './towns.json';
+
 
 const Search = (props) => {
   const name = useSelector((state) => state.app.name);
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [message, setMessage] = useState({ error: "", message: "" });
+  const [searchedApartments, setSearchedApartments] = useState([]);
 
   // List cities in Finland in alphabetical order
   if(location.state !== null) {
@@ -22,8 +26,9 @@ const Search = (props) => {
 
   // Remember to include empty value in the city list, do not remove it!
   const [form, setForm] = useState((location.state) ? location.state : {
-    city: '',
+    location: '',
     rooms: [2],
+    use: "Asunto",
     houseType: ["Kerrostalo"],
     minPrice: 350,
     maxPrice: 900,
@@ -35,17 +40,62 @@ const Search = (props) => {
     condition: [],
     kitchenType: [],
     suitable: [],
-    showOnly: []
+    showOnly: [],
   });
 
-  const onSearchFormSubmit = (e) => {
-    e.preventDefault();
+  const onSearchFormSend = async () => {
     if(props.landing) {
       navigate("/apartments/search", { state: form });
     } else {
       // TODO: Search apartments
+      const response = await fetch(`/api/search`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(form)
+      });
+      let body = await response.json();
+      console.log(body);
+      if(body.error === "No location specified.") {
+        setMessage({ error: "Et valinnut sijaintia josta etsiä. Yritätkö oikeasti hakea koko maailman asuntoilmoitukset?", message: "" });
+      } else if(body.message == "success") {
+        setSearchedApartments(body.apartments);
+        setMessage({ error: "", message: "" });
+      }
     }
-    console.log("Haku");
+  };
+
+  useEffect(() => {
+    if(location.state) {
+      onSearchFormSend();
+    }
+    // Don't know yet how to handle dispatch with useEffect
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const [locations, setLocations] = useState([]);
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      const response = await fetch("/api/locations", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        }
+      });
+      let body = await response.json();
+      let searchables = body.map((obj) => {
+        return { name : obj.location };
+      });
+      setLocations(searchables);
+    };
+    fetchLocations();
+  }, []);
+
+  const onSearchFormSubmit = async (e) => {
+    e.preventDefault();
+    onSearchFormSend();
   };
 
   useEffect(() => {
@@ -56,6 +106,7 @@ const Search = (props) => {
   }, [form]);
 
   const onSearchChange = (event) => {
+    setMessage({ error: "", message: "" });
     if(event.target.name === "more") {
       setForm({ ...form, [event.target.name]: event.target.checked });
     } else {
@@ -66,16 +117,17 @@ const Search = (props) => {
     }
   };
 
-  const onSearchCityChange = (e, v) => {
+  const onSearchLocationChange = (e, v) => {
+    setMessage({ error: "", message: "" });
     if(v !== null) {
       setForm({
         ...form,
-        city: v.name
+        location: v.name
       });
     } else {
       setForm({
         ...form,
-        city: ''
+        location: ''
       });
     }
   }
@@ -92,15 +144,34 @@ const Search = (props) => {
           </Grid>
           <Grid item xs={12}>
             <Autocomplete
-              name="city"
-              id="city"
-              options={searchCities}
+              name="location"
+              id="location"
+              options={locations}
               getOptionLabel={(option) => option.name}
-              value={{ name : form.city}}
-              isOptionEqualToValue={(option, value) => option.name.includes(value.name)}
-              onChange={onSearchCityChange}
-              renderInput={(params) => <TextField {...params} label="Kaupunki" name="city" onChange={onSearchChange} />}
+              value={{ name : form.location}}
+              isOptionEqualToValue={(option, value) => option.name.toLowerCase().includes(value.name.toLowerCase()) }
+              onChange={onSearchLocationChange}
+              renderInput={(params) => <TextField {...params} label="Sijainti, esim katu, postinumero, kaupunginosa tai kaupunki" name="location" onChange={onSearchChange} />}
             />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <FormControl fullWidth>
+              <InputLabel id="kaytto-label">Käyttötarkoitus</InputLabel>
+              <Select
+                labelId="kaytto-label"
+                id="kaytto"
+                name="use"
+                value={form.use}
+                label="Käyttötarkoitus"
+                onChange={onSearchChange}>
+                <MenuItem value="Asunto">Asunto</MenuItem>
+                <MenuItem value="Toimisto">Toimisto</MenuItem>
+                <MenuItem value="Liiketila">Liiketila</MenuItem>
+                <MenuItem value="Mökki">Mökki</MenuItem>
+                <MenuItem value="Varasto">Varasto</MenuItem>
+                <MenuItem value="Muu">Muu</MenuItem>
+              </Select>
+            </FormControl>
           </Grid>
           <Grid item xs={6}>
             <FormControl fullWidth>
@@ -450,6 +521,11 @@ const Search = (props) => {
               Hae asuntoja
             </Button>
           </Grid>
+          { message.error !== "" && (
+            <Grid item xs={12}>
+              <Alert severity="error">{ message.error }</Alert>
+            </Grid>
+          )}
           <Grid item xs={12}>
             <Typography variant="body2" align="center">
               { name } sivustolta löytyy asuntoja Suomesta. Tämän hakulomakkeen avulla löydät sinua kiinnostavat asunnot.
@@ -457,6 +533,22 @@ const Search = (props) => {
           </Grid>
         </Grid>
       </Box>
+      { searchedApartments.length > 0 && (
+        <Box mt={2}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant="h6" align="center">
+                { name } sivuston asunnot
+              </Typography>
+            </Grid>
+            {searchedApartments.map((apartment) => (
+              <Grid item xs={12} sm={6} md={6} key={apartment._id}>
+                <ApartmentCard apartment={apartment} />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+      )}
     </Container>
   )
 }

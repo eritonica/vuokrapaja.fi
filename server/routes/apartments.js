@@ -6,6 +6,24 @@ import locations from "./locations.js";
 
 const router = express.Router();
 
+const getApartment = async (id) => {
+  let apartment = await apartmentModel.findById(id).exec();
+  if (apartment) {
+    return apartment;
+  } else {
+    return null;
+  }
+};
+
+const getApartments = async (ids) => {
+  let apartments = await apartmentModel.find({ _id: { $in: ids } }).exec();
+  if (apartments) {
+    return apartments;
+  } else {
+    return null;
+  }
+};
+
 // GET /apartments
 router.get("/apartments/:company", async (req, res) => {
   if(companies.checkPermission(req.session.account._id, req.params.company, "read")) {
@@ -47,6 +65,7 @@ router.post("/apartments", async (req, res) => {
       has: req.body.has,
       suitable: req.body.suitable,
       images: req.body.images,
+      default: req.body.default,
       paid: false,
     });
     apartment.save();
@@ -60,7 +79,12 @@ router.post("/apartments", async (req, res) => {
         if(location.length !== 0) {
           tmp = ", " + location;
         }
-        location = apartment[keys[i]] + tmp;
+        if(keys[i] == "address") {
+          let address = apartment[keys[i]].split(" ");
+          location = address[0] + tmp;
+        } else {
+          location = apartment[keys[i]] + tmp;
+        }
         locations.addLocation(location, apartment._id);
       }
     }
@@ -95,6 +119,7 @@ router.put("/apartments/:id", async (req, res) => {
     apartment.has = req.body.has;
     apartment.suitable = req.body.suitable;
     apartment.images = req.body.images;
+    apartment.default = req.body.default;
     apartment.paid = req.body.paid;
     apartment.save();
     return res.status(200).json({ message: "Apartment updated." });
@@ -117,4 +142,6 @@ router.delete("/apartments/:id", async (req, res) => {
 
 export default {
   router,
+  getApartment,
+  getApartments,
 };

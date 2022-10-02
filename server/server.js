@@ -91,6 +91,11 @@ app.post("/api/uploads/multiple", (req, res) => {
 });
 
 // Routes, loading these could be automated without ES6 import/export support
+
+import search from "./routes/search.js";
+app.use("/api", search.router);
+import locations from './routes/locations.js';
+app.use("/api", locations.router);
 import accounts from './routes/accounts.js';
 app.use("/api", accounts.router);
 import sessions from './routes/sessions.js';
@@ -103,8 +108,6 @@ import members from './routes/members.js';
 app.use("/api", sessions.checkSession, members.router);
 import aparments from './routes/apartments.js';
 app.use("/api", sessions.checkSession, aparments.router);
-import locations from './routes/locations.js';
-app.use("/api", sessions.checkSession, locations.router);
 
 // Catch all routes, serve client build if it exists.
 app.get('*', (req, res) => {

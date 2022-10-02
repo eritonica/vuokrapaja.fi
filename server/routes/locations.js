@@ -1,6 +1,7 @@
 import express from 'express';
 
 import locationModel from '../schemas/location.js';
+import sessions from './sessions.js';
 
 const router = express.Router();
 
@@ -15,6 +16,24 @@ const addLocation = async (location, apartment) => {
       apartments: [apartment],
     });
     location.save();
+  }
+};
+
+const getLocation = async (location) => {
+  let foundLocation = await locationModel.findOne({ location: location }).exec();
+  if (foundLocation) {
+    return foundLocation;
+  } else {
+    return null;
+  }
+};
+
+const getLocations = async (location) => {
+  let foundLocations = await locationModel.find({ location: {$regex: location, $options: 'i'} }).exec();
+  if (foundLocations) {
+    return foundLocations;
+  } else {
+    return null;
   }
 };
 
@@ -49,12 +68,14 @@ router.get('/locations/:search', async (req, res) => {
 //    _id: "string",
 //  ]
 router.post('/locations', async (req, res) => {
-  let location = new locationModel({
-    location: req.body.location,
-    apartments: req.body.apartments,
+  sessions.checkSession(req, res, async () => {
+    let location = new locationModel({
+      location: req.body.location,
+      apartments: req.body.apartments,
+    });
+    location.save();
+    res.status(200).json({ message: 'Location created.' });
   });
-  location.save();
-  res.status(200).json({ message: 'Location created.' });
 });
 
 // UPDATE /locations/:id
@@ -64,35 +85,41 @@ router.post('/locations', async (req, res) => {
 //    _id: "string",
 //  ]
 router.put('/locations/:id', async (req, res) => {
+  sessions.checkSession(req, res, async () => {
   let location = await locationModel.findById(req.params.id).exec();
-  if (location) {
-    if (req.body.location) {
-      location.location = req.body.location;
+    if (location) {
+      if (req.body.location) {
+        location.location = req.body.location;
+      }
+      if (req.body.apartments) {
+        location.apartments = req.body.apartments;
+      }
+      location.updated = Date.now();
+      location.save();
+      res.status(200).json({ message: 'Location updated.' });
+    } else {
+      res.status(404).json({ message: 'Location not found.' });
     }
-    if (req.body.apartments) {
-      location.apartments = req.body.apartments;
-    }
-    location.updated = Date.now();
-    location.save();
-    res.status(200).json({ message: 'Location updated.' });
-  } else {
-    res.status(404).json({ message: 'Location not found.' });
-  }
+  });
 });
 
 // DELETE /locations/:id
 router.delete('/locations/:id', async (req, res) => {
-  let location = await locationModel.findById(req.params.id).exec();
-  if (location) {
-    location.remove();
-    res.status(200).json({ message: 'Location deleted.' });
-  } else {
-    res.status(404).json({ message: 'Location not found.' });
-  }
+  sessions.checkSession(req, res, async () => {
+    let location = await locationModel.findById(req.params.id).exec();
+    if (location) {
+      location.remove();
+      res.status(200).json({ message: 'Location deleted.' });
+    } else {
+      res.status(404).json({ message: 'Location not found.' });
+    }
+  });
 });
 
 export default {
   router,
   addLocation,
+  getLocation,
+  getLocations,
   removeLocation,
 };

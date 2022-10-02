@@ -25,7 +25,7 @@ const Landing = (props) => {
                 <GitHubIcon sx={{ml: 1}} />Ilmoita virheestä
               </Button>
               <Alert severity="info" sx={{mt: 2}}>
-                <p Style="margin-top: 0px">Tämä sivusto on luotu opiskelijaprojektina. Tarkoituksena on luoda vuokra-asuntojen etsimiseen
+                <p style={{mt:2}}>Tämä sivusto on luotu opiskelijaprojektina. Tarkoituksena on luoda vuokra-asuntojen etsimiseen
                 kätevä ja helppokäyttöinen sivusto. Sivustolla on tarkoitus myös mahdollistaa vuokra-asuntojen
                 ilmoittaminen ja vuokra-asuntojen hallinta.</p> 
                 <p>

@@ -87,6 +87,10 @@ const apartmentSchema = new mongoose.Schema({
   images: {
     type: Array,
   },
+  private: {
+    type: Boolean,
+    default: true,
+  },
   paid: {
     type: Boolean,
     required: true,

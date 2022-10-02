@@ -8,7 +8,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 
 import FileUploader from '../../components/FileUploader.js';
 
@@ -26,7 +26,6 @@ const modalStyle = {
 };
 
 const Apartment = () => {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = useSelector((state) => state.app.token);
   const profile = useSelector((state) => state.app.profile);
@@ -77,6 +76,7 @@ const Apartment = () => {
     has: [],
     suitable: [],
     images: [],
+    private : (profile.type === "Renter") ? true : false,
     new: true,
   });
 
@@ -156,7 +156,7 @@ const Apartment = () => {
 
   const handleFileUpload = (body) => {
     if (body.message !== "Files uploaded successfully.") {
-      setMessage({... message, error : "Virhe tapahtui tiedostoja lähettäessä. Yritä uudelleen."});
+      setMessage({...message, error : "Virhe tapahtui tiedostoja lähettäessä. Yritä uudelleen."});
     }
     setForm({
       ...form,
@@ -180,7 +180,7 @@ const Apartment = () => {
       company: company._id,
       ...form,
     }
-    if(newApartment.new == true) {
+    if(newApartment.new === true) {
       const response = await fetch("/api/apartments", {
         method: "POST",
         headers: {
@@ -275,7 +275,7 @@ const Apartment = () => {
               disabled={(location.state === null ? false : true)} 
               getOptionLabel={(option) => option.name}
               value={{ name: form.city }}
-              isOptionEqualToValue={(option, value) => option.name.includes(value.name)}
+              isOptionEqualToValue={(option, value) => option.name.toLowerCase().includes(value.name.toLowerCase())}
               onChange={onSearchCityChange}
               renderInput={(params) => <TextField {...params} label="Kaupunki" name="city" onChange={onChange} />}
             />
@@ -288,7 +288,7 @@ const Apartment = () => {
               disabled={(location.state === null ? false : true)} 
               getOptionLabel={(option) => option.name}
               value={{ name: form.country }}
-              isOptionEqualToValue={(option, value) => option.name.includes(value.name)}
+              isOptionEqualToValue={(option, value) => option.name.toLowerCase().includes(value.name.toLowerCase())}
               onChange={onSearchCountryChange}
               renderInput={(params) => <TextField {...params} label="Maa" name="country" onChange={onChange} />}
             />
