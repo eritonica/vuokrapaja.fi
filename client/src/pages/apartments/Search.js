@@ -59,6 +59,7 @@ const Search = (props) => {
       console.log(body);
       if(body.error === "No location specified.") {
         setMessage({ error: "Et valinnut sijaintia josta etsiä. Yritätkö oikeasti hakea koko maailman asuntoilmoitukset?", message: "" });
+        setSearchedApartments([]);
       } else if(body.message == "success") {
         setSearchedApartments(body.apartments);
         setMessage({ error: "", message: "" });
@@ -538,7 +539,7 @@ const Search = (props) => {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <Typography variant="h6" align="center">
-                { name } sivuston asunnot
+                Löydetyt kohteet
               </Typography>
             </Grid>
             {searchedApartments.map((apartment) => (
