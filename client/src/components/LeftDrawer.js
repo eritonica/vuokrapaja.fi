@@ -49,19 +49,19 @@ const LeftDrawer = (props) => {
               </ListItemIcon>
               <ListItemText primary="Yritys" onClick={() => navigate("/company")}/>
             </ListItem>
-            <ListItem button key="Tee ilmoitus" onClick={() => navigate("/company/apartment", { state : null })}>
+            <ListItem button key="Tee ilmoitus" component={Link} to="/company/apartment" onClick={() => navigate("/company/apartment", { state : null })}>
               <ListItemIcon>
                 <DomainAdd />
               </ListItemIcon>
               <ListItemText primary="Tee ilmoitus" onClick={() => navigate("/company/apartment", { state : null })}/>
             </ListItem>
-            <ListItem button key="Ilmoitukset" onClick={() => navigate("/company/apartments")}>
+            <ListItem button key="Ilmoitukset" component={Link} to="/company/apartments" onClick={() => navigate("/company/apartments")}>
               <ListItemIcon>
                 <Domain />
               </ListItemIcon>
               <ListItemText primary="Ilmoitukset" onClick={() => navigate("/company/apartments")}/>
             </ListItem>
-            <ListItem button key="Työntekijät" onClick={() => navigate("/company/member")}>
+            <ListItem button key="Työntekijät" component={Link} to="/company/member" onClick={() => navigate("/company/member")}>
               <ListItemIcon>
                 <Groups3 /> 
               </ListItemIcon>
