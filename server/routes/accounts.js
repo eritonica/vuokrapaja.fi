@@ -2,6 +2,8 @@ import express from "express";
 import crypto from "../dependancies/crypto.js";
 import mailer from "../dependancies/mailer.js";
 import sessions from "./sessions.js";
+import profiles from "./profiles.js";
+import companies from "./companies.js";
 
 import accountModel from "../schemas/account.js";
 
@@ -54,6 +56,9 @@ router.post("/accounts", async (req, res) => {
     code: activationCode,
   });
   await account.save();
+  let createdAccount = await accountModel.findOne({ email: req.body.email }).exec();
+  // Initialize empty profile and company.. 
+  await profiles.createEmptyProfile(createdAccount._id);
   let header = `Your account has been created.`
   let message = `Hello.\r\n\r\n`;
   message += `Your account has been created. Please click the link below to activate your account.\r\n\r\n`;

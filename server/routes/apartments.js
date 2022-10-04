@@ -97,7 +97,7 @@ router.post("/apartments", async (req, res) => {
 // UPDATE /apartments/:id
 router.put("/apartments/:id", async (req, res) => {
   let apartment = await apartmentModel.findById(req.params.id).exec();
-  if (companies.checkPermission(req.session.account._id, apartment.company, "write")) {
+  if (companies.checkPermission(req.session.account._id, apartment._id, "write")) {
     apartment.rent = req.body.rent;
     apartment.rental = req.body.rental;
     apartment.release = req.body.release;

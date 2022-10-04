@@ -23,9 +23,38 @@ const checkPermission = async (user, company, perm) => {
 	return false;
 }
 
+const createEmptyCompany = async (accountId) => {
+	let hasCompany = await companyModel.findOne({ manager: accountId }).exec();
+	if(hasCompany) {
+		return "Company exists";
+	} else {
+		let company = new companyModel({
+			manager: accountId,
+			name: "",
+			ycode: "",
+			address: "",
+			website: "",
+			description: "",
+			email: "",
+			phone: ""
+		});
+		company.save();
+		return "Empty company created.";
+	}
+}
+
 // GET /companies
 router.get('/companies', async (req, res) => {
 	let companies = await companyModel.findOne({manager: req.session.account._id}).exec();
+	if(!companies) {
+		// Check if user is a member of a company.
+		let companies = await members.getCompaniesByMember(req.session.account._id);
+		if(companies.length === 0) {
+			return res.status(404).json({ error: true, message: "No companies found." });
+		} else {
+			return res.status(200).json(companies);
+		}
+	}
 	return res.status(200).json(companies);
 });
 
@@ -119,5 +148,6 @@ router.put('/companies/:id', async (req, res) => {
 
 export default {
 	router,
-	checkPermission
+	checkPermission,
+	createEmptyCompany
 };

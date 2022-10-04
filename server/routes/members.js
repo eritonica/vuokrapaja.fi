@@ -26,6 +26,18 @@ const getMembers = async (company) => {
   return memberList;
 };
 
+// Return companies if member is part of one
+const getCompaniesByMember = async (member) => {
+  let members = await memberModel.find({ account: member }).exec();
+  let companyList = [];
+  for (let i = 0; i < members.length; i++) {
+    let member = members[i];
+    let company = await companyModel.findOne({ _id: member.company }).exec();
+    companyList.push(company);
+  }
+  return companyList;
+}
+
 
 // POST /companies/members
 // {
@@ -190,5 +202,6 @@ router.delete("/companies/members/:id", async (req, res) => {
 
 export default {
   router,
-  getMembers
+  getMembers,
+  getCompaniesByMember
 };

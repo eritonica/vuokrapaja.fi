@@ -46,10 +46,6 @@ const Apartment = () => {
     open: false,
   });
 
-  if(location.state) {
-    console.log(location.state);
-  }
-
   const [form, setForm] = useState((location.state) ? location.state : {
     address: "",
     zip: "",
@@ -79,6 +75,17 @@ const Apartment = () => {
     private : (profile.type === "Renter") ? true : false,
     new: true,
   });
+
+  useEffect(() => {
+    console.log(location.state);
+    if (location.state) {
+      setForm({...form, new: false});
+      setMessage({...message, success: "Muokkaa ilmoitusta", error: false});
+    } else {
+      setForm({...form, new: true});
+      setMessage({...message, success: "Luodaan ilmoitusta", error: false});
+    }
+  }, [location.state]);
 
   useEffect(() => {
     if (token === false) {
@@ -204,7 +211,7 @@ const Apartment = () => {
         setMessage({...message, error : "Virhe tapahtui. Yritä uudelleen."});
       }
     } else {
-      const response = await fetch("/api/apartments/" + location.state._id, {
+      const response = await fetch(`/api/apartments/${newApartment._id}`,  {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
