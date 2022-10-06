@@ -6,9 +6,7 @@ import { FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText } fro
 
 import Grid from '@mui/material/Unstable_Grid2';
 
-import ApartmentCard from './ApartmentCard';
-
-
+import ApartmentList from './ApartmentList';
 
 const Search = (props) => {
   const name = useSelector((state) => state.app.name);
@@ -17,12 +15,6 @@ const Search = (props) => {
 
   const [message, setMessage] = useState({ error: "", message: "" });
   const [searchedApartments, setSearchedApartments] = useState([]);
-
-  // List cities in Finland in alphabetical order
-  if(location.state !== null) {
-    console.log("Location state");
-    console.log(location.state);
-  }
 
   // Remember to include empty value in the city list, do not remove it!
   const [form, setForm] = useState((location.state) ? location.state : {
@@ -56,11 +48,10 @@ const Search = (props) => {
         body: JSON.stringify(form)
       });
       let body = await response.json();
-      console.log(body);
       if(body.error === "No location specified.") {
         setMessage({ error: "Et valinnut sijaintia josta etsiä. Yritätkö oikeasti hakea koko maailman asuntoilmoitukset?", message: "" });
         setSearchedApartments([]);
-      } else if(body.message == "success") {
+      } else if(body.message === "success") {
         setSearchedApartments(body.apartments);
         setMessage({ error: "", message: "" });
       }
@@ -535,20 +526,7 @@ const Search = (props) => {
         </Grid>
       </Box>
       { searchedApartments.length > 0 && (
-        <Box mt={2}>
-          <Grid container spacing={2}>
-            <Grid item xs={12}>
-              <Typography variant="h6" align="center">
-                Löydetyt kohteet
-              </Typography>
-            </Grid>
-            {searchedApartments.map((apartment) => (
-              <Grid item xs={12} sm={6} md={6} key={apartment._id}>
-                <ApartmentCard apartment={apartment} />
-              </Grid>
-            ))}
-          </Grid>
-        </Box>
+        <ApartmentList apartments={searchedApartments} />
       )}
     </Container>
   )

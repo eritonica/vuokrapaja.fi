@@ -1,17 +1,24 @@
-import { Container, Box, TextField, Button, Typography, Paper, Autocomplete, FormControlLabel, Alert } from '@mui/material';
-import { FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText } from '@mui/material';
+import { useState } from 'react';
+import { Typography, Paper} from '@mui/material';
+
 
 import Grid from '@mui/material/Unstable_Grid2';
 
 const ApartmentCard = ({ apartment }) => {
-  console.log(apartment);
   return (
     <Paper sx={{ p: 2, margin: 'auto', maxWidth: 600, flexGrow: 1 }}>
       <Grid container spacing={2}>
-        <Grid item xs={4}>
-          <img src={"/" + apartment.images[0].path} alt={apartment.images[0].name} width="100%" height="100px" />
+        <Grid item xs={4}  style={{ cursor: 'pointer' }}>
+          <Grid item xs={12}>
+            <Typography gutterBottom variant="subitle1">
+              {apartment.type}
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <img src={"/" + apartment.images[0].path} alt={apartment.images[0].name} width="100%" height="100px" />
+          </Grid>
         </Grid>
-        <Grid item xs={6} container direction="column" spacing={2}>
+        <Grid item xs={6} container direction="column" spacing={2}  style={{ cursor: 'pointer' }}>
           <Grid item xs>
             <Typography gutterBottom variant="subtitle1">
               {apartment.title}
@@ -24,12 +31,15 @@ const ApartmentCard = ({ apartment }) => {
             </Typography>
           </Grid>
           <Grid item xs>
-            <Typography variant="body2" style={{ cursor: 'pointer' }}>
+            <Typography variant="body2">
               {apartment.rent} €/kk {apartment.rental}
+            </Typography>
+            <Typography variant="body2">
+              { new Date(apartment.release) < new Date() ? "Vapautuu heti" : "Vapautuu " + new Date(apartment.release).toLocaleDateString("fi-FI") }
             </Typography>
           </Grid>
         </Grid>
-        <Grid item xs={2} container direction="column" spacing={2} textAlign="right">
+        <Grid item xs={2} container direction="column" spacing={2} textAlign="right"  style={{ cursor: 'pointer' }}>
           <Grid item xs>
             <Typography variant="subtitle1">{apartment.rooms}</Typography>
             <Typography variant="subtitle1">{apartment.size} m²</Typography>
