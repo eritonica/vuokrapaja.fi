@@ -47,8 +47,12 @@ const ImageList = ({ images }) => {
   return (
     <Paper sx={{ p: 2, margin: 'auto', flexGrow: 1 }}>
       <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <img src={"/" + image.path} alt={image.name} width="100%" />
+        <Grid item xs={12} sx={{ 
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+         }}>
+          <img src={"/" + image.path} alt={image.name} height="400px" />
         </Grid>
         <Grid item xs={12}>
           <Grid container spacing={2}>

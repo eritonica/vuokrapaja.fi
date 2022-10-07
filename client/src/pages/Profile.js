@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Container, Box, TextField, Button, Alert, Typography, Avatar} from '@mui/material';
 import { FormControl, Modal, InputLabel, Select, MenuItem, Paper, Tooltip } from '@mui/material';
-import AspectRatioBox from '../components/AspectRatioBox.js';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -250,13 +249,9 @@ const Profile = (props) => {
           </Grid>
         </Grid>
         <Grid container spacing={2}>
-          <Grid item xs={4}>
+          <Grid item xs={4}  sx={{ height: "220px", width: "220px", marginRight: "30px", marginBottom: "30px"}}>
             <Tooltip title="Vaihda profiilikuvaa">
-              <Box component="div" sx={{ width: "100%" }}>
-                <AspectRatioBox ratio={1}>
-                    <Avatar alt={profile.username} src={profile.avatar} onClick={handleOpenAvatarModal} />
-                </AspectRatioBox>
-              </Box>
+                <Avatar alt={profile.username} src={profile.avatar} onClick={handleOpenAvatarModal} sx={{ height: "220px", width: "220px"}}/>
             </Tooltip>
             <Modal
               open={modal.avatar}
