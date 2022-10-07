@@ -131,7 +131,7 @@ const Search = (props) => {
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <Typography variant="h4" component="h2" gutterBottom>
-              Hae asuntoa
+              Hae vuokrattavia kohteita
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -510,7 +510,7 @@ const Search = (props) => {
           )}
           <Grid item xs={12}>
             <Button variant="contained" color="primary" fullWidth type="submit" onClick={onSearchFormSubmit}>
-              Hae asuntoja
+              Hae 
             </Button>
           </Grid>
           { message.error !== "" && (

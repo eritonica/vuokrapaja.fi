@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Box, Grid, Typography, FormControl, InputLabel, Select, MenuItem, Button } from "@mui/material"
 import ApartmentCard from "./ApartmentCard"
 
@@ -11,30 +11,9 @@ const ApartmentList = ({apartments}) => {
     apartments : [apartments],
   });
 
-  const sortApartments = (apartments) => {
-    switch (sort) {
-      case "price-asc":
-        return apartments.sort((a, b) => a.rent < b.rent)
-      case "price-desc":
-        return apartments.sort((a, b) => a.rent > b.rent)
-      case "size-asc":
-        return apartments.sort((a, b) => a.size < b.size)
-      case "size-desc":
-        return apartments.sort((a, b) => b.size > a.size)
-      case "creation-asc":
-        return apartments.sort((a, b) => new Date(a.createdAt) < new Date(b.createdAt))
-      case "creation-desc":
-        return apartments.sort((a, b) => new Date(b.createdAt) > new Date(a.createdAt))
-      case "release-asc":
-        return apartments.sort((a, b) => new Date(a.release) > new Date(b.release))
-      default:
-        return apartments.sort((a, b) => a.rent - b.rent)
-    }
-  }
-
-  const paginateApartments = (apartments) => {
+  const paginateApartments = useCallback(() => {
     const pages = Math.ceil(apartments.length / pagination.perPage)
-    const paginatedApartments = []
+    let paginatedApartments = []
     for(let i = 0; i < pages; i++) {
       let pageApartments = apartments.slice(i * pagination.perPage, (i + 1) * pagination.perPage)
       paginatedApartments.push(pageApartments);
@@ -44,19 +23,43 @@ const ApartmentList = ({apartments}) => {
       pages: pages,
       apartments: paginatedApartments
     })
-  }
+  }, [pagination, apartments])
 
-  useEffect(() => {
-    console.count("UseEffect Pagination update")
-    apartments = sortApartments(apartments);
-    paginateApartments(apartments);
-  }, [pagination.perPage]);
+  const sortApartments = useCallback(() => {
+    let sortedApartments = [...apartments];
+    switch (sort) {
+      case "price-asc":
+        sortedApartments = apartments.sort((a, b) => a.rent < b.rent)
+        break;
+      case "price-desc":
+        sortedApartments = apartments.sort((a, b) => a.rent > b.rent)
+        break;
+      case "size-asc":
+        sortedApartments = apartments.sort((a, b) => a.size < b.size)
+        break;
+      case "size-desc":
+        sortedApartments = apartments.sort((a, b) => b.size > a.size)
+        break;
+      case "creation-asc":
+        sortedApartments = apartments.sort((a, b) => new Date(a.createdAt) < new Date(b.createdAt))
+        break;
+      case "creation-desc":
+        sortedApartments = apartments.sort((a, b) => new Date(b.createdAt) > new Date(a.createdAt))
+        break;
+      case "release-asc":
+        sortedApartments = apartments.sort((a, b) => new Date(a.release) > new Date(b.release))
+        break;
+      default:
+        sortedApartments = apartments.sort((a, b) => a.rent - b.rent)
+        break;
+    }
+    paginateApartments(sortedApartments)
+  }, [apartments, sort, paginateApartments]);
 
-  useEffect(() => {
-    console.count("UseEffect Sort update")
-    apartments = sortApartments(apartments);
-    paginateApartments(apartments); 
-  }, [sort]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(sortApartments, [sort]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(paginateApartments, [pagination.perPage]);
 
   const onSortChange = (event) => {
     console.log(event.target.value)

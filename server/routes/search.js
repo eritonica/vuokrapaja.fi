@@ -20,8 +20,6 @@ router.post("/search/", async (req, res) => {
     apartments = [...new Set(apartments)];
     // Now get those apartments.
     let foundApartments = await Apartments.getApartments(apartments);
-    // Now we can filter them by the other parameters.
-    console.log(req.body);
     let filteredApartments = foundApartments.filter((apartment) => {
       let useFound = false;
       if(req.body.use) {
@@ -153,6 +151,15 @@ router.post("/search/", async (req, res) => {
     return res.status(200).json({ message: "success", apartments: filteredApartments });
   } else {
     return res.status(404).json({ error: "No location specified." });
+  }
+});
+
+router.get("/search/apartment/:apartment", async (req, res) => {
+  let apartment = await Apartments.getApartment(req.params.apartment);
+  if (apartment) {
+    res.status(200).json({ message: "success", apartment: apartment });
+  } else {
+    res.status(404).json({ message: "Apartment not found." });
   }
 });
 

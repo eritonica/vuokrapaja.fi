@@ -24,7 +24,6 @@ const getApartments = async (ids) => {
   }
 };
 
-// GET /apartments
 router.get("/apartments/:company", async (req, res) => {
   if(companies.checkPermission(req.session.account._id, req.params.company, "read")) {
     let apartments = await apartmentModel.find({ company: req.params.company }).exec();

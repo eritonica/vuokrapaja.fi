@@ -13,6 +13,7 @@ import Gdpr from './components/Gdpr';
 
 // Pages
 import Landing from './pages/Landing';
+import Apartment from './pages/apartments/Apartment';
 import ApartmentsSearch from './pages/apartments/Search';
 import LoginForm from './pages/LoginForm';
 import Profile from './pages/Profile';
@@ -101,6 +102,7 @@ function App() {
             <TopBar />
             <Routes>
               <Route path="/" element={<Landing/>} />
+              <Route path="/apartments/:id" element={<Apartment/>} />
               <Route path="/apartments/search" element={<ApartmentsSearch/>} />
               <Route path="/company" element={<Company/>} />
               <Route path="/company/member" element={<Member/>} />

@@ -1,13 +1,20 @@
-import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Typography, Paper} from '@mui/material';
 
 
 import Grid from '@mui/material/Unstable_Grid2';
 
 const ApartmentCard = ({ apartment }) => {
+
+  const navigate = useNavigate();
+
+  const onApartmentClick = () => {
+    navigate(`/apartments/${apartment._id}`);
+  }
+
   return (
     <Paper sx={{ p: 2, margin: 'auto', maxWidth: 600, flexGrow: 1 }}>
-      <Grid container spacing={2}>
+      <Grid container spacing={2}  onClick={onApartmentClick}>
         <Grid item xs={4}  style={{ cursor: 'pointer' }}>
           <Grid item xs={12}>
             <Typography gutterBottom variant="subitle1">

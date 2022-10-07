@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Container, Box, TextField, Button, Modal, Typography, Alert, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { Container, Box, Button, Typography, Alert } from '@mui/material';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 
 import Grid from '@mui/material/Unstable_Grid2';
 
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 const Aparments = () => {
   const token = useSelector(state => state.app.token);
-  const server = useSelector(state => state.app.server);
   const company = useSelector(state => state.app.company);
   const profile = useSelector(state => state.app.profile);
 
@@ -25,7 +24,7 @@ const Aparments = () => {
     if(profile.role === 'Rentee') {
       navigate("/");
     }
-  }, []);
+  }, [navigate, token, profile]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,7 +44,8 @@ const Aparments = () => {
       }
     }
     fetchData();
-  }, [])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleDelete = async (id) => {
     const response = await fetch(`/api/apartments/${id}`, {

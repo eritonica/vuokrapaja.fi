@@ -26,7 +26,7 @@ const Profile = (props) => {
     if(profile.role === 'Rentee') {
       navigate("/");
     }
-  }, []);
+  }, [navigate, token, profile]);
 
 	const onChange = (e) => {
 		dispatch(setCompany({...company, [e.target.name]: e.target.value}));

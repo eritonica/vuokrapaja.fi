@@ -85,7 +85,8 @@ const Apartment = () => {
       setForm({...form, new: true});
       setMessage({...message, success: "Luodaan ilmoitusta", error: false});
     }
-  }, [location.state]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (token === false) {
@@ -94,7 +95,8 @@ const Apartment = () => {
     if (profile.role === 'Rentee') {
       navigate("/");
     }
-  }, [navigate, profile.role, token]);
+  
+  }, [navigate, token, profile]);
 
   const onChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -188,6 +190,26 @@ const Apartment = () => {
       ...form,
     }
     if(newApartment.new === true) {
+      // TODO: Virheilmoitukset kohteen lisäykseen.
+      if(newApartment.address === "") {
+        setMessage({...message, error : "Osoite puuttuu."});
+        return;
+      } else if(newApartment.zip === "") {
+        setMessage({...message, error : "Postinumero puuttuu."});
+        return;
+      } else if(newApartment.cityArea === "") {
+        setMessage({...message, error : "Kaupunginosa puuttuu."});
+        return;
+      } else if(newApartment.city === "") {
+        setMessage({...message, error : "Kaupunki puuttuu."});
+        return;
+      } else if(newApartment.country === "") {
+        setMessage({...message, error : "Maa puuttuu."});
+        return;
+      } else if(newApartment.rent === "") {
+        setMessage({...message, error : "Vuokra puuttuu."});
+        return;
+      }
       const response = await fetch("/api/apartments", {
         method: "POST",
         headers: {

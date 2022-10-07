@@ -36,7 +36,7 @@ const Member = () => {
     if(profile.role === 'Rentee') {
       navigate("/");
     }
-  }, []);
+  }, [navigate, token, profile]);
 
   const [modal, setModal] = useState({
     add: false,
