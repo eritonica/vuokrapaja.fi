@@ -600,9 +600,9 @@ const Apartment = () => {
                   <Checkbox checked={form.has.indexOf('Oma Sauna') > -1} />
                   <ListItemText primary="Oma Sauna" />
                 </MenuItem>
-                <MenuItem value="Taloyhtiö Sauna">
-                  <Checkbox checked={form.has.indexOf('Taloyhtiö Sauna') > -1} />
-                  <ListItemText primary="Taloyhtiö Sauna" />
+                <MenuItem value="Taloyhtiön Sauna">
+                  <Checkbox checked={form.has.indexOf('Taloyhtiön Sauna') > -1} />
+                  <ListItemText primary="Taloyhtiön Sauna" />
                 </MenuItem>
                 <MenuItem value="Hissi">
                   <Checkbox checked={form.has.indexOf('Hissi') > -1} />
@@ -675,17 +675,17 @@ const Apartment = () => {
                   <Checkbox checked={form.suitable.indexOf('Iäkkäälle') > -1} />
                   <ListItemText primary="Iäkkäälle" />
                 </MenuItem>
-                <MenuItem value="Vauvaperheelle">
-                  <Checkbox checked={form.suitable.indexOf('Vauvaperheelle') > -1} />
-                  <ListItemText primary="Vauvaperheelle" />
+                <MenuItem value="Lapsiperheelle">
+                  <Checkbox checked={form.suitable.indexOf('Lapsiperheelle') > -1} />
+                  <ListItemText primary="Lapsiperheelle" />
                 </MenuItem>
-                <MenuItem value="Koiralle">
-                  <Checkbox checked={form.suitable.indexOf('Koiralle') > -1} />
-                  <ListItemText primary="Koiralle" />
+                <MenuItem value="Lemmikille">
+                  <Checkbox checked={form.suitable.indexOf('Lemmikille') > -1} />
+                  <ListItemText primary="Lemmikille" />
                 </MenuItem>
-                <MenuItem value="Kissoille">
-                  <Checkbox checked={form.suitable.indexOf('Kissoille') > -1} />
-                  <ListItemText primary="Kissoille" />
+                <MenuItem value="Talouseläimille">
+                  <Checkbox checked={form.suitable.indexOf('Talouseläimille') > -1} />
+                  <ListItemText primary="Talouseläimille" />
                 </MenuItem>
                 <MenuItem value="Tupakoitsijalle">
                   <Checkbox checked={form.suitable.indexOf('Tupakoitsijalle') > -1} />

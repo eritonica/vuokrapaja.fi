@@ -12,6 +12,8 @@ const Apartment = () => {
   const [apartment, setApartment] = useState({});
   const token = useSelector(state => state.token);
 
+  const [cellWidth, setCellWidth] = useState("50%");
+
   useEffect(() => {
     if (id === undefined) {
       navigate("/apartments/search");
@@ -63,38 +65,42 @@ const Apartment = () => {
             <Typography variant="h6" component="h2" gutterBottom>
               Perustiedot
             </Typography>
-            <Table>
+            <Table size="small">
               <TableBody>
                 <TableRow>
-                  <TableCell><b>Koko</b></TableCell>
+                  <TableCell width={cellWidth}><b>Koko</b></TableCell>
                   <TableCell>{apartment.rooms + ", " + apartment.size} m²</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell><b>Vapautuminen</b></TableCell>
+                  <TableCell width={cellWidth}><b>Vapautuminen</b></TableCell>
                   <TableCell>{new Date(apartment.release).toLocaleDateString("fi-FI")}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell><b>Ilmoitettu</b></TableCell>
+                  <TableCell width={cellWidth}><b>Ilmoitettu</b></TableCell>
                   <TableCell>{new Date(apartment.created).toLocaleDateString("fi-FI")}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell><b>Asunnon käyttötarkoitus</b></TableCell>
+                  <TableCell width={cellWidth}><b>Asunnon käyttötarkoitus</b></TableCell>
                   <TableCell>{apartment.use}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell><b>Asunnon tyyppi</b></TableCell>
+                  <TableCell width={cellWidth}><b>Asunnon tyyppi</b></TableCell>
                   <TableCell>{apartment.type}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell><b>Kerros</b></TableCell>
+                  <TableCell width={cellWidth}><b>Kerros</b></TableCell>
                   <TableCell>{apartment.floor}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell><b>Asunnon kunto</b></TableCell>
+                  <TableCell width={cellWidth}><b>Keittiön tyyppi</b></TableCell>
+                  <TableCell>{apartment.kitchenType}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell width={cellWidth}><b>Asunnon kunto</b></TableCell>
                   <TableCell>{apartment.condition}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell><b>Rakennusvuosi</b></TableCell>
+                  <TableCell width={cellWidth}><b>Rakennusvuosi</b></TableCell>
                   <TableCell>{apartment.buildingYear}</TableCell>
                 </TableRow>
               </TableBody>
@@ -104,31 +110,48 @@ const Apartment = () => {
             <Typography variant="h6" component="h2" gutterBottom>
               Kustannukset
             </Typography>
-            <Table>
+            <Table size="small">
               <TableBody>
                 <TableRow>
-                  <TableCell><b>Vuokra</b></TableCell>
+                  <TableCell width={cellWidth}><b>Vuokra</b></TableCell>
                   <TableCell>{apartment.rent} €/kk</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell><b>Vakuus</b></TableCell>
+                  <TableCell width={cellWidth}><b>Vakuus</b></TableCell>
                   <TableCell>{(apartment.deposit) ? apartment.deposit.join(", ") : "Ei määritelty."}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell><b>Sähkömaksu</b></TableCell>
+                  <TableCell width={cellWidth}><b>Sähkömaksu</b></TableCell>
                   <TableCell>{(apartment.electricitySeperate === true) ? "Oma sopimus" : apartment.electricity + " €/kk"}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell><b>Vesimaksu</b></TableCell>
+                  <TableCell width={cellWidth}><b>Vesimaksu</b></TableCell>
                   <TableCell>{(apartment.waterSeperate === true) ? "Vesi kulutuksen mukaan" : apartment.water + " €/kk henkilöä kohden"}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell><b>Lämmitysmaksu</b></TableCell>
+                  <TableCell width={cellWidth}><b>Lämmitysmaksu</b></TableCell>
                   <TableCell>{(apartment.heatingSeperate === true) ? "Ei kuulu vuokraan" : "Lämmitys kuuluu vuokraan"}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell><b>Lämmitysmuoto</b></TableCell>
+                  <TableCell width={cellWidth}><b>Lämmitysmuoto</b></TableCell>
                   <TableCell>{apartment.heating}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6" component="h2" gutterBottom>
+              Lisätiedot
+            </Typography>
+            <Table size="small">
+              <TableBody>
+                <TableRow>
+                  <TableCell width={cellWidth}><b>Asunnossa on</b></TableCell>
+                  <TableCell>{(apartment.has) && apartment.has.join(", ")}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell width={cellWidth}><b>Asunto sopii</b></TableCell>
+                  <TableCell>{(apartment.suitable) && apartment.suitable.join(", ")}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
