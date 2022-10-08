@@ -92,6 +92,8 @@ app.post("/api/uploads/multiple", (req, res) => {
 
 // Routes, loading these could be automated without ES6 import/export support
 
+import files from "./routes/files.js";
+app.use("/api", files.router);
 import search from "./routes/search.js";
 app.use("/api", search.router);
 import locations from './routes/locations.js';

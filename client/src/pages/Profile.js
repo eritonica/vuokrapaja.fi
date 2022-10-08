@@ -231,9 +231,20 @@ const Profile = (props) => {
 
   const handleAvatarFormSubmit = async (data) => {
     console.log(data);
+    if(profile.avatar) {
+      await fetch("/api/files", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "token": token,
+        },
+        body: JSON.stringify({
+          filename: profile.avatar
+        })
+      });
+    }
     dispatch(setProfile({ ...profile, avatar: data.file.path }));
     handleCloseAvatarModal();
-    
     updateProfile({
       ...profile,
       avatar: data.file.path

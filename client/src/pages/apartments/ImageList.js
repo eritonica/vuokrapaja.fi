@@ -52,7 +52,7 @@ const ImageList = ({ images }) => {
           justifyContent: 'center',
           alignItems: 'center',
          }}>
-          <img src={"/" + image.path} alt={image.name} height="400px" />
+          <img src={"/" + image.path} alt={image.name} height="400px" xs={12} />
         </Grid>
         <Grid item xs={12}>
           <Grid container spacing={2}>

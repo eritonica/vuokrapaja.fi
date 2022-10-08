@@ -154,8 +154,18 @@ const Apartment = () => {
     });
   }
 
-  const removeImage = (index) => {
+  const removeImage = async (index) => {
     let images = form.images;
+    let response = await fetch("/api/files", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "token": token,
+      },
+      body: JSON.stringify({
+        filename: images[index].path
+      })
+    });
     images.splice(index, 1);
     setForm({
       ...form,
