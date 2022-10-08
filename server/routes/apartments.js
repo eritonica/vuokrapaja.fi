@@ -64,6 +64,12 @@ router.post("/apartments", async (req, res) => {
       has: req.body.has,
       suitable: req.body.suitable,
       images: req.body.images,
+      deposit: req.body.deposit,
+      floor: req.body.floor,
+      housing: req.body.housing,
+      hosting: req.body.hosting,
+      maintenance: req.body.maintenance,
+      responsible: req.body.responsible,
       default: req.body.default,
       paid: false,
     });
@@ -118,6 +124,12 @@ router.put("/apartments/:id", async (req, res) => {
     apartment.has = req.body.has;
     apartment.suitable = req.body.suitable;
     apartment.images = req.body.images;
+    apartment.deposit = req.body.deposit,
+    apartment.floor = req.body.floor,
+    apartment.housing = req.body.housing,
+    apartment.hosting = req.body.hosting,
+    apartment.maintenance = req.body.maintenance,
+    apartment.responsible = req.body.responsible,
     apartment.default = req.body.default;
     apartment.paid = req.body.paid;
     apartment.save();

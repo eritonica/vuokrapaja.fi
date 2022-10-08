@@ -12,7 +12,7 @@ const Map = ({address}) => {
   Geocode.setLanguage("fi");
   Geocode.setRegion("fi");
   Geocode.setLocationType("ROOFTOP");
-  //Geocode.enableDebug();
+  Geocode.enableDebug(false);
 
   // eslint-disable-next-line
   const [map, setMap ] = useState(null);
@@ -31,11 +31,11 @@ const Map = ({address}) => {
 
   useEffect(() => {
     Geocode.fromAddress(address).then(
-      response => {
+      (response) => {
         const { lat, lng } = response.results[0].geometry.location;
         setLatlng({lat: lat, lng: lng});
       },
-      error => {
+      (error) => {
         console.error(error);
       }
     );

@@ -2,92 +2,110 @@ import mongoose from 'mongoose';
 
 
 const apartmentSchema = new mongoose.Schema({
-  creator: {
+  creator: {      // Ilmoituksen luo
     type: mongoose.Schema.Types.ObjectId,
 		ref: 'Account',
 		required: true,
   },
-  company: {
+  company: {      // ilmoituksen yritys
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Company',
     required: true,
   },
-  address: {
+  address: {      // ilmoituksen osoite
     type: String,
   },
-  zip: {
+  zip: {          // postinumero
     type: String,
   },
-  cityArea: {
+  cityArea: {     // kaupunginosa
     type: String,
   },
-  city: {
+  city: {         // kaupunki
     type: String,
   },
-  country: {
+  country: {      // maa
     type: String,
   },
-  rent: {
+  rent: {         // vuokra
     type: Number,
   },
-  rental: {
+  rental: {       // sopimusmuoto
     type: String,
   },
-  release: {
+  deposit: {      // vakuus
+    type: String,
+  },
+  release: {      // vapautuminen
     type: Date,
   },
-  rooms: {
+  rooms: {        // huoneet 2h+k+kph
     type: String,
   },
-  size: {
+  size: {         // Koko neliöinä
     type: Number,
   },
-  type: {
+  floor: {        // Kerros
     type: String,
   },
-  waterSeperate: {
+  type: {         // asunnon tyyppi
+    type: String,
+  },
+  waterSeperate: {  // vesimaksu erikseen
     type: Boolean,
   },
-  water: {
+  water: {        // vesimaksu
     type: Number,
   },
-  electricitySeperate: {
+  electricitySeperate: {  // sähkömaksu erikseen
+    type: Boolean, 
+  },
+  electricity: { // sähkömaksu
+    type: Number,
+  },
+  heatingSeperate: { // lämmitysmaksu erikseen
     type: Boolean,
   },
-  electricity: {
+  use: {          // käyttötarkoitus
+    type: String,
+  },
+  description: {  // kuvaus
+    type: String,
+  },
+  condition: {    // kunto
+    type: String,
+  },
+  buildingYear: { // rakennusvuosi
     type: Number,
   },
-  heatingSeperate: {
-    type: Boolean,
-  },
-  use: {
+  kitchenType: {  // keittiön tyyppi
     type: String,
   },
-  description: {
+  heating: {      // lämmitys
     type: String,
   },
-  condition: {
-    type: String,
-  },
-  buildingYear: {
-    type: Number,
-  },
-  kitchenType: {
-    type: String,
-  },
-  heating: {
-    type: String,
-  },
-  has: {
+  has: {          // asunnossa on
     type: Array,
   },
-  suitable: {
+  suitable: {     // sopii
     type: Array,
   },
-  images: {
+  images: {       // kuvat
     type: Array,
   },
-  private: {
+  housing: {      // Taloyhtiön nimi
+    type: String,
+  },
+  hosting: {      // Isännöinti
+    type: String,
+  },
+  maintenance: {  // Huolto
+    type: String,
+  },
+  responsible: {  // Vastuu kiinteistönhoidosta
+    type: String,
+  },
+  private: {      // yksityinen
     type: Boolean,
     default: true,
   },
@@ -96,7 +114,7 @@ const apartmentSchema = new mongoose.Schema({
     required: true,
     default: false,
   },
-  created: {
+  created: {      // ilmoituksen luontipäivä
     type: Date,
     required: true,
     default: Date.now,

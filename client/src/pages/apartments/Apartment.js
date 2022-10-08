@@ -48,7 +48,7 @@ const Apartment = () => {
           </Grid>
           <Grid item xs={12}>
             <Paper sx={{ p: 2, margin: 'auto', flexGrow: 1 }}>
-              <Map address={apartment.address + ", " + apartment.city + ", " + apartment.country} />
+              { apartment.address && <Map address={apartment.address + ",+" + apartment.city + ",+" + apartment.country} /> }
             </Paper>
           </Grid>
           <Grid item xs={12}>
@@ -67,36 +67,72 @@ const Apartment = () => {
               <TableBody>
                 <TableRow>
                   <TableCell><b>Koko</b></TableCell>
-                  <TableCell>{apartment.size} m²</TableCell>
+                  <TableCell>{apartment.rooms + ", " + apartment.size} m²</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell><b>Hinta</b></TableCell>
-                  <TableCell>{apartment.rent} €/kk</TableCell>
+                  <TableCell><b>Vapautuminen</b></TableCell>
+                  <TableCell>{new Date(apartment.release).toLocaleDateString("fi-FI")}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell><b>Ilmoitettu</b></TableCell>
+                  <TableCell>{new Date(apartment.created).toLocaleDateString("fi-FI")}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell><b>Asunnon käyttötarkoitus</b></TableCell>
+                  <TableCell>{apartment.use}</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell><b>Asunnon tyyppi</b></TableCell>
                   <TableCell>{apartment.type}</TableCell>
                 </TableRow>
                 <TableRow>
+                  <TableCell><b>Kerros</b></TableCell>
+                  <TableCell>{apartment.floor}</TableCell>
+                </TableRow>
+                <TableRow>
                   <TableCell><b>Asunnon kunto</b></TableCell>
                   <TableCell>{apartment.condition}</TableCell>
                 </TableRow>
                 <TableRow>
-                  <TableCell><b>Asunnon huoneet</b></TableCell>
-                  <TableCell>{apartment.rooms}</TableCell>
+                  <TableCell><b>Rakennusvuosi</b></TableCell>
+                  <TableCell>{apartment.buildingYear}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
           </Grid>
           <Grid item xs={12}>
             <Typography variant="h6" component="h2" gutterBottom>
-              Rakennusvuosi
+              Kustannukset
             </Typography>
-            <Typography variant="body1" gutterBottom>
-              {apartment.buildingYear}
-            </Typography>
+            <Table>
+              <TableBody>
+                <TableRow>
+                  <TableCell><b>Vuokra</b></TableCell>
+                  <TableCell>{apartment.rent} €/kk</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell><b>Vakuus</b></TableCell>
+                  <TableCell>{(apartment.deposit) ? apartment.deposit.join(", ") : "Ei määritelty."}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell><b>Sähkömaksu</b></TableCell>
+                  <TableCell>{(apartment.electricitySeperate === true) ? "Oma sopimus" : apartment.electricity + " €/kk"}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell><b>Vesimaksu</b></TableCell>
+                  <TableCell>{(apartment.waterSeperate === true) ? "Vesi kulutuksen mukaan" : apartment.water + " €/kk henkilöä kohden"}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell><b>Lämmitysmaksu</b></TableCell>
+                  <TableCell>{(apartment.heatingSeperate === true) ? "Ei kuulu vuokraan" : "Lämmitys kuuluu vuokraan"}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell><b>Lämmitysmuoto</b></TableCell>
+                  <TableCell>{apartment.heating}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </Grid>
-
         </Grid>
       </Box>
     </Container>

@@ -46,7 +46,7 @@ const Apartment = () => {
     open: false,
   });
 
-  const [form, setForm] = useState((location.state) ? location.state : {
+  const [form, setForm] = useState({
     address: "",
     zip: "",
     cityArea: "",
@@ -72,6 +72,12 @@ const Apartment = () => {
     has: [],
     suitable: [],
     images: [],
+    deposit: [],
+    floor: 1,
+    housing: "",
+    hosting: "",
+    maintenance: "",
+    responsible: "",
     private : (profile.type === "Renter") ? true : false,
     new: true,
   });
@@ -79,7 +85,7 @@ const Apartment = () => {
   useEffect(() => {
     console.log(location.state);
     if (location.state) {
-      setForm({...form, new: false});
+      setForm({...form, ...(location.state), new: false});
       setMessage({...message, success: "Muokkaa ilmoitusta", error: false});
     } else {
       setForm({...form, new: true});
@@ -156,7 +162,7 @@ const Apartment = () => {
 
   const removeImage = async (index) => {
     let images = form.images;
-    let response = await fetch("/api/files", {
+    await fetch("/api/files", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -350,6 +356,41 @@ const Apartment = () => {
           </Grid>
           <Grid item xs={12}>
             <FormControl fullWidth>
+              <InputLabel id="floor-label">Kohteen kerros</InputLabel>
+              <Select
+                labelId="floor-label"
+                id="floor"
+                name="floor"
+                value={form.floor}
+                label="Kohteen kerros"
+                onChange={onChange}>
+                <MenuItem value="1">1</MenuItem>
+                <MenuItem value="2">2</MenuItem>
+                <MenuItem value="3">3</MenuItem>
+                <MenuItem value="4">4</MenuItem>
+                <MenuItem value="5">5</MenuItem>
+                <MenuItem value="6">6</MenuItem>
+                <MenuItem value="7">7</MenuItem>
+                <MenuItem value="8">8</MenuItem>
+                <MenuItem value="9">9</MenuItem>
+                <MenuItem value="10">10</MenuItem>
+                <MenuItem value="11">11</MenuItem>
+                <MenuItem value="12">12</MenuItem>
+                <MenuItem value="13">13</MenuItem>
+                <MenuItem value="14">14</MenuItem>
+                <MenuItem value="15">15</MenuItem>
+                <MenuItem value="16">16</MenuItem>
+                <MenuItem value="17">17</MenuItem>
+                <MenuItem value="18">18</MenuItem>
+                <MenuItem value="19">19</MenuItem>
+                <MenuItem value="20">20</MenuItem>
+                <MenuItem value="21">21</MenuItem>
+                <MenuItem value="22">22</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth>
               <InputLabel id="type-label">Kohteen tyyppi</InputLabel>
               <Select
                 labelId="type-label"
@@ -370,16 +411,59 @@ const Apartment = () => {
           </Grid>
           <Grid item xs={12}>
             <FormControl fullWidth>
-              <InputLabel id="sopimus-label">Vuokrasuhteen kesto</InputLabel>
+              <InputLabel id="rental-label">Vuokrasuhteen kesto</InputLabel>
               <Select
-                labelId="sopimus-label"
-                id="sopimus"
+                labelId="rental-label"
+                id="rental"
                 name="rental"
                 value={form.rental}
                 label="Vuokrasuhteen kesto"
                 onChange={onChange}>
                 <MenuItem value="toistaiseksi">Toistaiseksi</MenuItem>
                 <MenuItem value="määräajaksi">Määräajaksi</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl fullWidth>
+            <InputLabel id="deposit-label">Sopiva vakuus</InputLabel>
+              <Select
+                labelId="deposit-label"
+                label="Sopiva vakuus"
+                id="deposit"
+                name="deposit"
+                value={form.deposit}
+                multiple
+                renderValue={(selected) => selected.join(', ')}
+                onChange={onChange}>
+                <MenuItem value="1 kk">
+                  <Checkbox checked={form.deposit.indexOf('1 kk') > -1} />
+                  <ListItemText primary="1 kk" />
+                </MenuItem>
+                <MenuItem value="2 kk">
+                  <Checkbox checked={form.deposit.indexOf('2 kk') > -1} />
+                  <ListItemText primary="2 kk" />
+                </MenuItem>
+                <MenuItem value="3 kk">
+                  <Checkbox checked={form.deposit.indexOf('3 kk') > -1} />
+                  <ListItemText primary="3 kk" />
+                </MenuItem>
+                <MenuItem value="Kelavakuus">
+                  <Checkbox checked={form.deposit.indexOf('Kelavakuus') > -1} />
+                  <ListItemText primary="Kelavakuus" />
+                </MenuItem>
+                <MenuItem value="Ei vakuutta">
+                  <Checkbox checked={form.deposit.indexOf('Ei vakuutta') > -1} />
+                  <ListItemText primary="Ei vakuutta" />
+                </MenuItem>
+                <MenuItem value="Pankkitalletus">
+                  <Checkbox checked={form.deposit.indexOf('Pankkitalletus') > -1} />
+                  <ListItemText primary="Pankkitalletus" />
+                </MenuItem>
+                <MenuItem value="Takuuvakuutus">
+                  <Checkbox checked={form.deposit.indexOf('Takuuvakuutus') > -1} />
+                  <ListItemText primary="Takuuvakuutus" />
+                </MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -422,10 +506,10 @@ const Apartment = () => {
           </Grid>
           <Grid item xs={12}>
             <FormControl fullWidth>
-              <InputLabel id="kaytto-label">Käyttötarkoitus</InputLabel>
+              <InputLabel id="use-label">Käyttötarkoitus</InputLabel>
               <Select
-                labelId="kaytto-label"
-                id="kaytto"
+                labelId="use-label"
+                id="use"
                 name="use"
                 value={form.use}
                 label="Käyttötarkoitus"
@@ -444,10 +528,10 @@ const Apartment = () => {
           </Grid>
           <Grid item xs={12}>
             <FormControl fullWidth>
-              <InputLabel id="kunto-label">Kohteen kunto</InputLabel>
+              <InputLabel id="condition-label">Kohteen kunto</InputLabel>
               <Select
-                labelId="kunto-label"
-                id="kunto"
+                labelId="condition-label"
+                id="condition"
                 name="condition"
                 value={form.condition}
                 label="Kohteen kunto"
@@ -567,7 +651,6 @@ const Apartment = () => {
               </Select>
             </FormControl>
           </Grid>
-
           <Grid item xs={12}>
             <FormControl fullWidth>
               <InputLabel id="suitable-label">Soveltuu</InputLabel>
@@ -610,6 +693,51 @@ const Apartment = () => {
                 </MenuItem>
               </Select>
             </FormControl>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6" gutterBottom>
+              Taloyhtiö
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="housing"
+              name="housing"
+              label="Taloyhtiön nimi"
+              fullWidth
+              value={form.housing}
+              onChange={onChange}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="hosting"
+              name="hosting"
+              label="Isännöitsijä"
+              fullWidth
+              value={form.hosting}
+              onChange={onChange}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="maintenance"
+              name="maintenance"
+              label="Huoltoyhtiö"
+              fullWidth
+              value={form.maintenance}
+              onChange={onChange}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="responsible"
+              name="responsible"
+              label="Vastuu kiinteistön hoidosta"
+              fullWidth
+              value={form.responsible}
+              onChange={onChange}
+            />
           </Grid>
         </Grid>
         <Grid container spacing={2} sx={{ mb: 4}}>
