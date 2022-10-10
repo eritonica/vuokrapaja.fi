@@ -17,6 +17,7 @@ const confirm = async (token) => {
 
 // Session check middleware
 const checkSession = async (req, res, next) => {
+  console.log("header token", req.headers.token);
   let session = await sessionModel.findOne({ token: req.headers.token }).exec();
   if (session) {
     if(session.updated.getTime() + process.env.SESSION_TTL > Date.now()) {
@@ -35,6 +36,17 @@ const checkSession = async (req, res, next) => {
   } else {
     res.status(401).json({ message: "Unauthorized" });
   }
+}
+
+const createSession = async (id) => {
+  let token = crypto.generateString(32);
+  let session = new sessionModel({
+    token: token,
+    account: id,
+    updated: Date.now()
+  });
+  session.save();
+  return session;
 }
 
 // POST /sessions
@@ -96,7 +108,7 @@ const deleteSession = (token) => {
 
 router.delete("/sessions", async (req, res) => {
   let session = await sessionModel.findOne({ token: req.body.token }).exec();
-  if(!session.token) {
+  if(!session) {
     return res.status(400).json({ message: "Session not found." });
   }
   if (deleteSession(session.token)) {
@@ -111,4 +123,5 @@ export default {
   router,
   confirm,
   checkSession,
+  createSession,
 }

@@ -14,7 +14,7 @@ const accountSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
+    required: false,
   },
   active: {
     type: Boolean,
@@ -23,9 +23,17 @@ const accountSchema = new mongoose.Schema({
   },
   code: {
     type: String,
-    required: true,
+    required: false,
   },
   recovery: {
+    type: String,
+    required: false,
+  },
+  source: {
+    type: String,
+    required: false,
+  },
+  sourceId: {
     type: String,
     required: false,
   },

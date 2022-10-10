@@ -45,10 +45,10 @@ const Profile = (props) => {
         },
       });
       let prof = await result.json();
+      console.log("Logging profile");
       console.log(prof);
       if(!prof.message) {
         dispatch(setProfile({
-          ...profile,
           ...prof,
           new: false,
         }));

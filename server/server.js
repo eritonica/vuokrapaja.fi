@@ -8,6 +8,9 @@ import cors  from "cors";
 import dotenv from "dotenv";
 import mongoose from 'mongoose';
 import multer from 'multer';
+import session from 'express-session';
+import flash from 'express-flash';
+
 
 const app = express();
 dotenv.config();
@@ -15,6 +18,7 @@ dotenv.config();
 let port = process.env.PORT || 8080;
 
 // Middleware
+app.set("trust proxy", 1);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -28,7 +32,7 @@ app.use(cors({ origin : (origin, callback) => {
     return callback(new Error(msg), false);
   }
   return callback(null, true);
-}}));
+}, credentials: true }));
 
 // Static route, serve client build if it exists.
 import path from 'path';
@@ -41,6 +45,31 @@ mongoose.connect(process.env.ATLAS_URI, {
   useNewUrlParser: true,  
   useUnifiedTopology: true 
 });
+
+import { OAuth2Client } from "google-auth-library";
+const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+app.post("/auth/google", async (req, res) => {
+  const { token } = req.body;
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience: process.env.GOOGLE_CLIENT_ID,
+  });
+  const payload = ticket.getPayload();
+  let user = await accounts.addGoogleUser(payload.sub, payload.email, payload.given_name, payload.family_name, payload.picture);
+  console.log("user", user);
+  if(user === "Failed Google Login") {
+    res.status(400).json({ message: "Error happened", error: "Failed Google Login." });
+  }
+  let localToken = await sessions.createSession(user._id);
+  res.status(200).json({ message: "Success", token: localToken.token });
+});
+
+app.delete("/auth/google", async (req, res) => {
+  req.session.destroy();
+  res.status(200).json({ message: "Success" });
+});
+
 
 // File uploading multipart form data
 const storage = multer.diskStorage({

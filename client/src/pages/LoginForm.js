@@ -4,7 +4,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Container, Box, TextField, Button, Alert } from '@mui/material';
 import { Login, AppRegistration, Password, Google } from "@mui/icons-material";
 import Grid from '@mui/material/Unstable_Grid2';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { GoogleLogin } from "@react-oauth/google";
+
 
 // Needs rewriting to use Redux
 
@@ -63,6 +65,23 @@ const LoginForm = (props) => {
     }
   }
 
+  useEffect(() => {
+    const fetcData = async () => {
+      let result = await fetch('/api/google/session', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      let body = await result.json();
+      if (body.token) {
+        dispatch(setToken(body.token));
+        navigate('/');
+      }
+    }
+    fetcData();
+  }, [loginState]);
+
   const handleChange = (event) => {
     setLoginState({ ...loginState, [event.target.name]: event.target.value });
   }
@@ -73,6 +92,25 @@ const LoginForm = (props) => {
 
   const onResetPasswordButton = () => {
     navigate("/recovery");
+  }
+
+  const onGoogleLogin = async (googleData) => {
+    console.log(googleData);
+    const res = await fetch("/auth/google", {
+      method: "POST",
+      body: JSON.stringify({
+        token: googleData.credential,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      }
+    });
+    const body = await res.json();
+    console.log(body);
+    if (body.token) {
+      dispatch(setToken(body.token));
+      navigate('/');
+    }
   }
 
   return (
@@ -103,7 +141,10 @@ const LoginForm = (props) => {
           <Grid item xs={12}>
             <Grid container spacing={0.5}>
               <Grid item xs={12}>
-                <Button fullWidth variant="contained" startIcon={<Google />} onClick={() => alert("Tämä ei ole vielä käytössä.") }>Sign in with Google</Button>
+                <GoogleLogin fullWidth
+                  onSuccess={credentialResponse => onGoogleLogin(credentialResponse)}
+                  onFailure={() => console.log("Google login failed")}
+                />
               </Grid>
             </Grid>
           </Grid>

@@ -10,11 +10,11 @@ const getProfileById = async (id) => {
 };
 
 const createEmptyProfile = async(accountId) => {
-	let hasProfile = await profileModel.findOne({ account: accountId}).exec();
+	let hasProfile = await profileModel.findOne({ account: accountId }).exec();
 	if(hasProfile) {
 		return "Profile exists";
 	} else {
-		let Profile = new profileModel({
+		let profile = new profileModel({
 			account: accountId,
 			type: "Rentee",
 			name: "",
@@ -27,7 +27,7 @@ const createEmptyProfile = async(accountId) => {
 			active: true,
 		});
 		profile.save();
-		return "Empty profile created.";
+		return profile;
 	}
 } 
 
@@ -60,15 +60,11 @@ router.post("/profiles", async (req, res) => {
 // GET /profiles
 router.get("/profiles", async (req, res) => {
 	let profile = await profileModel.findOne({ account: req.session.account._id }).exec();
-	if(!profile) {
-			res.status(400).json({ message: "Profile not found." });
-	}
-	if(profile.active === false) {
-			res.status(400).json({ message: "Profile not found." });
-	}
-	let account = await accounts.getAccountById(profile.account);
+	let account = await accounts.getAccountById(req.session.account._id);
 	let tmpProfile = {
-		id: profile._id,
+		id: req.session.account._id,
+		username: account.username,
+		remail: account.email,
 		type: profile.type,
 		name: profile.name,
 		profession: profile.profession,
@@ -80,8 +76,6 @@ router.get("/profiles", async (req, res) => {
 		email: profile.email,
 		website: profile.website,
 		active: profile.active,
-		username: account.username,
-		remail: account.email,
 	};
 	res.status(200).json(tmpProfile);
 });
@@ -101,7 +95,7 @@ router.put("/profiles", async (req, res) => {
 		profile.email = req.body.email;
 		profile.website = req.body.website;
 		profile.updated = Date.now();
-		profile.save();
+		await profile.save();
 		res.status(200).json({ message: "Profile updated." });
 	} else {
 		res.status(400).json({ message: "Profile not found." });

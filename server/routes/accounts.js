@@ -6,6 +6,7 @@ import profiles from "./profiles.js";
 import companies from "./companies.js";
 
 import accountModel from "../schemas/account.js";
+import profileModel from "../schemas/profile.js";
 
 const router = express.Router();
 
@@ -30,6 +31,37 @@ const getAccountByToken = async (token) => {
   }
 }
 
+const addGoogleUser = async (sourceId, email, firstname, lastname, profilePhoto) => {
+  let account = await accountModel.findOne({ sourceId: sourceId }).exec();
+  if(account) {
+    // create token
+    return account;
+  } else {
+    // create new account
+    let newAccount = new accountModel({
+      sourceId: sourceId,
+      email: email,
+      username: firstname + " " + lastname,
+      source: "google",
+      active: true,
+    });
+    newAccount.save();
+    let profile = new profileModel({
+			account: newAccount._id,
+			type: "Rentee",
+			name: "",
+			profession: "",
+			birthday: Date.now(),
+			avatar: profilePhoto,
+			phone: "",
+			email: "",
+			website: "",
+			active: true,
+		});
+		profile.save();
+    return newAccount;
+  }
+}
 
 // POST /accounts
 // {
@@ -53,6 +85,7 @@ router.post("/accounts", async (req, res) => {
     email: req.body.email,
     password: crypto.encrypt(req.body.password),
     activated: false,
+    source: "local",
     code: activationCode,
   });
   await account.save();
@@ -187,4 +220,5 @@ export default {
   getAccountByEmail,
   getAccountById,
   getAccountByToken,
+  addGoogleUser
 }
