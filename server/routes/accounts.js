@@ -37,28 +37,32 @@ const addGoogleUser = async (sourceId, email, firstname, lastname, profilePhoto)
     // create token
     return account;
   } else {
+    let emailCheck = await accountModel.findOne({ email: email }).exec();
+    if(emailCheck) {
+      return null;
+    }  
     // create new account
     let newAccount = new accountModel({
       sourceId: sourceId,
       email: email,
-      username: firstname + " " + lastname,
+      username: firstname + " " + lastname + " " + crypto.generateString(5),
       source: "google",
       active: true,
     });
     newAccount.save();
     let profile = new profileModel({
-			account: newAccount._id,
-			type: "Rentee",
-			name: "",
-			profession: "",
-			birthday: Date.now(),
-			avatar: profilePhoto,
-			phone: "",
-			email: "",
-			website: "",
-			active: true,
-		});
-		profile.save();
+      account: newAccount._id,
+      type: "Rentee",
+      name: "",
+      profession: "",
+      birthday: Date.now(),
+      avatar: profilePhoto,
+      phone: "",
+      email: "",
+      website: "",
+      active: true,
+    });
+    profile.save();
     return newAccount;
   }
 }

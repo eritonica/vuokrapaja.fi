@@ -58,11 +58,12 @@ app.post("/auth/google", async (req, res) => {
   const payload = ticket.getPayload();
   let user = await accounts.addGoogleUser(payload.sub, payload.email, payload.given_name, payload.family_name, payload.picture);
   console.log("user", user);
-  if(user === "Failed Google Login") {
+  if(user) {
+    let localToken = await sessions.createSession(user._id);
+    res.status(200).json({ message: "Success", token: localToken.token });
+  } else {
     res.status(400).json({ message: "Error happened", error: "Failed Google Login." });
   }
-  let localToken = await sessions.createSession(user._id);
-  res.status(200).json({ message: "Success", token: localToken.token });
 });
 
 app.delete("/auth/google", async (req, res) => {
