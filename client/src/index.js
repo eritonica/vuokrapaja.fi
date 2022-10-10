@@ -7,13 +7,15 @@ import store from './store';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import env from 'react-dotenv';
 
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+console.log("env", env.REACT_APP_GOOGLE_CLIENT_ID);
 root.render(
   <React.StrictMode>
-    <GoogleOAuthProvider clientId="618713119962-dit50s8n6vjd4p6uiv9dq89vthblmv04.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={env.REACT_APP_GOOGLE_CLIENT_ID}>
       <BrowserRouter>
         <Provider store={store}>
           <App />
