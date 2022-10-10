@@ -4,7 +4,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Container, Box, TextField, Button, Alert } from '@mui/material';
 import { Login, AppRegistration, Password, Google } from "@mui/icons-material";
 import Grid from '@mui/material/Unstable_Grid2';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { GoogleLogin } from "@react-oauth/google";
 
 
@@ -64,23 +64,6 @@ const LoginForm = (props) => {
       }
     }
   }
-
-  useEffect(() => {
-    const fetcData = async () => {
-      let result = await fetch('/api/google/session', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-      let body = await result.json();
-      if (body.token) {
-        dispatch(setToken(body.token));
-        navigate('/');
-      }
-    }
-    fetcData();
-  }, [loginState]);
 
   const handleChange = (event) => {
     setLoginState({ ...loginState, [event.target.name]: event.target.value });
