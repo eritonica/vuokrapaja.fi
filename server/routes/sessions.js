@@ -61,6 +61,10 @@ router.post("/sessions", async (req, res) => {
       res.status(400).json({ message: "Account not activated." });
       return;
     }
+    if (account.source == "google") {
+      res.status(400).json({ message: "Account created with Google." });
+      return;
+    }
     if (crypto.compare(req.body.password, account.password)) {
       let session = new sessionModel({
         account: account._id,

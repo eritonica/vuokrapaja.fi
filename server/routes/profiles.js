@@ -62,21 +62,34 @@ router.get("/profiles", async (req, res) => {
 	let profile = await profileModel.findOne({ account: req.session.account._id }).exec();
 	let account = await accounts.getAccountById(req.session.account._id);
 	let tmpProfile = {
-		id: req.session.account._id,
-		username: account.username,
-		remail: account.email,
-		type: profile.type,
-		name: profile.name,
-		profession: profile.profession,
-		birthday: profile.birthday,
-		address: profile.address,
-		description: profile.description,
-		avatar: profile.avatar,
-		phone: profile.phone,
-		email: profile.email,
-		website: profile.website,
-		active: profile.active,
+		type: "",
+		name: "",
+		profession: "",
+		birthday: "",
+		address: "",
+		description: "",
+		avatar: "",
+		phone: "",
+		email: "",
+		website: "",	
 	};
+	if(account) {
+		tmpProfile.id = account._id;
+		tmpProfile.username = account.username;
+		tmpProfile.email = account.email;
+	}
+	if(profile) {
+		tmpProfile.type = profile.type;
+		tmpProfile.name = profile.name;
+		tmpProfile.profession = profile.profession;
+		tmpProfile.birthday = profile.birthday;
+		tmpProfile.address = profile.address;
+		tmpProfile.description = profile.description;
+		tmpProfile.avatar = profile.avatar;
+		tmpProfile.phone = profile.phone;
+		tmpProfile.email = profile.email;
+		tmpProfile.website = profile.website;
+	}
 	res.status(200).json(tmpProfile);
 });
 
