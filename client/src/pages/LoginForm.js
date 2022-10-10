@@ -140,12 +140,15 @@ const LoginForm = (props) => {
           </Grid>
           <Grid item xs={12}>
             <Grid container spacing={0.5}>
-              <Grid item xs={12}>
-                <GoogleLogin fullWidth
+              <Grid item xs={3}></Grid>
+              <Grid item xs={6}>
+                <GoogleLogin
                   onSuccess={credentialResponse => onGoogleLogin(credentialResponse)}
                   onFailure={() => console.log("Google login failed")}
+                  useOneTap={true}
                 />
               </Grid>
+              <Grid item xs={3}></Grid>
             </Grid>
           </Grid>
           {loginState.loginError && (
