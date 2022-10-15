@@ -134,7 +134,7 @@ const Search = (props) => {
     <Container maxWidth="md" component={Paper}>
       <Box sx={{ mt: 4, pb: 4, mb: 4 }}>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
+          <Grid item xs={12}  sx={{pt:3}}>
             <Typography variant="h4" component="h2" gutterBottom>
               Hae vuokrattavia kohteita
             </Typography>

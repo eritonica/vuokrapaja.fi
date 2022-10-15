@@ -24,7 +24,13 @@ const Aparments = () => {
     if(profile.role === 'Rentee') {
       navigate("/");
     }
-  }, [navigate, token, profile]);
+    // if company is not set, navigate to company info page
+    console.log("We should go to company info page");
+    if(company._id === undefined) {
+      console.log("NOW!");
+      navigate("/company");
+    }
+  }, [navigate, token, profile, company]);
 
   useEffect(() => {
     const fetchData = async () => {

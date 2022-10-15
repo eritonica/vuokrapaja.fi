@@ -36,7 +36,11 @@ const Member = () => {
     if(profile.role === 'Rentee') {
       navigate("/");
     }
-  }, [navigate, token, profile]);
+    // if company is not set, navigate to company info page
+    if(company._id === undefined) {
+      navigate("/company");
+    }
+  }, [navigate, token, profile, company]);
 
   const [modal, setModal] = useState({
     add: false,

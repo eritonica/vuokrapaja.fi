@@ -25,11 +25,16 @@ const getApartments = async (ids) => {
 };
 
 router.get("/apartments/:company", async (req, res) => {
-  if(companies.checkPermission(req.session.account._id, req.params.company, "read")) {
-    let apartments = await apartmentModel.find({ company: req.params.company }).exec();
-    res.status(200).json({ message: "success", apartments: apartments });
+  // check if req.params.company is not undefined
+  if (req.params.company !== "undefined") {
+    if(companies.checkPermission(req.session.account._id, req.params.company, "read")) {
+      let apartments = await apartmentModel.find({ company: req.params.company }).exec();
+      res.status(200).json({ message: "success", apartments: apartments });
+    } else {
+      res.status(401).json({ message: "You do not have permission to read these apartments." });
+    }
   } else {
-    res.status(401).json({ message: "You do not have permission to read these apartments." });
+    res.status(400).json({ message: "You do not have company profile created." });
   }
 });
 
@@ -70,6 +75,12 @@ router.post("/apartments", async (req, res) => {
       hosting: req.body.hosting,
       maintenance: req.body.maintenance,
       responsible: req.body.responsible,
+      contact: req.body.contact,
+      phone: req.body.phone,
+      email: req.body.email,
+      website: req.body.website,
+      location: req.body.location,
+      applicationUrl: req.body.applicationUrl,
       default: req.body.default,
       paid: false,
     });
@@ -101,53 +112,67 @@ router.post("/apartments", async (req, res) => {
 
 // UPDATE /apartments/:id
 router.put("/apartments/:id", async (req, res) => {
-  let apartment = await apartmentModel.findById(req.params.id).exec();
-  if (companies.checkPermission(req.session.account._id, apartment._id, "write")) {
-    apartment.rent = req.body.rent;
-    apartment.rental = req.body.rental;
-    apartment.release = req.body.release;
-    apartment.rooms = req.body.rooms;
-    apartment.size = req.body.size;
-    apartment.type = req.body.type;
-    apartment.waterSeperate = req.body.waterSeperate;
-    apartment.water = req.body.water;
-    apartment.electricitySeperate = req.body.electricitySeperate;
-    apartment.electricity = req.body.electricity;
-    apartment.heatingSeperate = req.body.heatingSeperate;
-    apartment.use = req.body.use;
-    apartment.description = req.body.description;
-    apartment.condition = req.body.condition;
-    apartment.buildingYear = req.body.buildingYear;
-    apartment.location = req.body.location;
-    apartment.kitchenType = req.body.kitchenType;
-    apartment.heating = req.body.heating;
-    apartment.has = req.body.has;
-    apartment.suitable = req.body.suitable;
-    apartment.images = req.body.images;
-    apartment.deposit = req.body.deposit,
-    apartment.floor = req.body.floor,
-    apartment.housing = req.body.housing,
-    apartment.hosting = req.body.hosting,
-    apartment.maintenance = req.body.maintenance,
-    apartment.responsible = req.body.responsible,
-    apartment.default = req.body.default;
-    apartment.paid = req.body.paid;
-    apartment.save();
-    return res.status(200).json({ message: "Apartment updated." });
+  if(req.params.id !== "undefined") {
+    let apartment = await apartmentModel.findById(req.params.id).exec();
+    if (companies.checkPermission(req.session.account._id, apartment._id, "write")) {
+      apartment.rent = req.body.rent;
+      apartment.rental = req.body.rental;
+      apartment.release = req.body.release;
+      apartment.rooms = req.body.rooms;
+      apartment.size = req.body.size;
+      apartment.type = req.body.type;
+      apartment.waterSeperate = req.body.waterSeperate;
+      apartment.water = req.body.water;
+      apartment.electricitySeperate = req.body.electricitySeperate;
+      apartment.electricity = req.body.electricity;
+      apartment.heatingSeperate = req.body.heatingSeperate;
+      apartment.use = req.body.use;
+      apartment.description = req.body.description;
+      apartment.condition = req.body.condition;
+      apartment.buildingYear = req.body.buildingYear;
+      apartment.location = req.body.location;
+      apartment.kitchenType = req.body.kitchenType;
+      apartment.heating = req.body.heating;
+      apartment.has = req.body.has;
+      apartment.suitable = req.body.suitable;
+      apartment.images = req.body.images;
+      apartment.deposit = req.body.deposit;
+      apartment.floor = req.body.floor;
+      apartment.housing = req.body.housing;
+      apartment.hosting = req.body.hosting;
+      apartment.maintenance = req.body.maintenance;
+      apartment.responsible = req.body.responsible;
+      apartment.contact = req.body.contact;
+      apartment.phone = req.body.phone;
+      apartment.email = req.body.email;
+      apartment.website = req.body.website;
+      apartment.location = req.body.location;
+      apartment.applicationUrl = req.body.applicationUrl;
+      apartment.default = req.body.default;
+      apartment.paid = req.body.paid;
+      apartment.save();
+      return res.status(200).json({ message: "Apartment updated." });
+    } else {
+      return res.status(403).json({ message: "You do not have permission to edit this apartment." });
+    }
   } else {
-    return res.status(403).json({ message: "You do not have permission to edit this apartment." });
+    return res.status(400).json({ message: "Apartment not found." });
   }
 });
 
 // DELETE /apartments/:id
 router.delete("/apartments/:id", async (req, res) => {
-  let apartment = await apartmentModel.findById(req.params.id).exec();
-  if(!apartment) return res.status(404).json({ message: "Apartment not found." });
-  if (companies.checkPermission(req.session.account._id, apartment.company, "delete")) {
-    apartmentModel.findByIdAndDelete(req.params.id).exec();
-    return res.status(200).json({ message: "Apartment deleted." });
+  if(req.params.id !== "undefined") {
+    let apartment = await apartmentModel.findById(req.params.id).exec();
+    if(!apartment) return res.status(404).json({ message: "Apartment not found." });
+    if (companies.checkPermission(req.session.account._id, apartment.company, "delete")) {
+      apartmentModel.findByIdAndDelete(req.params.id).exec();
+      return res.status(200).json({ message: "Apartment deleted." });
+    } else {
+      return res.status(403).json({ message: "You are not the creator of this apartment." });
+    }
   } else {
-    return res.status(403).json({ message: "You are not the creator of this apartment." });
+    return res.status(404).json({ message: "Apartment not found." });
   }
 });
 

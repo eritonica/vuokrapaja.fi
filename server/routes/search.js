@@ -2,6 +2,7 @@ import express from "express";
 
 import Locations from "./locations.js";
 import Apartments from "./apartments.js";
+import Companies from "./companies.js";
 
 const router = express.Router();
 
@@ -157,7 +158,13 @@ router.post("/search/", async (req, res) => {
 router.get("/search/apartment/:apartment", async (req, res) => {
   let apartment = await Apartments.getApartment(req.params.apartment);
   if (apartment) {
-    res.status(200).json({ message: "success", apartment: apartment });
+    let company = await Companies.getCompany(apartment.company);
+    if (company) {
+      apartment.company = company;
+      return res.status(200).json({ message: "success", apartment: apartment });
+    } else {
+      res.status(200).json({ message: "success", apartment: apartment });
+    }
   } else {
     res.status(404).json({ message: "Apartment not found." });
   }

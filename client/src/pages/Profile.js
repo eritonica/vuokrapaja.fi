@@ -454,7 +454,7 @@ const Profile = (props) => {
             <TextField fullWidth label="Nimi" name="name" value={profile.name} onChange={onProfileFormChange} helperText="Sinun etu ja sukunimesi." />
           </Grid>
           <Grid item xs={12}>
-            <TextField fullWidth multiline label="Kuvaus" rows={4} name="description" value={profile.description} onChange={onProfileFormChange} />
+            <TextField fullWidth multiline label="Kuvaus" rows={4} name="description" value={profile.description} onChange={onProfileFormChange} placeholder="Sinun profiilisi kuvaus. Kerro itsestäsi." />
           </Grid>
           <Grid item xs={12}>
             <TextField fullWidth label="Ammatti" name="profession" value={profile.profession} onChange={onProfileFormChange} />

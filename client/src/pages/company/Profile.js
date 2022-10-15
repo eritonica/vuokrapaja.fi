@@ -47,7 +47,7 @@ const Profile = (props) => {
 			console.log(body);
 			if(body.message === "Company created.") {
 				setMessage({ success: "Tiedot päivitetty."});
-				dispatch(setCompany({...company, new: false}));
+				dispatch(setCompany({...body.company, new: false}));
 			} else if(body.message === "Company already exists.") {
 				setMessage({ error: "Yritys on jo olemassa. Ota heihin yhteyttä."});
 			}
@@ -86,6 +86,7 @@ const Profile = (props) => {
 							label="Nimi"
 							name="name"
 							onChange={onChange}
+							required
 							value={company.name}
 						/>
 					</Grid>
@@ -95,6 +96,7 @@ const Profile = (props) => {
 							label="Y-tunnus"
 							name="ycode"
 							onChange={onChange}
+							required
 							value={company.ycode}
 						/>
 					</Grid>

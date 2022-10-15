@@ -78,6 +78,12 @@ const Apartment = () => {
     hosting: "",
     maintenance: "",
     responsible: "",
+    contact: "",
+    phone: "",
+    email: "",
+    website: "",
+    location: "",
+    applicationUrl: "",
     private : (profile.type === "Renter") ? true : false,
     new: true,
   });
@@ -91,6 +97,7 @@ const Apartment = () => {
       setForm({...form, new: true});
       setMessage({...message, success: "Luodaan ilmoitusta", error: false});
     }
+    
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -101,8 +108,11 @@ const Apartment = () => {
     if (profile.role === 'Rentee') {
       navigate("/");
     }
-  
-  }, [navigate, token, profile]);
+    // if company is not set, navigate to company info page
+    if(company._id === undefined) {
+      navigate("/company");
+    }
+  }, [navigate, token, profile, company]);
 
   const onChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -736,6 +746,61 @@ const Apartment = () => {
               label="Vastuu kiinteistön hoidosta"
               fullWidth
               value={form.responsible}
+              onChange={onChange}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6" gutterBottom>
+              Julkaistavat yhteystiedot
+            </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="contact"
+              name="contact"
+              label="Yhteystieto"
+              fullWidth
+              value={form.contact}
+              onChange={onChange}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="location"
+              name="location"
+              label="Käyntiosoite"
+              fullWidth
+              value={form.location}
+              onChange={onChange}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="email"
+              name="email"
+              label="Sähköposti"
+              fullWidth
+              value={form.email}
+              onChange={onChange}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="phone"
+              name="phone"
+              label="Puhelinnumero"
+              fullWidth
+              value={form.phone}
+              onChange={onChange}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              id="applicationUrl"
+              name="applicationUrl"
+              label="Oma hakemus linkki"
+              fullWidth
+              value={form.applicationUrl}
               onChange={onChange}
             />
           </Grid>

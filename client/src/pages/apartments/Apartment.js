@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Box, Grid, Typography, Paper, Table, TableBody, TableCell, TableRow } from "@mui/material";
+import { Container, Box, Grid, Typography, Paper, Table, TableBody, TableCell, TableRow, Button } from "@mui/material";
 import { useSelector } from 'react-redux';
 
 import ImageList from './ImageList';
@@ -22,19 +22,23 @@ const Apartment = () => {
         let response = await fetch('/api/search/apartment/' + id, {
           method: "GET",
           headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            "token": token
           },
         });
         let body = await response.json();
         if (body.message === "success") {
           console.log(body.apartment);
           setApartment(body.apartment);
-
         }
       }
       fetchApartment();
     }
   }, [id, navigate, token]);
+
+  const handleApplicationClick = () => {
+    navigate("/apartments/application/" + id);
+  }
 
   return (
     <Container maxWidth="md" component={Paper}>
@@ -155,6 +159,56 @@ const Apartment = () => {
                 </TableRow>
               </TableBody>
             </Table>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h6" component="h2" gutterBottom>
+              Yhteystiedot
+            </Typography>
+            <Table size="small">
+              <TableBody>
+                { apartment.company && 
+                  <TableRow>
+                    <TableCell width={cellWidth}><b>Yritys</b></TableCell>
+                    <TableCell>{apartment.company.name}</TableCell>
+                  </TableRow>
+                }
+                { apartment.location &&
+                  <TableRow>
+                    <TableCell width={cellWidth}><b>Käyntiosoite</b></TableCell>
+                    <TableCell>{apartment.location}</TableCell>
+                  </TableRow>
+                }
+                { apartment.contact &&
+                  <TableRow>
+                    <TableCell width={cellWidth}><b>Yhteyshenkilö</b></TableCell>
+                    <TableCell>{apartment.contact}</TableCell>
+                  </TableRow>
+                }
+                { apartment.phone && 
+                  <TableRow>
+                    <TableCell width={cellWidth}><b>Puhelinnumero</b></TableCell>
+                    <TableCell>{apartment.phone}</TableCell>
+                  </TableRow>
+                }
+                { apartment.email && 
+                  <TableRow>
+                    <TableCell width={cellWidth}><b>Sähköposti</b></TableCell>
+                    <TableCell>{apartment.email}</TableCell>
+                  </TableRow>
+                }
+                { apartment.website &&
+                  <TableRow>
+                    <TableCell width={cellWidth}><b>Nettisivu</b></TableCell>
+                    <TableCell>{apartment.website}</TableCell>
+                  </TableRow>
+                }
+              </TableBody>
+            </Table>
+          </Grid>
+          <Grid item xs={12}>
+            <Button fullWidth variant="contained" color="primary" onClick={handleApplicationClick}>
+              Hae asuntoa
+            </Button>
           </Grid>
         </Grid>
       </Box>

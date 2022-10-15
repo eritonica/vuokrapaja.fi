@@ -105,6 +105,24 @@ const apartmentSchema = new mongoose.Schema({
   responsible: {  // Vastuu kiinteistönhoidosta
     type: String,
   },
+  contact: {      // Yhteyshenkilö
+    type: String,
+  },
+  phone: {        // Puhelinnumero
+    type: String,
+  },
+  email: {        // Sähköposti
+    type: String,
+  },
+  website: {      // Kotisivu
+    type: String,
+  },
+  location: {     // Sijainti
+    type: String,
+  },
+  applicationUrl: { // Hakulomake
+    type: String,
+  },
   private: {      // yksityinen
     type: Boolean,
     default: true,

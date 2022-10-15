@@ -71,11 +71,13 @@ router.get("/profiles", async (req, res) => {
 		avatar: "",
 		phone: "",
 		email: "",
+		remail: "",
 		website: "",	
 	};
 	if(account) {
 		tmpProfile.id = account._id;
 		tmpProfile.username = account.username;
+		tmpProfile.remail = account.email;
 		tmpProfile.email = account.email;
 	}
 	if(profile) {

@@ -4,7 +4,7 @@ import { Login, Logout, Close, Person } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
 
 import { useSelector, useDispatch } from 'react-redux';
-import { setToken } from '../appSlice';
+import { setToken, setCompany, setProfile } from '../appSlice';
 
 import LeftDrawer from "./LeftDrawer";
 
@@ -53,6 +53,8 @@ const TopBar = (props) => {
       navigate('/');
       localStorage.removeItem('token');
       dispatch(setToken(false));
+      dispatch(setProfile({}));
+      dispatch(setCompany({}));
     }
   };
 
@@ -94,6 +96,10 @@ const TopBar = (props) => {
             sx={{ display: { xs: 'none', sm: 'block' } }}>
             { name }
           </Typography>
+          <Box sx={{ flexGrow: 1 }} />
+          <Button color="inherit" onClick={ () => navigate("/info/beta") } sx={{ color: "red" }}>BETA</Button>
+          <Button color="inherit" onClick={ () => navigate("/info/renter") }>Vuokranantaja</Button>
+          <Button color="inherit" onClick={ () => navigate("/info/rentee") }>Vuokralainen</Button>
           <Box sx={{ flexGrow: 1 }} />
           {
             (token === false)

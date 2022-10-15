@@ -7,6 +7,15 @@ import members from './members.js';
 
 const router = express.Router();
 
+const getCompany = async (id) => {
+	let company = await companyModel.findById(id).exec();
+	if (company) {
+		return company;
+	} else {
+		return null;
+	}
+};
+
 const checkPermission = async (user, company, perm) => {
 	let companyMembers = await members.getMembers(company);
 	for(let i = 0; i < companyMembers.length; i++) {
@@ -89,11 +98,12 @@ router.post('/companies', async (req, res) => {
 		phone: req.body.phone
 	});
 	company.save();
-	return res.status(200).json({ message: 'Company created.' });
+	return res.status(200).json({ message: 'Company created.', company: company });
 });
 
 // GET /companies/:id
 router.get('/companies/:id', async (req, res) => {
+	console.log(req);
 	let company = await companyModel.findOne({ _id: req.params.id }).exec();
 	if (company) {
 		return res.status(200).json(company);
@@ -113,6 +123,10 @@ router.get('/companies/:id', async (req, res) => {
 //  "description": "string"
 // }
 router.put('/companies/:id', async (req, res) => {
+	if(req.params.id == "undefined") {
+		res.status(400).json({message: "Invalid company id."});
+		return;
+	}
 	let company = await companyModel.findOne({ _id: req.params.id }).exec();
 	if (company) {
 		company.manager = req.body.manager;
@@ -149,5 +163,6 @@ router.put('/companies/:id', async (req, res) => {
 export default {
 	router,
 	checkPermission,
-	createEmptyCompany
+	createEmptyCompany,
+	getCompany
 };

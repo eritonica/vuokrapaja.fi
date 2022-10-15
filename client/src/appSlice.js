@@ -7,7 +7,6 @@ export const appSlice = createSlice({
         token: false,
         server: "http://localhost:8080/",
         beta: true,
-        
         name: 'Vuokrapaja',
         cookies: false,
         profile: {
