@@ -4,9 +4,18 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Box, SwipeableDrawer, IconButton, List, Divider, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import { Menu, Home, Login, Logout, AppRegistration, Search, Person, AddBusiness, Groups3, Domain, DomainAdd } from "@mui/icons-material";
 
+import SubjectIcon from '@mui/icons-material/Subject';
+import ArticleIcon from '@mui/icons-material/Article';
+import GradingIcon from '@mui/icons-material/Grading';
+import NotesIcon from '@mui/icons-material/Notes';
+import CallToActionIcon from '@mui/icons-material/CallToAction';
+
+import useDimensions from '../hooks/useDimensions';
+
 const LeftDrawer = (props) => {
   const token = useSelector((state) => state.app.token);
   const profile = useSelector((state) => state.app.profile);
+  const { height, width } = useDimensions();
   const [drawerState, setDrawerState] = useState({
     left: false,
   });
@@ -39,7 +48,14 @@ const LeftDrawer = (props) => {
           </ListItemIcon>
           <ListItemText primary="Hae asuntoa" onClick={() => navigate("/apartments/search")}/>
         </ListItem>
-        
+        {(token !== false) && (
+          <ListItem button key="Profiili" component={Link} to="/profile" onClick={() => navigate("/profile")}>
+            <ListItemIcon>
+              <Person /> 
+            </ListItemIcon>
+            <ListItemText primary="Profiili" onClick={() => navigate("/profile")}/>
+          </ListItem>
+        )}
         <Divider />
         {(token !== false && profile.type !== "Rentee") && ( 
           <>
@@ -70,14 +86,38 @@ const LeftDrawer = (props) => {
             <Divider />
           </>
         )}
-        {(token !== false) && (
-          <ListItem button key="Profiili" component={Link} to="/profile" onClick={() => navigate("/profile")}>
-            <ListItemIcon>
-              <Person /> 
-            </ListItemIcon>
-            <ListItemText primary="Profiili" onClick={() => navigate("/profile")}/>
-          </ListItem>
-        )}
+        <ListItem button key="Beta" component={Link} to="/info/beta" onClick={() => navigate("/info/beta")} sx={{ color: "red"}}>
+          <ListItemIcon>
+            <CallToActionIcon />
+          </ListItemIcon>
+          <ListItemText primary="Beta" onClick={() => navigate("/info/beta")}/>
+        </ListItem>
+        <ListItem button key="Vuokralainen" component={Link} to="/info/rentee" onClick={() => navigate("/info/rentee")}>
+          <ListItemIcon>
+            <SubjectIcon />
+          </ListItemIcon>
+          <ListItemText primary="Vuokralainen" onClick={() => navigate("/info/rentee")}/>
+        </ListItem>
+        <ListItem button key="Vuokranantaja" component={Link} to="/info/renter" onClick={() => navigate("/info/renter")}>
+          <ListItemIcon>
+            <GradingIcon />
+          </ListItemIcon>
+          <ListItemText primary="Vuokranantaja" onClick={() => navigate("/info/renter")}/>
+        </ListItem>
+        <ListItem button key="Käyttöehdot" component={Link} to="/info/terms" onClick={() => navigate("/info/terms")}>
+          <ListItemIcon>
+            <ArticleIcon /> 
+          </ListItemIcon>
+          <ListItemText primary="Käyttöehdot" onClick={() => navigate("/info/terms")}/>
+        </ListItem>
+        <ListItem button key="Tietosuojaseloste" component={Link} to="/info/privacy" onClick={() => navigate("/info/privacy")}>
+          <ListItemIcon>
+            <NotesIcon /> 
+          </ListItemIcon>
+          <ListItemText primary="Tietosuojaseloste" onClick={() => navigate("/info/privacy")}/>
+        </ListItem>
+        <Divider />
+        
         {(token === false) 
           ? <>
               <ListItem button key="Login" component={Link} to="/login" onClick={() => navigate("/login")}>

@@ -13,9 +13,12 @@ import Gdpr from './components/Gdpr';
 
 // Pages
 import Landing from './pages/Landing';
+import Privacy from './pages/info/Privacy';
+import Terms from './pages/info/Terms';
 import Beta from './pages/info/Beta';
 import RenterInfo from './pages/info/Renter';
 import RenteeInfo from './pages/info/Rentee';
+import Application from './pages/application/Application'
 import Apartment from './pages/apartments/Apartment';
 import ApartmentsSearch from './pages/apartments/Search';
 import LoginForm from './pages/LoginForm';
@@ -47,6 +50,7 @@ function App() {
     if(tmpToken) {
       dispatch(setToken(tmpToken))
     }
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     // Don't know yet how to handle dispatch with useEffect
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -109,6 +113,9 @@ function App() {
               <Route path="/info/beta" element={<Beta/>} />
               <Route path="/info/renter" element={<RenterInfo/>} />
               <Route path="/info/rentee" element={<RenteeInfo/>} />
+              <Route path="/info/privacy" element={<Privacy/>} />
+              <Route path="/info/terms" element={<Terms/>} />
+              <Route path="/application/:id" element={<Application/>} />
               <Route path="/apartments/:id" element={<Apartment/>} />
               <Route path="/apartments/search" element={<ApartmentsSearch/>} />
               <Route path="/company" element={<Company/>} />

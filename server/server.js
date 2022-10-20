@@ -8,9 +8,6 @@ import cors  from "cors";
 import dotenv from "dotenv";
 import mongoose from 'mongoose';
 import multer from 'multer';
-import session from 'express-session';
-import flash from 'express-flash';
-
 
 const app = express();
 dotenv.config();
@@ -71,6 +68,26 @@ app.delete("/auth/google", async (req, res) => {
   res.status(200).json({ message: "Success" });
 });
 
+// Routes, loading these could be automated without ES6 import/export support
+
+import applications from "./routes/applications.js";
+app.use("/api", applications.router);
+import search from "./routes/search.js";
+app.use("/api", search.router);
+import locations from './routes/locations.js';
+app.use("/api", locations.router);
+import accounts from './routes/accounts.js';
+app.use("/api", accounts.router);
+import sessions from './routes/sessions.js';
+app.use("/api", sessions.router);
+import profiles from './routes/profiles.js';
+app.use("/api", sessions.checkSession, profiles.router);
+import companies from './routes/companies.js';
+app.use("/api", sessions.checkSession, companies.router);
+import members from './routes/members.js';
+app.use("/api", sessions.checkSession, members.router);
+import aparments from './routes/apartments.js';
+app.use("/api", sessions.checkSession, aparments.router);
 
 // File uploading multipart form data
 const storage = multer.diskStorage({
@@ -120,26 +137,11 @@ app.post("/api/uploads/multiple", (req, res) => {
   });
 });
 
-// Routes, loading these could be automated without ES6 import/export support
-
 import files from "./routes/files.js";
 app.use("/api", files.router);
-import search from "./routes/search.js";
-app.use("/api", search.router);
-import locations from './routes/locations.js';
-app.use("/api", locations.router);
-import accounts from './routes/accounts.js';
-app.use("/api", accounts.router);
-import sessions from './routes/sessions.js';
-app.use("/api", sessions.router);
-import profiles from './routes/profiles.js';
-app.use("/api", sessions.checkSession, profiles.router);
-import companies from './routes/companies.js';
-app.use("/api", sessions.checkSession, companies.router);
-import members from './routes/members.js';
-app.use("/api", sessions.checkSession, members.router);
-import aparments from './routes/apartments.js';
-app.use("/api", sessions.checkSession, aparments.router);
+
+
+
 
 // Catch all routes, serve client build if it exists.
 app.get('*', (req, res) => {

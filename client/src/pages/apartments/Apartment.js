@@ -15,6 +15,10 @@ const Apartment = () => {
   const [cellWidth, setCellWidth] = useState("50%");
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+  }, []);
+
+  useEffect(() => {
     if (id === undefined) {
       navigate("/apartments/search");
     } else {
@@ -37,7 +41,7 @@ const Apartment = () => {
   }, [id, navigate, token]);
 
   const handleApplicationClick = () => {
-    navigate("/apartments/application/" + id);
+    navigate("/application/" + id);
   }
 
   return (

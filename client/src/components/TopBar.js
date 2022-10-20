@@ -8,6 +8,8 @@ import { setToken, setCompany, setProfile } from '../appSlice';
 
 import LeftDrawer from "./LeftDrawer";
 
+import useDimensions from "../hooks/useDimensions";
+
 
 const TopBar = (props) => {
   const navigate = useNavigate();
@@ -16,6 +18,7 @@ const TopBar = (props) => {
   const name = useSelector((state) => state.app.name);
   const profile = useSelector((state) => state.app.profile);
   const [anchorEl, setAnchorEl] = useState(null);
+  const {height, width} = useDimensions();
   const [snackbarState, setSnackbarState] = useState({
     open: false,
     message: 'Kirjauduit onnistuneesti ulos.',
@@ -96,10 +99,14 @@ const TopBar = (props) => {
             sx={{ display: { xs: 'none', sm: 'block' } }}>
             { name }
           </Typography>
-          <Box sx={{ flexGrow: 1 }} />
-          <Button color="inherit" onClick={ () => navigate("/info/beta") } sx={{ color: "red" }}>BETA</Button>
-          <Button color="inherit" onClick={ () => navigate("/info/renter") }>Vuokranantaja</Button>
-          <Button color="inherit" onClick={ () => navigate("/info/rentee") }>Vuokralainen</Button>
+          { width > 448 &&
+            <>
+              <Box sx={{ flexGrow: 1 }} />
+              <Button color="inherit" onClick={ () => navigate("/info/beta") } sx={{ color: "red" }}>BETA</Button>
+              <Button color="inherit" onClick={ () => navigate("/info/renter") }>Vuokranantaja</Button>
+              <Button color="inherit" onClick={ () => navigate("/info/rentee") }>Vuokralainen</Button>
+            </>
+          }
           <Box sx={{ flexGrow: 1 }} />
           {
             (token === false)

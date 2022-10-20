@@ -28,12 +28,9 @@ const Beta = (props) => {
                 <GitHubIcon sx={{ml: 1}} />Ilmoita virheestä
               </Button>
               <Typography variant="body1" component="p" gutterBottom>
-                Vuokrapaja kun siirttyy tuotantoversioon, niin kaikki tämän hetkiset
-                käyttäjätietosi poistuu. Tämä koskee myös kaikkia ilmoituksia,
-                joita olet tehnyt.
-              </Typography>
-              <Typography variant="body1" component="p" gutterBottom>
-                Tämä ilmoitus poistuu kun sivusto siirtyy tuotantoversioon.
+                Vuokrapaja kun siirtyy tuotantoversioon, niin kaikki tämän hetkiset
+                käyttäjätietosi poistuu. Tämä koskee myös kaikkia ilmoituksia ja hakemuksia
+                joita olet tehnyt. Ja tämä ilmoitus poistuu.
               </Typography>
             </Grid>
           </Grid>

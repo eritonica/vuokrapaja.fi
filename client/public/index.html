@@ -53,13 +53,14 @@
       src="https://www.googletagmanager.com/gtag/js?id=G-543VRLZXGY"
     ></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
+      if (document.location.hostname.search("vuokrapaja.fi") !== -1) {
+        window.dataLayer = window.dataLayer || [];
+        function gtag() {
+          dataLayer.push(arguments);
+        }
+        gtag("js", new Date());
+        gtag("config", "G-543VRLZXGY");
       }
-      gtag("js", new Date());
-
-      gtag("config", "G-543VRLZXGY");
     </script>
   </body>
 </html>

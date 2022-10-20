@@ -437,13 +437,14 @@ const Profile = (props) => {
           </Grid>
           <Grid item xs={12}>
             <FormControl fullWidth>
-              <InputLabel id="type-label">Tyyppi</InputLabel>
+              <InputLabel id="type-label">Tyyppi *</InputLabel>
               <Select
+                required
                 labelId="type-label"
                 name="type"
                 value={profile.type}
                 onChange={onProfileFormChange}
-                label="Tyyppi">
+                label="Tyyppi *">
                 <MenuItem value={"Rentee"}>Vuokralainen</MenuItem>
                 <MenuItem value={"Renter"}>Vuokranantaja</MenuItem>
                 <MenuItem value={"Broker"}>Kiinteistönvälittäjä</MenuItem>
@@ -483,7 +484,7 @@ const Profile = (props) => {
             <TextField fullWidth label="Puhelinnumero" name="phone" value={profile.phone} onChange={onProfileFormChange} />
           </Grid>
           <Grid item xs={12}>
-            <TextField fullWidth label="Sähköposti" name="email" value={profile.email} onChange={onProfileFormChange} />
+            <TextField fullWidth label="Julkinen sähköposti" name="email" value={profile.email} onChange={onProfileFormChange} />
           </Grid>
         </Grid>
         <Grid container spacing={2} mt={4}>

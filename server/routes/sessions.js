@@ -15,6 +15,15 @@ const confirm = async (token) => {
   }
 }
 
+const getSessionByToken = async (token) => {
+  let session = await sessionModel.findOne({ token: token }).exec();
+  if (session) {
+    return session;
+  } else {
+    return false;
+  }
+}
+
 // Session check middleware
 const checkSession = async (req, res, next) => {
   console.log("header token", req.headers.token);
@@ -128,4 +137,5 @@ export default {
   confirm,
   checkSession,
   createSession,
+  getSessionByToken,
 }
