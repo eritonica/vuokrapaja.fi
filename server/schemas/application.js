@@ -43,6 +43,10 @@ const applicationSchema = new mongoose.Schema({
   },
   terms: {
     type: Boolean,
+  },
+  created: {
+    type: Date,
+    default: Date.now,
   }
 });
 

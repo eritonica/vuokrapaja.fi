@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Box, Grid, Typography, Paper, TextField, Button, FormControl, InputLabel, Select, MenuItem, ListItemText, Checkbox, Alert } from "@mui/material";
 import { RadioGroup, FormControlLabel, Radio } from '@mui/material';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -13,6 +14,7 @@ const Application = () => {
   const { id } = useParams();
   const token = useSelector((state) => state.app.token);
   const [error, setError] = useState(null);
+  const [message, setMessage] = useState(null);
   const [application, setApplication] = useState({
     applicantsCount: 1,
     applicants: [
@@ -45,14 +47,16 @@ const Application = () => {
       if(token === null) {
         return;
       }
-      const response = await fetch(`/api/applications/`, {
+      const response = await fetch(`/api/applications/latest`, {
         method: 'GET',
         headers: {
           'Content-type': 'application/json',
           'token': token
         }
       });
+      console.log(response);
       const data = await response.json();
+      console.log(data);
       if(data.application !== undefined) {
         setApplication(data.application);
       }
@@ -68,6 +72,8 @@ const Application = () => {
     } else if(application.applicantsCount === 0) {
       setError("Sinun pitää lisätä vähintään yksi hakija, jotta voisit lähettää hakemuksen.");
     } else {
+      application.apartment = id;
+      console.log(application);
       const response = await fetch(`/api/applications/`, {
         method: 'POST',
         headers: {
@@ -78,7 +84,8 @@ const Application = () => {
       });
       const data = await response.json();
       if(data.message === "Application added.") {
-        
+        setError(null);
+        setMessage("Hakemuksesi on lähetetty onnistuneesti.");
       } else {
         if(data.message) {
           setError(data.message);
@@ -115,6 +122,7 @@ const Application = () => {
       workplace: "",
       monthlyIncome: "",
       smoking: "",
+      credits: "",
     });
     setApplication({ ...application, applicants: newApplicants,  applicantsCount: application.applicantsCount + 1 });
   }
@@ -389,12 +397,19 @@ const Application = () => {
             { /* TODO: add link to terms of service and  privacy statement*/ }
             <Typography variant="subtitle1">
               Kun haet kohdetta Vuokrapaja palvelussa sinun tarvitsee
-              hyväksyä käyttäehdot ja tietosuojaseloste. 
+              hyväksyä <Link to="/info/terms" target="_blank" rel="noopener noreferrer">
+              Käyttöehdot
+            </Link> ja <Link to="/info/privacy" target="_blank" rel="noopener noreferrer">
+              Tietosuojaseloste
+            </Link>. 
 
               Tämä tarkoittaa sitä, että annat luvan tallentaa hakemuksessa
               ilmoittamasi yksityiset tiedot. Ja lähettää nämä tiedot
               kohteen vuokranantajalle tai asunnon välittäjälle.
+                   
             </Typography>
+          </Grid>
+          <Grid item xs={12}>
             <RadioGroup aria-label="termsOfService"
               name="terms"
               value={application.terms}
@@ -414,6 +429,11 @@ const Application = () => {
           { error && 
             <Grid item xs={12}>
               <Alert severity="error">{error}</Alert>
+            </Grid>
+          }
+          { message &&
+            <Grid item xs={12}>
+              <Alert severity="success">{message}</Alert>
             </Grid>
           }
           <Grid item xs={12}>

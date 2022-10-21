@@ -2,9 +2,7 @@ import mongoose from 'mongoose';
 
 const applicantSchema = new mongoose.Schema({
   name: {
-    type: String,
-    required: true,
-    unique: true,
+    type: String
   },
   bithday: {
     type: Date,

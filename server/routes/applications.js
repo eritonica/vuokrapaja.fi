@@ -5,8 +5,40 @@ import applicationModel from '../schemas/application.js';
 import applicants from './applicants.js';
 import accounts from './accounts.js';
 
-
 const router = express.Router();
+
+
+// Get latest application by token
+router.get('/applications/latest', async (req, res) => {
+  if(!req.headers.token) {
+    res.status(400).send({"message": "No token provided."});
+  }
+  let foundApplication = await applicationModel.findOne({token: req.headers.token}).sort({created: -1}).exec();
+  if(foundApplication) {
+    let foundApplicants = await applicants.getApplicants(foundApplication._id);
+    let application = {
+      _id: foundApplication.property,
+      apartment: foundApplication.apartment,
+      token: foundApplication.token,
+      applicantsCount: foundApplication.applicantsCount,
+      applicants: foundApplicants,
+      desiredStart: (foundApplication.desiredStart) ? foundApplication.desiredStart : Date.now(),
+      desiredEnd: (foundApplication.desiredEnd) ? foundApplication.desiredEnd : Date.now(),
+      currentAddress: (foundApplication.currentAddress) ? foundApplication.currentAddress : "",
+      deposit: String(foundApplication.deposit).split(","),
+      pets: (foundApplication.pets) ? foundApplication.pets : "",
+      description: (foundApplication.description) ? foundApplication.description : "",
+      reason: (foundApplication.reason) ? foundApplication.reason : "",
+      creditDescription: (foundApplication.creditDescription) ? foundApplication.creditDescription : "",
+      visitation: (foundApplication.visitation) ? foundApplication.visitation : "",
+      terms: (foundApplication.terms) ? foundApplication.terms : false,
+    }
+    console.log(application);
+    res.status(200).send({ "message" : "Application found.", "application" : application });
+  } else {
+    res.status(404).send({"message": "Application not found"});
+  }
+});
 
 // Route for getting single application by id
 router.get('/applications/:id', async (req, res) => {
@@ -16,10 +48,9 @@ router.get('/applications/:id', async (req, res) => {
   if(!req.params.id) {
     res.status(400).send({"message": "No apartment ID provided."});
   }
-  console.log("Getting application by id", req.params.id);
   let application = await applicationModel.findById(req.params.id).exec();
-  console.log("Got application by id", application);
   if(application) {
+    application.applicants = await applicants.getApplicants(application._id);
     res.status(200).send({ "message" : "Application found.", "application" : application });
   } else {
     res.status(404).send({ "message" : "Application not found."});
@@ -36,7 +67,8 @@ router.get('/applications/apartment/:id', async (req, res) => {
   }
   let applications = await applicationModel.find({apartment: req.params.id}).exec();
   if(applications) {
-    res.status(200).send(applications);
+    application.applicants = await applicants.getApplicants(application._id);
+    res.status(200).send({ "message" : "Application found.", "application" : application });
   } else {
     res.status(404).send({"message": "Applications not found"});
   }

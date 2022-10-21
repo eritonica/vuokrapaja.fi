@@ -9,7 +9,6 @@ const addApplicants = async (application, applicants) => {
   if(!applicants) {
     throw new Error("No applicants provided.");
   }
-  console.log(applicants.length);
   for(let i = 0; i < applicants.length; i++) {
     let applicant = new applicantModel({
       application: application,
