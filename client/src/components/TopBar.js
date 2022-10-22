@@ -55,7 +55,7 @@ const TopBar = (props) => {
     if(body.message) {
       navigate('/');
       localStorage.removeItem('token');
-      dispatch(setToken(false));
+      dispatch(setToken(undefined));
       dispatch(setProfile({}));
       dispatch(setCompany({}));
     }
@@ -109,7 +109,7 @@ const TopBar = (props) => {
           }
           <Box sx={{ flexGrow: 1 }} />
           {
-            (token === false)
+            (token === "undefined" || token === undefined)
               ? <Button color="inherit" onClick={onLogin} startIcon={<Login />}>Kirjaudu</Button>
               : <Box sx={{ flexGrow: 0 }} >
                   <Tooltip title="Käyttäjä asetukset" placement="bottom">

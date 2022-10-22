@@ -110,9 +110,10 @@ const Aparments = () => {
                   <TableCell align="right">{apartment.size}</TableCell>
                   <TableCell align="right">{apartment.price}</TableCell>
                   <TableCell align="right">{apartment.available}</TableCell>
-                  <TableCell align="right">{(apartment.paid) ? "Julkaistu" : <Button variant="contained" color="primary" size="small">Maksa</Button> }</TableCell>
+                  <TableCell align="right">{(apartment.paid) ? "Julkaistu" : <Button fullWidth variant="contained" color="primary" size="small">Maksa</Button> }</TableCell>
                   <TableCell align="right">
-                    <Button variant="contained" color="error" size="small" onClick={() => handleDelete(apartment._id)}>
+                    <Button fullWidth sx={{marginBottom: "4px"}} variant="contained" color="secondary" size="small" onClick={() => navigate("/company/applications/" + apartment._id)}>Hakemukset</Button>
+                    <Button fullWidth variant="contained" color="error" size="small" onClick={() => handleDelete(apartment._id)}>
                       Poista
                     </Button>
                   </TableCell>

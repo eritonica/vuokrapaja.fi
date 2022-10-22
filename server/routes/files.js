@@ -2,6 +2,8 @@ import fs from 'fs';
 import express from "express";
 import sessions from "./sessions.js";
 
+import sanitize from "sanitize-filename";
+
 const router = express.Router();
 
 // DELETE /files
@@ -10,7 +12,8 @@ const router = express.Router();
 router.delete("/files", async (req, res) => {
   sessions.checkSession(req, res, async () => {
     try {
-      fs.unlinkSync(req.body.filename);
+      const filename = sanitize(req.body.filename);
+      fs.unlinkSync(filename);
       res.status(200).json({ message: "File " + req.body.filename + " deleted successfully." });
     } catch(err) {
       console.error(err);

@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { Container, Box, Grid, Typography, Paper, TextField, Button, FormControl, InputLabel, Select, MenuItem, ListItemText, Checkbox, Alert } from "@mui/material";
 import { RadioGroup, FormControlLabel, Radio } from '@mui/material';
 import { useSelector } from 'react-redux';
@@ -10,7 +10,6 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 const Application = () => {
-  const navigate = useNavigate();
   const { id } = useParams();
   const token = useSelector((state) => state.app.token);
   const [error, setError] = useState(null);
@@ -67,7 +66,7 @@ const Application = () => {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    if(application.terms == false) {
+    if(application.terms === false) {
       setError("Sinun tarvitsee hyväksyä ehdot, jos haluat lähettää hakemuksen.");
     } else if(application.applicantsCount === 0) {
       setError("Sinun pitää lisätä vähintään yksi hakija, jotta voisit lähettää hakemuksen.");
@@ -97,16 +96,19 @@ const Application = () => {
   }
 
   const onApplicationChange = (e) => {
+    setMessage(null);
     setApplication({ ...application, [e.target.name]: e.target.value });
   }
 
   const onApplicantChange = (e) => {
+    setMessage(null);
     const newApplicants = [...application.applicants];
     newApplicants[e.target.dataset.index][e.target.name] = e.target.value;
     setApplication({ ...application, applicants: newApplicants });
   }
 
   const onApplicantSelectChange = (index) => e => {
+    setMessage(null);
     const newApplicants = [...application.applicants];
     newApplicants[index][e.target.name] = e.target.value;
     setApplication({ ...application, applicants: newApplicants });
@@ -437,7 +439,7 @@ const Application = () => {
             </Grid>
           }
           <Grid item xs={12}>
-            <Button fullWidth variant="contained" color="primary" onClick={onSubmit}>Lähetä hakemus</Button>
+            <Button fullWidth variant="contained" disabled={ (message) ? true : false } color="primary" onClick={onSubmit}>Lähetä hakemus</Button>
           </Grid>
         </Grid>
       </Box>

@@ -44,6 +44,10 @@ const applicationSchema = new mongoose.Schema({
   terms: {
     type: Boolean,
   },
+  status: {
+    type: String,
+    default: 'pending',
+  },
   created: {
     type: Date,
     default: Date.now,

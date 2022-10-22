@@ -23,6 +23,7 @@ import Apartment from './pages/apartments/Apartment';
 import ApartmentsSearch from './pages/apartments/Search';
 import LoginForm from './pages/LoginForm';
 import Profile from './pages/Profile';
+import Applications from './pages/company/Applications';
 import Company from './pages/company/Profile';
 import Member from './pages/company/Member';
 import NewApartment from './pages/company/Apartment';
@@ -49,6 +50,8 @@ function App() {
     let tmpToken = localStorage.getItem("token");
     if(tmpToken) {
       dispatch(setToken(tmpToken))
+    } else {
+      dispatch(setToken(undefined))
     }
     window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
     // Don't know yet how to handle dispatch with useEffect
@@ -119,6 +122,7 @@ function App() {
               <Route path="/apartments/:id" element={<Apartment/>} />
               <Route path="/apartments/search" element={<ApartmentsSearch/>} />
               <Route path="/company" element={<Company/>} />
+              <Route path="/company/applications/:id" element={<Applications/>} />
               <Route path="/company/member" element={<Member/>} />
               <Route path="/company/apartments" element={<Apartments/>} />
               <Route path="/company/apartment" element={<NewApartment/>} />

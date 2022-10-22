@@ -33,7 +33,6 @@ router.get('/applications/latest', async (req, res) => {
       visitation: (foundApplication.visitation) ? foundApplication.visitation : "",
       terms: (foundApplication.terms) ? foundApplication.terms : false,
     }
-    console.log(application);
     res.status(200).send({ "message" : "Application found.", "application" : application });
   } else {
     res.status(404).send({"message": "Application not found"});
@@ -48,9 +47,26 @@ router.get('/applications/:id', async (req, res) => {
   if(!req.params.id) {
     res.status(400).send({"message": "No apartment ID provided."});
   }
-  let application = await applicationModel.findById(req.params.id).exec();
-  if(application) {
-    application.applicants = await applicants.getApplicants(application._id);
+  let foundApplication = await applicationModel.findOne({token: req.headers.token}).sort({created: -1}).exec();
+  if(foundApplication) {
+    let foundApplicants = await applicants.getApplicants(foundApplication._id);
+    let application = {
+      _id: foundApplication.property,
+      apartment: foundApplication.apartment,
+      token: foundApplication.token,
+      applicantsCount: foundApplication.applicantsCount,
+      applicants: foundApplicants,
+      desiredStart: (foundApplication.desiredStart) ? foundApplication.desiredStart : Date.now(),
+      desiredEnd: (foundApplication.desiredEnd) ? foundApplication.desiredEnd : Date.now(),
+      currentAddress: (foundApplication.currentAddress) ? foundApplication.currentAddress : "",
+      deposit: String(foundApplication.deposit).split(","),
+      pets: (foundApplication.pets) ? foundApplication.pets : "",
+      description: (foundApplication.description) ? foundApplication.description : "",
+      reason: (foundApplication.reason) ? foundApplication.reason : "",
+      creditDescription: (foundApplication.creditDescription) ? foundApplication.creditDescription : "",
+      visitation: (foundApplication.visitation) ? foundApplication.visitation : "",
+      terms: (foundApplication.terms) ? foundApplication.terms : false,
+    }
     res.status(200).send({ "message" : "Application found.", "application" : application });
   } else {
     res.status(404).send({ "message" : "Application not found."});
@@ -65,10 +81,33 @@ router.get('/applications/apartment/:id', async (req, res) => {
   if(!req.params.id) {
     res.status(400).send({"message": "No apartment ID provided."});
   }
-  let applications = await applicationModel.find({apartment: req.params.id}).exec();
-  if(applications) {
-    application.applicants = await applicants.getApplicants(application._id);
-    res.status(200).send({ "message" : "Application found.", "application" : application });
+  console.log("Requested applications with apartment", req.params.id);
+  let foundApplications = await applicationModel.find({property: req.params.id}).sort({created: -1}).exec();
+  if(foundApplications) {
+    let applications = [];
+    for(let i = 0; i < foundApplications.length; i++) {
+      let foundApplicants = await applicants.getApplicants(foundApplications[i]._id);
+      console.log(foundApplications[i]._id);
+      let application = {
+        _id: foundApplications[i].property,
+        apartment: foundApplications[i].property,
+        token: foundApplications[i].token,
+        applicantsCount: foundApplications[i].applicantsCount,
+        applicants: foundApplicants,
+        desiredStart: (foundApplications[i].desiredStart) ? foundApplications[i].desiredStart : Date.now(),
+        desiredEnd: (foundApplications[i].desiredEnd) ? foundApplications[i].desiredEnd : Date.now(),
+        currentAddress: (foundApplications[i].currentAddress) ? foundApplications[i].currentAddress : "",
+        deposit: String(foundApplications[i].deposit).split(","),
+        pets: (foundApplications[i].pets) ? foundApplications[i].pets : "",
+        description: (foundApplications[i].description) ? foundApplications[i].description : "",
+        reason: (foundApplications[i].reason) ? foundApplications[i].reason : "",
+        creditDescription: (foundApplications[i].creditDescription) ? foundApplications[i].creditDescription : "",
+        visitation: (foundApplications[i].visitation) ? foundApplications[i].visitation : "",
+        terms: (foundApplications[i].terms) ? foundApplications[i].terms : false,
+      }
+      applications.push(application);
+    }
+    res.status(200).send({ "message" : "Application found.", "applications" : applications });
   } else {
     res.status(404).send({"message": "Applications not found"});
   }
@@ -86,7 +125,8 @@ router.post('/applications', async (req, res) => {
     res.status(400).send({"message": "No applicants provided."});
   }
   // check if token exists
-  if(req.headers.token) {
+  if(req.headers.token !== "undefined") {
+    console.log("Token exists");
     let account = await accounts.getAccountByToken(req.headers.token);
     if(account) {
       let application = new applicationModel({
@@ -134,9 +174,17 @@ router.post('/applications', async (req, res) => {
       visitation: req.body.visitation,
       terms: req.body.terms
     });
-    application.save();
-    let applicants = await applicants.addApplicants(application, req.body.applicants);
-    res.status(200).send({ "message": "Application added.", "application": application, "applicants": applicants });
+    let savedApplication = await application.save();
+    if(savedApplication) {
+      let savedApplicants = await applicants.addApplicants(savedApplication._id, req.body.applicants);
+      if(savedApplicants) {
+        res.status(200).send({ "message": "Application added.", "application": savedApplication, "applicants": applicants });
+      } else {
+        res.status(500).send({ "message": "Error saving applicants."});
+      }
+    } else {
+      res.status(500).send({ "message": "Error saving application."});
+    }
   }
 });
 
