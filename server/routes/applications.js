@@ -8,6 +8,15 @@ import accounts from './accounts.js';
 const router = express.Router();
 
 
+const getApplicationsCountByApartment = async (id) => {
+  let response = await applicationModel.find({ property: id }).exec();
+  if (response) {
+    return response.length;
+  } else {
+    return 0;
+  }
+};
+
 // Get latest application by token
 router.get('/applications/latest', async (req, res) => {
   if(!req.headers.token) {
@@ -17,8 +26,8 @@ router.get('/applications/latest', async (req, res) => {
   if(foundApplication) {
     let foundApplicants = await applicants.getApplicants(foundApplication._id);
     let application = {
-      _id: foundApplication.property,
-      apartment: foundApplication.apartment,
+      _id: foundApplication._id,
+      apartment: foundApplication.property,
       token: foundApplication.token,
       applicantsCount: foundApplication.applicantsCount,
       applicants: foundApplicants,
@@ -32,12 +41,30 @@ router.get('/applications/latest', async (req, res) => {
       creditDescription: (foundApplication.creditDescription) ? foundApplication.creditDescription : "",
       visitation: (foundApplication.visitation) ? foundApplication.visitation : "",
       terms: (foundApplication.terms) ? foundApplication.terms : false,
+      status: foundApplication.status,
     }
     res.status(200).send({ "message" : "Application found.", "application" : application });
   } else {
     res.status(404).send({"message": "Application not found"});
   }
 });
+
+// Get application count by apartment id
+router.get('/applications/apartment/count/:id', async (req, res) => {
+  if(!req.params) {
+    res.status(400).send({"message": "No apartment ID provided."});
+  }
+  if(!req.params.id) {
+    res.status(400).send({"message": "No apartment ID provided."});
+  }
+  let foundApplications = await applicationModel.find({property: req.params.id}).exec();
+  if(foundApplications) {
+    res.status(200).send({ "message" : "Applications found.", "count" : foundApplications.length });
+  } else {
+    res.status(404).send({"message": "Application not found"});
+  }
+});
+
 
 // Route for getting single application by id
 router.get('/applications/:id', async (req, res) => {
@@ -51,8 +78,8 @@ router.get('/applications/:id', async (req, res) => {
   if(foundApplication) {
     let foundApplicants = await applicants.getApplicants(foundApplication._id);
     let application = {
-      _id: foundApplication.property,
-      apartment: foundApplication.apartment,
+      _id: foundApplication._id,
+      apartment: foundApplication.property,
       token: foundApplication.token,
       applicantsCount: foundApplication.applicantsCount,
       applicants: foundApplicants,
@@ -66,6 +93,7 @@ router.get('/applications/:id', async (req, res) => {
       creditDescription: (foundApplication.creditDescription) ? foundApplication.creditDescription : "",
       visitation: (foundApplication.visitation) ? foundApplication.visitation : "",
       terms: (foundApplication.terms) ? foundApplication.terms : false,
+      status: foundApplication.status,
     }
     res.status(200).send({ "message" : "Application found.", "application" : application });
   } else {
@@ -89,7 +117,7 @@ router.get('/applications/apartment/:id', async (req, res) => {
       let foundApplicants = await applicants.getApplicants(foundApplications[i]._id);
       console.log(foundApplications[i]._id);
       let application = {
-        _id: foundApplications[i].property,
+        _id: foundApplications[i]._id,
         apartment: foundApplications[i].property,
         token: foundApplications[i].token,
         applicantsCount: foundApplications[i].applicantsCount,
@@ -104,6 +132,7 @@ router.get('/applications/apartment/:id', async (req, res) => {
         creditDescription: (foundApplications[i].creditDescription) ? foundApplications[i].creditDescription : "",
         visitation: (foundApplications[i].visitation) ? foundApplications[i].visitation : "",
         terms: (foundApplications[i].terms) ? foundApplications[i].terms : false,
+        status: foundApplications[i].status,
       }
       applications.push(application);
     }
@@ -269,5 +298,6 @@ router.delete('/applications/:id', async (req, res) => {
 });
 
 export default {
-  router
+  router,
+  getApplicationsCountByApartment,
 };

@@ -3,6 +3,7 @@ import express from "express";
 import apartmentModel from "../schemas/apartment.js";
 import companies from "./companies.js";
 import locations from "./locations.js";
+import applications from "./applications.js";
 
 const router = express.Router();
 
@@ -29,7 +30,63 @@ router.get("/apartments/:company", async (req, res) => {
   if (req.params.company !== "undefined") {
     if(companies.checkPermission(req.session.account._id, req.params.company, "read")) {
       let apartments = await apartmentModel.find({ company: req.params.company }).exec();
-      res.status(200).json({ message: "success", apartments: apartments });
+      if (apartments) {
+        let apartmentsArray = [];
+        for (let i = 0; i < apartments.length; i++) {
+          let count = await applications.getApplicationsCountByApartment(apartments[i]._id);
+          let apartment = {
+            _id: apartments[i]._id,
+            creator: apartments[i].creator,
+            company: apartments[i].company,
+            address: apartments[i].address,
+            zip: apartments[i].zip,
+            cityArea: apartments[i].cityArea,
+            city: apartments[i].city,
+            country: apartments[i].country,
+            rent: apartments[i].rent,
+            rental: apartments[i].rental,
+            release: apartments[i].release,
+            rooms: apartments[i].rooms,
+            size: apartments[i].size,
+            type: apartments[i].type,
+            waterSeperate: apartments[i].waterSeperate,
+            water: apartments[i].water,
+            electricitySeperate: apartments[i].electricitySeperate,
+            electricity: apartments[i].electricity,
+            heatingSeperate: apartments[i].heatingSeperate,
+            use: apartments[i].use,
+            description: apartments[i].description,
+            condition: apartments[i].condition,
+            buildingYear: apartments[i].buildingYear,
+            kitchenType: apartments[i].kitchenType,
+            heating: apartments[i].heating,
+            has: apartments[i].has,
+            suitable: apartments[i].suitable,
+            images: apartments[i].images,
+            deposit: apartments[i].deposit,
+            floor: apartments[i].floor,
+            housing: apartments[i].housing,
+            hosting: apartments[i].hosting,
+            maintenance: apartments[i].maintenance,
+            responsible: apartments[i].responsible,
+            contact: apartments[i].contact,
+            phone: apartments[i].phone,
+            email: apartments[i].email,
+            website: apartments[i].website,
+            location: apartments[i].location,
+            applicationUrl: apartments[i].applicationUrl,
+            default: apartments[i].default,
+            paid: apartments[i].paid,
+            created: apartments[i].created,
+            updated: apartments[i].updated,
+            applicationsCount: count,
+          };
+          apartmentsArray.push(apartment);
+        }
+        res.status(200).json({ message: "success", apartments: apartmentsArray });
+      } else {
+        res.status(200).json({ message: "No apartments found." });
+      }
     } else {
       res.status(401).json({ message: "You do not have permission to read these apartments." });
     }
