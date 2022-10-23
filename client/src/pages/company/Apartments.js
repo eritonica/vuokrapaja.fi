@@ -75,10 +75,10 @@ const Aparments = () => {
         sortedApartments = apartments.sort((a, b) => new Date(b.release) < new Date(a.release))
         break;
       case "applications-asc":
-        sortedApartments = apartments.sort((a, b) => a.applicationsCount > b.applicationsCount)
+        sortedApartments = apartments.sort((a, b) => a.applicationsCount < b.applicationsCount)
         break;
       case "applications-desc":
-        sortedApartments = apartments.sort((a, b) => a.applicationsCount < b.applicationsCount)
+        sortedApartments = apartments.sort((a, b) => a.applicationsCount > b.applicationsCount)
         break;
       default:
         sortedApartments = apartments.sort((a, b) => a.rent - b.rent)

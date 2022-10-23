@@ -1,4 +1,5 @@
 import { useSelector } from "react-redux";
+import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from "react-router-dom";
 import { Container, Box, Button, Typography, Alert, Grid } from '@mui/material';
@@ -7,14 +8,13 @@ import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 
 const Applications = (props) => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const company = useSelector(state => state.app.company);
   const token = useSelector(state => state.app.token);
-
   const [applications, setApplications] = useState([]);
   const [apartment, setApartment] = useState({});
   const [message, setMessage] = useState({ error: false, message: ""});
-
   const [sort, setSort] = useState("creation-asc")
   const [pagination, setPagination] = useState({
     currentPage: 1,
@@ -94,7 +94,7 @@ const Applications = (props) => {
         }
       });
       const data = await response.json();
-      console.log(data);
+      console.log("Applications applicants", data);
       if(data.message === "Application found.") {
         setApplications(data.applications);
         setMessage({ error: false, message: ""});
@@ -202,16 +202,16 @@ const Applications = (props) => {
                       <TableCell align="right">{application.applicantsCount}</TableCell>
                       <TableCell align="right">
                         {
-                          (application.status == "pending") ? "Käsittelyssä" : 
-                          (application.status == "accepted") ? "Hyväksytty" :
-                          (application.status == "rejected") ? "Hylätty" :
-                          (application.status == "cancelled") ? "Peruttu" :
-                          (application.status == "waiting") ? "Odottaa" :
+                          (application.status === "pending") ? "Käsittelyssä" : 
+                          (application.status === "accepted") ? "Hyväksytty" :
+                          (application.status === "rejected") ? "Hylätty" :
+                          (application.status === "cancelled") ? "Peruttu" :
+                          (application.status === "waiting") ? "Odottaa" :
                           "Tuntematon"
                         }
                       </TableCell>
                       <TableCell align="right">
-                        <Button variant="contained" color="primary" href={`/applications/${application._id}`}>Näytä</Button>
+                        <Button fullWidth sx={{marginBottom: "4px"}} variant="contained" color="secondary" size="small" onClick={() => navigate("/company/application/" + application._id)}>Näytä</Button>
                       </TableCell>
                     </TableRow>
                   ))}

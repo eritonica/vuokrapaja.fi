@@ -57,6 +57,9 @@ router.get('/applications/apartment/count/:id', async (req, res) => {
   if(!req.params.id) {
     res.status(400).send({"message": "No apartment ID provided."});
   }
+  if(req.params.id == "undefined") {
+    res.status(400).send({"message": "No apartment ID provided."});
+  }
   let foundApplications = await applicationModel.find({property: req.params.id}).exec();
   if(foundApplications) {
     res.status(200).send({ "message" : "Applications found.", "count" : foundApplications.length });
@@ -74,7 +77,10 @@ router.get('/applications/:id', async (req, res) => {
   if(!req.params.id) {
     res.status(400).send({"message": "No apartment ID provided."});
   }
-  let foundApplication = await applicationModel.findOne({token: req.headers.token}).sort({created: -1}).exec();
+  if(req.params.id == "undefined") {
+    res.status(400).send({"message": "No apartment ID provided."});
+  }
+  let foundApplication = await applicationModel.findById(req.params.id).exec();
   if(foundApplication) {
     let foundApplicants = await applicants.getApplicants(foundApplication._id);
     let application = {
@@ -107,6 +113,9 @@ router.get('/applications/apartment/:id', async (req, res) => {
     res.status(400).send({"message": "No apartment ID provided."});
   }
   if(!req.params.id) {
+    res.status(400).send({"message": "No apartment ID provided."});
+  }
+  if(req.params.id == "undefined") {
     res.status(400).send({"message": "No apartment ID provided."});
   }
   console.log("Requested applications with apartment", req.params.id);
