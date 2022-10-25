@@ -57,6 +57,9 @@ const Application = () => {
       const data = await response.json();
       console.log(data);
       if(data.application !== undefined) {
+        if(data.application.deposit[0] === "") {
+          data.application.deposit = [];
+        }
         setApplication(data.application);
       }
     }
@@ -105,6 +108,7 @@ const Application = () => {
     const newApplicants = [...application.applicants];
     newApplicants[e.target.dataset.index][e.target.name] = e.target.value;
     setApplication({ ...application, applicants: newApplicants });
+    
   }
 
   const onApplicantSelectChange = (index) => e => {
@@ -287,6 +291,7 @@ const Application = () => {
               <InputLabel id="deposit-label">Sopiva vakuus</InputLabel>
               <Select 
                 labelId="deposit-label"
+                id="deposit"
                 name="deposit"
                 value={application.deposit}
                 onChange={onApplicationChange}
@@ -351,9 +356,9 @@ const Application = () => {
             <TextField fullWidth
               label="Lisätietoa luottotiedoista."
               variant="outlined"
-              name="reason"
+              name="creditDescription"
               type="text"
-              value={application.reason}
+              value={application.creditDescription}
               onChange={onApplicationChange}
               multiline
               rows={5}
