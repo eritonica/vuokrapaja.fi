@@ -84,8 +84,8 @@ const Terms = (props) => {
                 5. Palvelun käyttö
               </Typography>
               <Typography variant="body1" component="p" gutterBottom>
-                {name} palveli möyntää käyttäjälle näissä ehdoissa määritellyn
-                rajoitetun, peruutettavissa oleva, ei-yksinomaisen ja henkilökohtaisen
+                {name} palvelu möyntää käyttäjälle näissä ehdoissa määritellyn
+                rajoitetun, peruutettavissa olevan, ei-yksinomaisen ja henkilökohtaisen
                 oikeuden käyttää {name} palvelua ja sen sisältöä ainoastaan
                 näiden ehtojen mukaisesti. Käyttäjällä on oikeus käyttää
                 {name} palvelua ja sen sisältöä vain omaan, ei-kaupalliseen käyttöön. 

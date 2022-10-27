@@ -4,6 +4,8 @@ import applicationModel from '../schemas/application.js';
 
 import applicants from './applicants.js';
 import accounts from './accounts.js';
+import notifications from './notifications.js';
+import apartments from './apartments.js';
 
 const router = express.Router();
 
@@ -185,6 +187,11 @@ router.post('/applications', async (req, res) => {
       let savedApplication = await application.save();
       if(savedApplication) {
         let savedApplicants = await applicants.addApplicants(savedApplication._id, req.body.applicants);
+        // write notification to company that new application has been created
+        notifications.sendToApartmentCompany(req.body.apartment, 
+          "New application has been created on apartment" +
+          "/company/applications" + req.body.apartment + "." +
+          " Please review it and contact the applicant.")
         if(savedApplicants) {
           res.status(200).send({ "message": "Application added.", "application": savedApplication, "applicants": applicants });
         } else {
