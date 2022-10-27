@@ -93,11 +93,10 @@ const TopBar = (props) => {
 
   const changeNotificationMessage = (notifications) => {
     for(let i = 0; i < notifications.length; i++) {
-      console.log(notifications[i].notification);
+      console.log(notifications[i].notification); // leave for debugging purposes and for adding new notifications
       if(notifications[i].notification.startsWith('New application has been created')) {
         const words = notifications[i].notification.split(' ');
         for(let j = 0; j < words.length; j++) {
-          console.log(words[j]);
           if(words[j].startsWith('/company/applications/')) {
             notifications[i].link = words[j];
             break;
@@ -159,7 +158,7 @@ const TopBar = (props) => {
   };
 
   const handleMarkAsRead = async (id) => {
-    let result = await fetch('/api/notifications/' + id, {
+    let result = await fetch('/api/notifications/markasread/' + id, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -167,9 +166,16 @@ const TopBar = (props) => {
       },
     });
     let body = await result.json();
-    console.log(body);
     if(body.message === 'success') {
       getNotifications();
+    }
+  };
+
+  const handleOpenNotification = (notification) => {
+    handleCloseNotifications();
+    handleMarkAsRead(notification._id);
+    if(notification.link !== undefined) {
+      navigate(notification.link);
     }
   };
 
@@ -244,7 +250,7 @@ const TopBar = (props) => {
                               {new Date(notification.created).toLocaleDateString("fi-FI")}
                             </Typography>
                             {notification.link !== undefined &&
-                              <Button onClick={() => { navigate(notification.link); handleCloseNotifications(); }}>Avaa</Button>
+                              <Button onClick={() => handleOpenNotification(notification) }>Avaa</Button>
                             }
                           </React.Fragment>
                         } />

@@ -69,15 +69,17 @@ router.get("/notifications/account/:account", async (req, res) => {
     if (notifications) {
       let notificationsArray = [];
       for (let i = 0; i < notifications.length; i++) {
-        let notification = {
-          _id: notifications[i]._id,
-          account: notifications[i].account,
-          company: notifications[i].company,
-          notification: notifications[i].notification,
-          read: notifications[i].read,
-          created: notifications[i].created,
+        if(notifications[i].read === false) {
+          let notification = {
+            _id: notifications[i]._id,
+            account: notifications[i].account,
+            company: notifications[i].company,
+            notification: notifications[i].notification,
+            read: notifications[i].read,
+            created: notifications[i].created,
+          }
+          notificationsArray.push(notification);
         }
-        notificationsArray.push(notification);
       }
       res.json({ "message" : "success", "data" : notificationsArray });
     } else {
@@ -96,15 +98,17 @@ router.get("/notifications/company/:company", async (req, res) => {
     if (notifications) {
       let notificationsArray = [];
       for (let i = 0; i < notifications.length; i++) {
-        let notification = {
-          _id: notifications[i]._id,
-          account: notifications[i].account,
-          company: notifications[i].company,
-          notification: notifications[i].notification,
-          read: notifications[i].read,
-          created: notifications[i].created,
+        if(notifications[i].read === false) {
+          let notification = {
+            _id: notifications[i]._id,
+            account: notifications[i].account,
+            company: notifications[i].company,
+            notification: notifications[i].notification,
+            read: notifications[i].read,
+            created: notifications[i].created,
+          }
+          notificationsArray.push(notification);
         }
-        notificationsArray.push(notification);
       }
       res.json({ "message" : "success", "data" : notificationsArray });
     } else {
@@ -133,17 +137,36 @@ router.post("/notifications", async (req, res) => {
 });
 
 router.put("/notifications/:id", async (req, res) => {
-  let notification = await getNotification(req.params.id);
-  if (notification) {
-    notification.account = req.body.account;
-    notification.company = req.body.company;
-    notification.notification = req.body.notification;
-    notification.read = req.body.read;
-    notification.created = req.body.created;
-    notification.save();
-    res.json({ "message" : "success", "data" : notification });
+  if(req.params.id !== "undefined" && req.params.id !== undefined) {
+    let notification = await getNotification(req.params.id);
+    if (notification) {
+      notification.account = req.body.account;
+      notification.company = req.body.company;
+      notification.notification = req.body.notification;
+      notification.read = req.body.read;
+      notification.created = req.body.created;
+      notification.save();
+      res.json({ "message" : "success", "data" : notification });
+    } else {
+      res.json({ "message" : "error", "error" : "No notification found" });
+    }
   } else {
-    res.json({ "message" : "error", "error" : "No notification found" });
+    res.json({ "message" : "error", "error" : "No notification id provided" });
+  }
+});
+
+router.put("/notifications/markasread/:id", async (req, res) => {
+  if(req.params.id !== "undefined" && req.params.id !== undefined) {
+    let notification = await getNotification(req.params.id);
+    if (notification) {
+      notification.read = true;
+      notification.save();
+      res.json({ "message" : "success", "data" : notification });
+    } else {
+      res.json({ "message" : "error", "error" : "No notification found" });
+    }
+  } else {
+    res.json({ "message" : "error", "error" : "No notification id provided" });
   }
 });
 
