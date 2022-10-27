@@ -1,10 +1,13 @@
-import { useState } from "react";
+import React, {  useState, useCallback, useEffect } from "react";
 import { Box, AppBar, Toolbar, Typography, Button, Snackbar, Avatar, Menu, Tooltip, IconButton, MenuItem } from "@mui/material";
 import { Login, Logout, Close, Person } from "@mui/icons-material";
 import { useNavigate } from "react-router-dom";
+import { List, ListItem, ListItemText } from "@mui/material";
 
 import { useSelector, useDispatch } from 'react-redux';
 import { setToken, setCompany, setProfile } from '../appSlice';
+
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 import LeftDrawer from "./LeftDrawer";
 
@@ -17,8 +20,12 @@ const TopBar = (props) => {
   const token = useSelector((state) => state.app.token);
   const name = useSelector((state) => state.app.name);
   const profile = useSelector((state) => state.app.profile);
-  const [anchorEl, setAnchorEl] = useState(null);
-  const {height, width} = useDimensions();
+  const company = useSelector((state) => state.app.company);
+  const [usermenuAnchor, setUsermenuAnchor] = useState(null);
+  const [notificationsAnchor, setNotificationsAnchor] = useState(null);
+  const [accountNotifications, setAccountNotifications] = useState([]);
+  const [companyNotifications, setCompanyNotifications] = useState([]);
+  const {height, width} = useDimensions(); // eslint-disable-line no-unused-vars
   const [snackbarState, setSnackbarState] = useState({
     open: false,
     message: 'Kirjauduit onnistuneesti ulos.',
@@ -73,19 +80,98 @@ const TopBar = (props) => {
 
 
   const handleOpenUsermenu = (event) => {
-    setAnchorEl(event.currentTarget);
+    setUsermenuAnchor(event.currentTarget);
   };
 
   const handleCloseUsermenu = () => {
-    setAnchorEl(null);
+    setUsermenuAnchor(null);
   };
 
+  const sleep = ms => new Promise(
+    resolve => setTimeout(resolve, ms)
+  );
 
-  // TODO:
-  // Poista logout ja profile buttons from topbar.
-  // Instead show user avatar for quick profile access
-  // and logout button in left drawer.
-  // Also badge for notifications.
+  const changeNotificationMessage = (notifications) => {
+    for(let i = 0; i < notifications.length; i++) {
+      console.log(notifications[i].notification);
+      if(notifications[i].notification.startsWith('New application has been created')) {
+        const words = notifications[i].notification.split(' ');
+        for(let j = 0; j < words.length; j++) {
+          console.log(words[j]);
+          if(words[j].startsWith('/company/applications/')) {
+            notifications[i].link = words[j];
+            break;
+          }
+        }
+        notifications[i].type = 'Hakemus';
+        notifications[i].notification = 'Kohteeseen tehty uusi hakemus';
+      }
+    }
+    return notifications;
+  }
+
+  const getNotifications = useCallback(() => {
+    const loadNotifications = async () => {
+      sleep(1000);
+      if(profile.id === undefined) {
+        return;
+      }
+      if(company._id === undefined) {
+        return;
+      }
+      let accountResult = await fetch('/api/notifications/account/' + profile.id, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          "token": token,
+        },
+      });
+      let accountBody = await accountResult.json();
+      console.log(accountBody);
+      if(accountBody.message === 'success') {
+        setAccountNotifications(accountBody.data);
+      }
+      let companyResult = await fetch('/api/notifications/company/' + company._id, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          "token": token,
+        },
+      });
+      let companyBody = await companyResult.json();
+      console.log(companyBody);
+      if(companyBody.message === 'success') {
+        companyBody.data = changeNotificationMessage(companyBody.data);
+        setCompanyNotifications(companyBody.data);
+      }
+    };
+    loadNotifications();
+  }, [profile, company, token]);
+
+  useEffect(getNotifications, [getNotifications]);
+
+  const handleOpenNotifications = (event) => {
+    setNotificationsAnchor(event.currentTarget);
+  };
+
+  const handleCloseNotifications = () => {
+    setNotificationsAnchor(null);
+  };
+
+  const handleMarkAsRead = async (id) => {
+    let result = await fetch('/api/notifications/' + id, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        "token": token,
+      },
+    });
+    let body = await result.json();
+    console.log(body);
+    if(body.message === 'success') {
+      getNotifications();
+    }
+  };
 
   return (
     <Box sx={ { flexGrow: 1 } }>
@@ -108,6 +194,66 @@ const TopBar = (props) => {
             </>
           }
           <Box sx={{ flexGrow: 1 }} />
+          { (token !== "undefined" && token !== undefined) &&
+            /* Create notifications menu */
+            <Box sx={{ flexGrow: 0, marginRight: 3 }}>
+              <Tooltip title="Ilmoitukset" placement="bottom">
+                <IconButton color="inherit" onClick={handleOpenNotifications} sx={{ p: 0 }}>
+                  <NotificationsIcon />
+                </IconButton>
+              </Tooltip>
+              <Menu
+                id="notifications-menu"
+                anchorEl={notificationsAnchor}
+                open={Boolean(notificationsAnchor)}
+                onClose={handleCloseNotifications}
+                keepMounted
+                sx={{ marginTop: 6 }}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+              >
+                <List>
+                  <ListItem>
+                    <ListItemText primary="Omat ilmoitukset" />
+                  </ListItem>
+                  { accountNotifications.map((notification) => (
+                    <ListItem key={notification._id}>
+                      <ListItemText primary={notification.notification} />
+                    </ListItem>
+                  ))}
+                </List>
+                <List>
+                  <ListItem>
+                    <ListItemText primary="Yrityksen ilmoitukset" />
+                  </ListItem>
+                  { companyNotifications.map((notification) => (
+                    <ListItem key={notification._id}>
+                      <ListItemText primary={notification.type} 
+                        secondary={
+                          <React.Fragment>
+                            <Typography sx={{ display: 'block' }} component="span" variant="body2" color="text.primary">
+                              {notification.notification}
+                            </Typography>
+                            <Typography sx={{ display: 'block' }} component="span" variant="body2" color="text.primary">
+                              {new Date(notification.created).toLocaleDateString("fi-FI")}
+                            </Typography>
+                            {notification.link !== undefined &&
+                              <Button onClick={() => { navigate(notification.link); handleCloseNotifications(); }}>Avaa</Button>
+                            }
+                          </React.Fragment>
+                        } />
+                    </ListItem>
+                  ))}
+                </List>
+              </Menu>
+            </Box>
+          }
           {
             (token === "undefined" || token === undefined)
               ? <Button color="inherit" onClick={onLogin} startIcon={<Login />}>Kirjaudu</Button>
@@ -120,7 +266,7 @@ const TopBar = (props) => {
                   <Menu 
                     sx={{ mt: '45px' }}
                     id="appbarUserMenu"
-                    anchorEl={anchorEl}
+                    anchorEl={usermenuAnchor}
                     anchorOrigin={{
                       vertical: 'top',
                       horizontal: 'right',
@@ -130,7 +276,7 @@ const TopBar = (props) => {
                       vertical: 'top',
                       horizontal: 'right',
                     }}
-                    open={Boolean(anchorEl)}
+                    open={Boolean(usermenuAnchor)}
                     onClose={handleCloseUsermenu}>
                     <MenuItem onClick={onProfile}>
                       <Person sx={{ mr: 1 }}/>

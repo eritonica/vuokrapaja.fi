@@ -189,7 +189,7 @@ router.post('/applications', async (req, res) => {
         // write notification to company that new application has been created
         notifications.sendToApartmentCompany(req.body.apartment, 
           "New application has been created on apartment" +
-          "/company/applications" + req.body.apartment + "." +
+          " /company/applications/" + req.body.apartment + "" +
           " Please review it and contact the applicant.")
         if(savedApplicants) {
           res.status(200).send({ "message": "Application added.", "application": savedApplication, "applicants": applicants });
@@ -221,7 +221,7 @@ router.post('/applications', async (req, res) => {
     if(savedApplication) {
       notifications.sendToApartmentCompany(req.body.apartment, 
         "New application has been created on apartment" +
-        "/company/applications" + req.body.apartment + "." +
+        " /company/applications/" + req.body.apartment + "" +
         " Please review it and contact the applicant.")
       let savedApplicants = await applicants.addApplicants(savedApplication._id, req.body.applicants);
       if(savedApplicants) {

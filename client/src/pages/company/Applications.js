@@ -197,7 +197,7 @@ const Applications = (props) => {
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
                       <TableCell component="th" scope="row">
-                        { application.applicants ? application.applicants[0].name : "Ei hakijaa" }
+                        { (application.applicants[0] === undefined) ? "Ei hakijaa" : application.applicants[0].name }
                       </TableCell>
                       <TableCell align="right">{application.applicantsCount}</TableCell>
                       <TableCell align="right">

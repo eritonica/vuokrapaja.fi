@@ -70,6 +70,8 @@ app.delete("/auth/google", async (req, res) => {
 
 // Routes, loading these could be automated without ES6 import/export support
 
+import notifications from "./routes/notifications.js";
+app.use("/api", notifications.router);
 import applications from "./routes/applications.js";
 app.use("/api", applications.router);
 import search from "./routes/search.js";

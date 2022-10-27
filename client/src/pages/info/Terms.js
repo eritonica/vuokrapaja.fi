@@ -1,7 +1,6 @@
 import { useSelector } from 'react-redux';
-import { Container, Box, Paper, Typography, Alert, Button, List, ListItem, ListItemText, ListItemIcon  } from '@mui/material';
+import { Container, Box, Paper, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import GitHubIcon from '@mui/icons-material/GitHub';
 
 const Terms = (props) => {
   const name = useSelector((state) => state.app.name);

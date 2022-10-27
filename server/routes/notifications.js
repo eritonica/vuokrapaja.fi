@@ -63,6 +63,7 @@ const getNotifications = async (ids) => {
 
 router.get("/notifications/account/:account", async (req, res) => {
   // check if req.params.account is not undefined
+  console.log("/notifications/account/:", req.params.account);
   if (req.params.account !== "undefined" && req.params.account !== undefined) {
     let notifications = await notificationModel.find({ account: req.params.account }).exec();
     if (notifications) {
@@ -89,6 +90,7 @@ router.get("/notifications/account/:account", async (req, res) => {
 
 router.get("/notifications/company/:company", async (req, res) => {
   // check if req.params.account is not undefined
+  console.log("/notifications/company/:", req.params.company);
   if (req.params.company !== "undefined" && req.params.company !== undefined) {
     let notifications = await notificationModel.find({ company: req.params.company }).exec();
     if (notifications) {
@@ -109,7 +111,7 @@ router.get("/notifications/company/:company", async (req, res) => {
       res.json({ "message" : "error", "error" : "No notifications found" });
     }
   } else {
-    res.json({ "message" : "error", "error" : "No account id provided" });
+    res.json({ "message" : "error", "error" : "No company id provided" });
   }
 });
 
