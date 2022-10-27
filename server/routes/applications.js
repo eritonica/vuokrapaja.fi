@@ -36,7 +36,7 @@ router.get('/applications/latest', async (req, res) => {
       desiredStart: (foundApplication.desiredStart) ? foundApplication.desiredStart : Date.now(),
       desiredEnd: (foundApplication.desiredEnd) ? foundApplication.desiredEnd : Date.now(),
       currentAddress: (foundApplication.currentAddress) ? foundApplication.currentAddress : "",
-      deposit: (foundApplication[i].deposit === "") ? [] : String(foundApplication[i].deposit).split(","),
+      deposit: (foundApplication.deposit === "") ? [] : String(foundApplication.deposit).split(","),
       pets: (foundApplication.pets) ? foundApplication.pets : "",
       description: (foundApplication.description) ? foundApplication.description : "",
       reason: (foundApplication.reason) ? foundApplication.reason : "",
@@ -94,7 +94,7 @@ router.get('/applications/:id', async (req, res) => {
       desiredStart: (foundApplication.desiredStart) ? foundApplication.desiredStart : Date.now(),
       desiredEnd: (foundApplication.desiredEnd) ? foundApplication.desiredEnd : Date.now(),
       currentAddress: (foundApplication.currentAddress) ? foundApplication.currentAddress : "",
-      deposit: (foundApplication[i].deposit === "") ? [] : String(foundApplication[i].deposit).split(","),
+      deposit: (foundApplication.deposit === "") ? [] : String(foundApplication.deposit).split(","),
       pets: (foundApplication.pets) ? foundApplication.pets : "",
       description: (foundApplication.description) ? foundApplication.description : "",
       reason: (foundApplication.reason) ? foundApplication.reason : "",
@@ -166,7 +166,6 @@ router.post('/applications', async (req, res) => {
   }
   // check if token exists
   if(req.headers.token !== "undefined") {
-    console.log("Token exists");
     let account = await accounts.getAccountByToken(req.headers.token);
     if(account) {
       let application = new applicationModel({
@@ -204,7 +203,6 @@ router.post('/applications', async (req, res) => {
       res.status(401).send({ "message": "Invalid token."});
     }
   } else {
-    console.log("Token does not exist!");
     let application = new applicationModel({
       property: req.body.apartment,
       applicantsCount: req.body.applicantsCount,
@@ -221,6 +219,10 @@ router.post('/applications', async (req, res) => {
     });
     let savedApplication = await application.save();
     if(savedApplication) {
+      notifications.sendToApartmentCompany(req.body.apartment, 
+        "New application has been created on apartment" +
+        "/company/applications" + req.body.apartment + "." +
+        " Please review it and contact the applicant.")
       let savedApplicants = await applicants.addApplicants(savedApplication._id, req.body.applicants);
       if(savedApplicants) {
         res.status(200).send({ "message": "Application added.", "application": savedApplication, "applicants": applicants });

@@ -8,28 +8,28 @@ import accountModel from "../schemas/account.js";
 
 const router = express.Router();
 
-const sendNotificationToApartmentCompany = async (apartmentId, notification) => {
+const sendToApartmentCompany = async (apartmentId, message) => {
   let apartment = await apartmentModel.findById(apartmentId).exec();
   if (apartment) {
     let company = await companyModel.findById(apartment.company).exec();
     if (company) {
       let notification = {
         company: company._id,
-        notification: notification,
+        notification: message,
       };
       await setNotification(notification);
     }
   }
 };
 
-const sendNotificationToApplicationAccount = async (applicationId, notification) => {
+const sendToApplicationCreator = async (applicationId, message) => {
   let application = await applicationModel.findById(applicationId).exec();
   if (application) {
     let account = await accountModel.findById(application.account).exec();
     if (account) {
       let notification = {
         account: account._id,
-        notification: notification,
+        notification: message,
       };
       await setNotification(notification);
     }
@@ -87,7 +87,7 @@ router.get("/notifications/account/:account", async (req, res) => {
   }
 });
 
-router.get("/notifications/comapny/:company", async (req, res) => {
+router.get("/notifications/company/:company", async (req, res) => {
   // check if req.params.account is not undefined
   if (req.params.company !== "undefined" && req.params.company !== undefined) {
     let notifications = await notificationModel.find({ company: req.params.company }).exec();
@@ -160,6 +160,6 @@ export default {
   setNotification,
   getNotification,
   getNotifications,
-  sendNotificationToApartmentCompany,
-  sendNotificationToApplicationAccount,
+  sendToApartmentCompany,
+  sendToApplicationCreator,
 };
