@@ -186,11 +186,14 @@ const CompanyApplication = (props) => {
             </List>
           </Grid>
           <Grid item xs={2}></Grid>
-          { application && (application.status === "pending" && application.creator !== undefined) && (
-            <Grid item xs={8}>
-              <Button fullWidth variant="contained" color="primary">Pyydä hakijoiden henkilötunnuksia luottotietojen tarkistukseen</Button>
-            </Grid>
-          )}
+          { application && (application.status === "pending" && application.creator !== undefined) 
+            ? <Grid item xs={8} sx={{mt: 2, mb: 2, pb: 2}}>
+                <Button fullWidth variant="contained" color="primary">Pyydä hakijoiden henkilötunnuksia luottotietojen tarkistukseen</Button>
+              </Grid>
+            : <Grid item xs={8} sx={{mt: 2, mb: 2, pb: 2}}>
+                <Button fullWidth variant="contained" color="primary" disabled>Ota yhteyttä hakijaan pyytääksesi henkilötunnusta luottotietojen tarkistukseen.</Button>
+              </Grid>
+          }
           <Grid item xs={2}></Grid>
           { application && (application.status !== "accepted" && application.status !== "rejected" && application.status !== "cancelled") && (
             <Grid item xs={12} sx={{mt: 2, mb: 2, pb: 2}}  component={Paper}>

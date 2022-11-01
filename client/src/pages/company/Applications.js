@@ -48,10 +48,12 @@ const Applications = (props) => {
         sortedApplications = applications.sort((a, b) => a.applicantsCount < b.applicantsCount);
         break;
       case "creation-asc":
-        sortedApplications = applications.sort((a, b) => new Date(a.created) > new Date(b.created));
+        console.log("Sorting applications by creation date ascending");
+        sortedApplications = applications.sort((a, b) => new Date(a.created).getTime() > new Date(b.created).getTime());
         break;
       case "creation-desc":
-        sortedApplications = applications.sort((a, b) => new Date(b.created) < new Date(a.created));
+        console.log("Sorting applications by creation date descending");
+        sortedApplications = applications.sort((a, b) => new Date(a.created).getTime() < new Date(b.created).getTime());
         break;
       default:
         sortedApplications = applications.sort((a, b) => a.applicantsCount - b.applicantsCount);
@@ -172,8 +174,8 @@ const Applications = (props) => {
                 value={sort}
                 label="Järjestys"
                 onChange={onSortChange}>
-                <MenuItem value="creation-asc">Luomisen mukaan nouseva</MenuItem>
-                <MenuItem value="creation-desc">Luomisen mukaan laskeva</MenuItem>
+                <MenuItem value="creation-asc">Hakemusajan mukaan nouseva</MenuItem>
+                <MenuItem value="creation-desc">Hakemusajan mukaan laskeva</MenuItem>
                 <MenuItem value="applicants-asc">Hakijoiden määrän mukaan nouseva</MenuItem>
                 <MenuItem value="applicants-desc">Hakijoiden määrän mukaan laskeva</MenuItem>
               </Select>

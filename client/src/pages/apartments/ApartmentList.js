@@ -41,13 +41,16 @@ const ApartmentList = ({apartments}) => {
         sortedApartments = apartments.sort((a, b) => b.size > a.size)
         break;
       case "creation-asc":
-        sortedApartments = apartments.sort((a, b) => new Date(a.created) < new Date(b.created))
+        sortedApartments = apartments.sort((a, b) => new Date(a.created).getTime() < new Date(b.created).getTime())
         break;
       case "creation-desc":
-        sortedApartments = apartments.sort((a, b) => new Date(b.created) > new Date(a.created))
+        sortedApartments = apartments.sort((a, b) => new Date(b.created).getTime() > new Date(a.created).getTime())
         break;
       case "release-asc":
-        sortedApartments = apartments.sort((a, b) => new Date(a.release) > new Date(b.release))
+        sortedApartments = apartments.sort((a, b) => new Date(a.release).getTime() < new Date(b.release).getTime())
+        break;
+      case "release-desc":
+        sortedApartments = apartments.sort((a, b) => new Date(a.release).getTime() > new Date(b.release).getTime())
         break;
       default:
         sortedApartments = apartments.sort((a, b) => a.rent - b.rent)

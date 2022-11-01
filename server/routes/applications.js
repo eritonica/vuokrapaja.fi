@@ -45,6 +45,7 @@ router.get('/applications/latest', async (req, res) => {
       visitation: (foundApplication.visitation) ? foundApplication.visitation : "",
       terms: (foundApplication.terms) ? foundApplication.terms : false,
       status: foundApplication.status,
+      created: foundApplication.created,
     }
     res.status(200).send({ "message" : "Application found.", "application" : application });
   } else {
@@ -104,6 +105,7 @@ router.get('/applications/:id', async (req, res) => {
       visitation: (foundApplication.visitation) ? foundApplication.visitation : "",
       terms: (foundApplication.terms) ? foundApplication.terms : false,
       status: foundApplication.status,
+      created: foundApplication.created,
     }
     res.status(200).send({ "message" : "Application found.", "application" : application });
   } else {
@@ -145,6 +147,7 @@ router.get('/applications/apartment/:id', async (req, res) => {
         visitation: (foundApplications[i].visitation) ? foundApplications[i].visitation : "",
         terms: (foundApplications[i].terms) ? foundApplications[i].terms : false,
         status: foundApplications[i].status,
+        created: foundApplications[i].created,
       }
       applications.push(application);
     }
@@ -271,6 +274,7 @@ router.put("/applications/reject/:id", async (req, res) => {
         visitation: (savedApplication.visitation) ? savedApplication.visitation : "",
         terms: (savedApplication.terms) ? savedApplication.terms : false,
         status: savedApplication.status,
+        created: savedApplication.created,
       }
       res.status(200).send({ "message": "Application rejected.", "application": application });
     } else {
@@ -313,6 +317,7 @@ router.put("/applications/accept/:id", async (req, res) => {
         visitation: (savedApplication.visitation) ? savedApplication.visitation : "",
         terms: (savedApplication.terms) ? savedApplication.terms : false,
         status: savedApplication.status,
+        created: savedApplication.created,
       }
       res.status(200).send({ "message": "Application accepted.", "application": application });
     } else {
