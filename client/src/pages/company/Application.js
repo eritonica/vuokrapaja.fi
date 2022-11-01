@@ -50,6 +50,7 @@ const CompanyApplication = (props) => {
       setMessage({ error: true, message: responseData.message });
     } else {
       setMessage({ error: false, message: responseData.message });
+      setApplication(responseData.application);
     }
   }
 
@@ -67,6 +68,7 @@ const CompanyApplication = (props) => {
       setMessage({ error: true, message: responseData.message });
     } else {
       setMessage({ error: false, message: responseData.message });
+      setApplication(responseData.application);
     }
   }
 
@@ -160,7 +162,7 @@ const CompanyApplication = (props) => {
                 <ListItemText primary="Haluttu sopimuksen lopetus päivä" secondary={application.desiredStop} />
               </ListItem>
               <ListItem>
-                <ListItemText primary="Sopiva vakuus" secondary={(application.deposit === undefined) ? "" : application.deposit.join(", ")} />
+                <ListItemText primary="Sopiva vakuus" secondary={(application.deposit === undefined) ? "" : (Array.isArray(application.deposit)) ? application.deposit.join(", ") : application.deposit } />
               </ListItem>
               <ListItem>
                 <ListItemText primary="Lemmikkieläimet" secondary={application.pets} />

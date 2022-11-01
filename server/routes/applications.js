@@ -252,7 +252,69 @@ router.put("/applications/reject/:id", async (req, res) => {
     foundApplication.status = "rejected";
     let savedApplication = await foundApplication.save();
     if(savedApplication) {
-      res.status(200).send({ "message": "Application rejected.", "application": savedApplication });
+      let foundApplicants = await applicants.getApplicants(savedApplication._id);
+      let application = {
+        _id: savedApplication._id,
+        apartment: savedApplication.property,
+        creator: savedApplication.creator,
+        token: savedApplication.token,
+        applicantsCount: savedApplication.applicantsCount,
+        applicants: foundApplicants,
+        desiredStart: (savedApplication.desiredStart) ? savedApplication.desiredStart : Date.now(),
+        desiredEnd: (savedApplication.desiredEnd) ? savedApplication.desiredEnd : Date.now(),
+        currentAddress: (savedApplication.currentAddress) ? savedApplication.currentAddress : "",
+        deposit: (savedApplication.deposit === "") ? [] : String(savedApplication.deposit).split(","),
+        pets: (savedApplication.pets) ? savedApplication.pets : "",
+        description: (savedApplication.description) ? savedApplication.description : "",
+        reason: (savedApplication.reason) ? savedApplication.reason : "",
+        creditDescription: (savedApplication.creditDescription) ? savedApplication.creditDescription : "",
+        visitation: (savedApplication.visitation) ? savedApplication.visitation : "",
+        terms: (savedApplication.terms) ? savedApplication.terms : false,
+        status: savedApplication.status,
+      }
+      res.status(200).send({ "message": "Application rejected.", "application": application });
+    } else {
+      res.status(500).send({ "message": "Error saving application."});
+    }
+  } else {
+    res.status(404).send({ "message": "Application not found."});
+  }
+});
+
+// Route for accepting application
+router.put("/applications/accept/:id", async (req, res) => {
+  if(!req.params.id) {
+    res.status(400).send({"message": "No application ID provided."});
+  }
+  if(req.params.id == "undefined") {
+    res.status(400).send({"message": "No application ID provided."});
+  }
+  let foundApplication = await applicationModel.findOne({_id: req.params.id}).exec();
+  if(foundApplication) {
+    foundApplication.status = "accepted";
+    let savedApplication = await foundApplication.save();
+    if(savedApplication) {
+      let foundApplicants = await applicants.getApplicants(savedApplication._id);
+      let application = {
+        _id: savedApplication._id,
+        apartment: savedApplication.property,
+        creator: savedApplication.creator,
+        token: savedApplication.token,
+        applicantsCount: savedApplication.applicantsCount,
+        applicants: foundApplicants,
+        desiredStart: (savedApplication.desiredStart) ? savedApplication.desiredStart : Date.now(),
+        desiredEnd: (savedApplication.desiredEnd) ? savedApplication.desiredEnd : Date.now(),
+        currentAddress: (savedApplication.currentAddress) ? savedApplication.currentAddress : "",
+        deposit: (savedApplication.deposit === "") ? [] : String(savedApplication.deposit).split(","),
+        pets: (savedApplication.pets) ? savedApplication.pets : "",
+        description: (savedApplication.description) ? savedApplication.description : "",
+        reason: (savedApplication.reason) ? savedApplication.reason : "",
+        creditDescription: (savedApplication.creditDescription) ? savedApplication.creditDescription : "",
+        visitation: (savedApplication.visitation) ? savedApplication.visitation : "",
+        terms: (savedApplication.terms) ? savedApplication.terms : false,
+        status: savedApplication.status,
+      }
+      res.status(200).send({ "message": "Application accepted.", "application": application });
     } else {
       res.status(500).send({ "message": "Error saving application."});
     }
