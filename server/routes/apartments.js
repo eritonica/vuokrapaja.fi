@@ -142,7 +142,6 @@ router.post("/apartments", async (req, res) => {
       paid: false,
     });
     apartment.save();
-    console.log(apartment);
     // Magic happens here! ;) Lets add all possible locations to the location database.
     let keys = ["address", "zip", "cityArea", "city", "country"].reverse();
     let location = "";

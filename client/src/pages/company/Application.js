@@ -26,6 +26,7 @@ const CompanyApplication = (props) => {
       if (!response.ok) {
         setMessage({ error: true, message: responseData.message });
       } else {
+        console.log(responseData.application.creator);
         setApplication(responseData.application);
       }
     }
@@ -35,14 +36,70 @@ const CompanyApplication = (props) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(fetchApplication, [fetchApplication]);
 
+  const handleReject = async () => {
+    const response = await fetch(`/api/applications/reject/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "token": token,
+      }
+    });
+    const responseData = await response.json();
+    console.log(responseData);
+    if (!response.ok) {
+      setMessage({ error: true, message: responseData.message });
+    } else {
+      setMessage({ error: false, message: responseData.message });
+    }
+  }
+
+  const handleAccept = async () => {
+    const response = await fetch(`/api/applications/accept/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "token": token,
+      }
+    });
+    const responseData = await response.json();
+    console.log(responseData);
+    if (!response.ok) {
+      setMessage({ error: true, message: responseData.message });
+    } else {
+      setMessage({ error: false, message: responseData.message });
+    }
+  }
+
   return (
     <Container maxWidth="md" component={Paper}>
       <Box sx={{ my: 4 }}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography variant="h4" component="h1" gutterBottom>
-              Hakemus
-            </Typography>
+            { application && (
+              (application.status === "pending") 
+              ? <Typography variant="h4" color="primary"  component="h1" gutterBottom>
+                 Hakemus käsiteltävänä
+                </Typography>
+              : (application.status === "accepted") 
+              ? <Typography variant="h4" color="success" component="h1" gutterBottom>
+                 Hakemus hyväksytty
+                </Typography>
+              : (application.status === "rejected") 
+              ? <Typography variant="h4" color="error" component="h1" gutterBottom>
+                  Hakemus hylätty
+                </Typography>
+              : (application.status === "cancelled") 
+              ? <Typography variant="h4" color="warning" component="h1" gutterBottom>
+                  Hakemus peruttu
+                </Typography>
+              : (application.status === "waiting")
+              ? <Typography variant="h4" color="info" component="h1" gutterBottom>
+                  Hakemus odottaa
+                </Typography>
+              : <Typography variant="h4" color="secondary" component="h1" gutterBottom>
+                  Hakemus
+                </Typography>
+            )}
           </Grid>
           {message.error && 
             <Grid item xs={12}>
@@ -127,16 +184,27 @@ const CompanyApplication = (props) => {
             </List>
           </Grid>
           <Grid item xs={2}></Grid>
-          <Grid item xs={8}>
-            <Button fullWidth variant="contained" color="primary">Pyydä hakijoiden henkilötunnuksia luottotietojen tarkistukseen</Button>
-          </Grid>
+          { application && (application.status === "pending" && application.creator !== undefined) && (
+            <Grid item xs={8}>
+              <Button fullWidth variant="contained" color="primary">Pyydä hakijoiden henkilötunnuksia luottotietojen tarkistukseen</Button>
+            </Grid>
+          )}
           <Grid item xs={2}></Grid>
-          <Grid item xs={6} sx={{mb: 2}}>
-            <Button fullWidth variant="contained" color="success">Hyväksy</Button>
-          </Grid>
-          <Grid item xs={6} sx={{mb: 2}}>
-            <Button fullWidth variant="contained" color="error">Hylkää</Button>
-          </Grid>
+          { application && (application.status !== "accepted" && application.status !== "rejected" && application.status !== "cancelled") && (
+            <Grid item xs={12} sx={{mt: 2, mb: 2, pb: 2}}  component={Paper}>
+              <Typography variant="h5" component="h2" gutterBottom>
+                Hyväksy tai hylkää hakemus
+              </Typography>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  <Button fullWidth variant="contained" color="success" onClick={handleAccept}>Hyväksy</Button>
+                </Grid>
+                <Grid item xs={6}>
+                  <Button fullWidth variant="contained" color="error" onClick={handleReject}>Hylkää</Button>
+                </Grid>
+              </Grid>
+            </Grid>
+          )}
         </Grid>
       </Box>
     </Container>

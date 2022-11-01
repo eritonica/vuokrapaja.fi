@@ -30,6 +30,7 @@ router.get('/applications/latest', async (req, res) => {
     let application = {
       _id: foundApplication._id,
       apartment: foundApplication.property,
+      creator: foundApplication.creator,
       token: foundApplication.token,
       applicantsCount: foundApplication.applicantsCount,
       applicants: foundApplicants,
@@ -88,6 +89,7 @@ router.get('/applications/:id', async (req, res) => {
     let application = {
       _id: foundApplication._id,
       apartment: foundApplication.property,
+      creator: foundApplication.creator,
       token: foundApplication.token,
       applicantsCount: foundApplication.applicantsCount,
       applicants: foundApplicants,
@@ -120,16 +122,15 @@ router.get('/applications/apartment/:id', async (req, res) => {
   if(req.params.id == "undefined") {
     res.status(400).send({"message": "No apartment ID provided."});
   }
-  console.log("Requested applications with apartment", req.params.id);
   let foundApplications = await applicationModel.find({property: req.params.id}).sort({created: -1}).exec();
   if(foundApplications) {
     let applications = [];
     for(let i = 0; i < foundApplications.length; i++) {
       let foundApplicants = await applicants.getApplicants(foundApplications[i]._id);
-      console.log(foundApplications[i]._id);
       let application = {
         _id: foundApplications[i]._id,
         apartment: foundApplications[i].property,
+        creator: foundApplications[i].creator,
         token: foundApplications[i].token,
         applicantsCount: foundApplications[i].applicantsCount,
         applicants: foundApplicants,
@@ -165,8 +166,11 @@ router.post('/applications', async (req, res) => {
     res.status(400).send({"message": "No applicants provided."});
   }
   // check if token exists
+  console.log("POST /api/applications", req.body)
+  console.log("Headers: ", req.headers)
   if(req.headers.token !== "undefined") {
     let account = await accounts.getAccountByToken(req.headers.token);
+    console.log("Fetched account: ", account);
     if(account) {
       let application = new applicationModel({
         property: req.body.apartment,
@@ -248,7 +252,7 @@ router.put("/applications/reject/:id", async (req, res) => {
     foundApplication.status = "rejected";
     let savedApplication = await foundApplication.save();
     if(savedApplication) {
-      res.status(200).send({ "message": "Application rejected."});
+      res.status(200).send({ "message": "Application rejected.", "application": savedApplication });
     } else {
       res.status(500).send({ "message": "Error saving application."});
     }

@@ -101,18 +101,13 @@ router.post("/accounts", async (req, res) => {
   message += `Your account has been created. Please click the link below to activate your account.\r\n\r\n`;
   message += `${process.env.ACTIVATION_LINK}${activationCode}\r\n\r\n`;
   message += `Thank you, sincerely for joining our service.`;
-  console.log("To: " + req.body.email);
-  console.log("Header: " + header);
-  console.log("Message: \r\n" + message);
   mailer.sendMail(req.body.email, header, message);
   res.status(200).json({ message: "Account created, waiting for verification." });
 });
 
 // GET /accounts/activate/:code
 router.get("/accounts/activate/:code", async (req, res) => {
-  console.log(req.params.code);
   let account = await accountModel.findOne({ code: req.params.code }).exec();
-  console.log(account);
   if (account) {
     account.active = true;
     account.updated = Date.now();
@@ -136,9 +131,6 @@ router.get("/accounts/recovery/:email", async (req, res) => {
     message += `You have requested a password recovery. Please click the link below to recover your account.\r\n\r\n`;
     message += `${process.env.RECOVERY_LINK}${recoveryCode}\r\n\r\n`;
     message += `Thank you, sincerely for joining our service.`;
-    console.log("To: " + req.params.email);
-    console.log("Header: " + header);
-    console.log("Message: \r\n" + message);
     mailer.sendMail(req.params.email, header, message);
     res.status(200).json({ message: "Recovery email sent." });
   } else {

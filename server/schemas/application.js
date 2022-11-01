@@ -7,7 +7,8 @@ const applicationSchema = new mongoose.Schema({
     required: true,
   },
   creator: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Account',
     required: false,
   },
   applicantsCount: {

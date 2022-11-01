@@ -15,7 +15,6 @@ const sendMail = async (email, subject, text) => {
     text: text,
   };
   let info = await transporter.sendMail(options);
-  console.log("Message sent: %s", info.messageId);
   return info;
 };
 

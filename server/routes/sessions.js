@@ -26,7 +26,6 @@ const getSessionByToken = async (token) => {
 
 // Session check middleware
 const checkSession = async (req, res, next) => {
-  console.log("header token", req.headers.token);
   let session = await sessionModel.findOne({ token: req.headers.token }).exec();
   if (session) {
     if(session.updated.getTime() + process.env.SESSION_TTL > Date.now()) {

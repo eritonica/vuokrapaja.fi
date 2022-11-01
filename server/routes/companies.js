@@ -103,7 +103,6 @@ router.post('/companies', async (req, res) => {
 
 // GET /companies/:id
 router.get('/companies/:id', async (req, res) => {
-	console.log(req);
 	let company = await companyModel.findOne({ _id: req.params.id }).exec();
 	if (company) {
 		return res.status(200).json(company);

@@ -8,7 +8,6 @@ const router = express.Router();
 
 // POST /search/
 router.post("/search/", async (req, res) => {
-  console.log("Trying to search apartments in " + req.body.location);
   if(req.body.location) {
     // Find apartments in the location
     let locations = await Locations.getLocations(req.body.location);

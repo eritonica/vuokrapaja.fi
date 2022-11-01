@@ -31,7 +31,6 @@ const getApplicants = async (application) => {
     throw new Error("No application provided.");
   }
   let applicants = await applicantModel.find({application: application}).exec();
-  console.log(applicants);
   if(!applicants) {
     throw new Error("No applicants found.");
   }
