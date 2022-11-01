@@ -1,4 +1,5 @@
 import express from "express";
+import mailer from "../dependancies/mailer.js";
 
 import notificationModel from "../schemas/notification.js";
 import apartmentModel from "../schemas/apartment.js";
@@ -32,6 +33,13 @@ const sendToApplicationCreator = async (applicationId, message) => {
         notification: message + "|application|" + application._id,
       };
       await setNotification(notification);
+      let header = `Hakemuksesi tilassa muutos.`
+      let message = `Hei\r\n\r\n`;
+      message += message + "\r\n\r\n";
+      message += "Hakemus ID: " + application._id + "\r\n\r\n";
+      message += `Ystävällisin terveisin, \r\n`;
+      message += `https://vuokrapaja.fi/`;
+      mailer.sendMail(account.email, header, message);
     }
   }
 };
