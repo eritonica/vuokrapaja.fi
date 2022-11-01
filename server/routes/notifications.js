@@ -29,7 +29,7 @@ const sendToApplicationCreator = async (applicationId, message) => {
     if (account) {
       let notification = {
         account: account._id,
-        notification: message,
+        notification: message + "|application|" + application._id,
       };
       await setNotification(notification);
     }
