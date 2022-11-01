@@ -235,6 +235,28 @@ router.post('/applications', async (req, res) => {
   }
 });
 
+// Route for rejecting application
+router.put("/applications/reject/:id", async (req, res) => {
+  if(!req.params.id) {
+    res.status(400).send({"message": "No application ID provided."});
+  }
+  if(req.params.id == "undefined") {
+    res.status(400).send({"message": "No application ID provided."});
+  }
+  let foundApplication = await applicationModel.findOne({_id: req.params.id}).exec();
+  if(foundApplication) {
+    foundApplication.status = "rejected";
+    let savedApplication = await foundApplication.save();
+    if(savedApplication) {
+      res.status(200).send({ "message": "Application rejected."});
+    } else {
+      res.status(500).send({ "message": "Error saving application."});
+    }
+  } else {
+    res.status(404).send({ "message": "Application not found."});
+  }
+});
+
 // Route for updating application and applicants
 router.put('/applications/:id', async (req, res) => {
   // check if token is valid and if it belongs to the creator of the application

@@ -184,11 +184,13 @@ const TopBar = (props) => {
       <AppBar position="static">
         <Toolbar>
           <LeftDrawer onLogout={ onLogout }/>
+          <Avatar src={"/logo512.png"} onClick={ () => navigate("/") }/>
           <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}>
+            sx={{ display: { xs: 'none', sm: 'block' } }}
+            onClick={() => navigate("/")}>
             { name }
           </Typography>
           { width > 448 &&
@@ -224,39 +226,44 @@ const TopBar = (props) => {
                   horizontal: 'right',
                 }}
               >
-                <List>
-                  <ListItem>
-                    <ListItemText primary="Omat ilmoitukset" />
-                  </ListItem>
-                  { accountNotifications.map((notification) => (
-                    <ListItem key={notification._id}>
-                      <ListItemText primary={notification.notification} />
+                { (profile) && 
+                  <List>
+                    <ListItem>
+                      <ListItemText primary="Omat ilmoitukset" />
                     </ListItem>
-                  ))}
-                </List>
-                <List>
-                  <ListItem>
-                    <ListItemText primary="Yrityksen ilmoitukset" />
-                  </ListItem>
-                  { companyNotifications.map((notification) => (
-                    <ListItem key={notification._id}>
-                      <ListItemText primary={notification.type} 
-                        secondary={
-                          <React.Fragment>
-                            <Typography sx={{ display: 'block' }} component="span" variant="body2" color="text.primary">
-                              {notification.notification}
-                            </Typography>
-                            <Typography sx={{ display: 'block' }} component="span" variant="body2" color="text.primary">
-                              {new Date(notification.created).toLocaleDateString("fi-FI")}
-                            </Typography>
-                            {notification.link !== undefined &&
-                              <Button onClick={() => handleOpenNotification(notification) }>Avaa</Button>
-                            }
-                          </React.Fragment>
-                        } />
+                    { accountNotifications.map((notification) => (
+                      <ListItem key={notification._id}>
+                        <ListItemText primary={notification.notification} />
+                      </ListItem>
+                    ))}
+                  </List>
+                }
+                { (company) &&
+                  <List>
+                    <ListItem>
+                      <ListItemText primary="Yrityksen ilmoitukset" />
                     </ListItem>
-                  ))}
-                </List>
+                    { companyNotifications.map((notification) => (
+                      <ListItem key={notification._id}>
+                        <ListItemText primary={notification.type} 
+                          secondary={
+                            <React.Fragment>
+                              
+                              <Typography sx={{ display: 'block' }} component="span" variant="body2" color="text.primary">
+                                {notification.notification}
+                              </Typography>
+                              <Typography sx={{ display: 'block' }} component="span" variant="body2" color="text.primary">
+                                {new Date(notification.created).toLocaleDateString("fi-FI")}
+                              </Typography>
+                              {notification.link !== undefined &&
+                                <Button onClick={() => handleOpenNotification(notification) }>Avaa</Button>
+                              }
+                            </React.Fragment>
+                          } />
+                      </ListItem>
+                    ))}
+                  </List>
+                }
               </Menu>
             </Box>
           }
