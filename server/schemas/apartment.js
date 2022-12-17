@@ -34,7 +34,7 @@ const apartmentSchema = new mongoose.Schema({
     type: String,
   },
   deposit: {      // vakuus
-    type: String,
+    type: Array,
   },
   release: {      // vapautuminen
     type: Date,

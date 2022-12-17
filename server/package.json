@@ -25,6 +25,7 @@
     "nodemon": "^2.0.19",
     "passport": "^0.6.0",
     "passport-google-oidc": "^0.1.0",
-    "sanitize-filename": "^1.6.3"
+    "sanitize-filename": "^1.6.3",
+    "stripe": "^11.1.0"
   }
 }

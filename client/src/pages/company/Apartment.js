@@ -246,11 +246,10 @@ const Apartment = () => {
       });
       const body = await response.json();
       console.log(body);
-      // Implement stripe payment here, if needed. Otherwise just close the modal.
       handleCloseSaveModal();
       if (body.message === "Apartment created.") {
-        // TODO: Redirect to apartment page.
-        setMessage({...message, success : "Ilmoitus lisätty onnistuneesti. ", error: "" });
+        setMessage({...message, success : "Ilmoitus lisätty onnistuneesti. Sinun tarvitsee vielä maksaa ilmoituksesi, että se tulee.", error: "" });
+        setForm({ ...newApartment })
       } else if(body.message === "Apartment already exists.") {
         setMessage({...message, error : "Ilmoitus on jo olemassa."});
       } else if(body.message === "You do not have permission to create this apartment.") {
@@ -852,6 +851,24 @@ const Apartment = () => {
               <Alert severity="success">{message.success}</Alert>
             </Grid>
           )}
+          {(message.success === "Ilmoitus lisätty onnistuneesti. Sinun tarvitsee vielä maksaa ilmoituksesi, että se tulee.") &&
+            <Grid item xs={12}>
+              <form method="POST" action="/api/stripe-one-time-payment">
+                <input type="hidden" name="apartment" value={form._id}></input>
+                <input type="hidden" name="token" value={token}></input>
+                <Button sx={{ mb: 2 }} fullWidth variant="contained" color="primary" type="submit">Maksa</Button>
+              </form>
+            </Grid>
+          }
+          {(message.success === "Ilmoitus lisätty onnistuneesti. Sinun tarvitsee vielä maksaa ilmoituksesi, että se tulee.") &&
+            <Grid item xs={12}>
+              <form method="POST" action="/api/stripe-one-time-payment">
+                <input type="hidden" name="apartment" value={form._id}></input>
+                <input type="hidden" name="token" value={token}></input>
+                <Button sx={{ mb: 2 }} fullWidth variant="contained" color="primary" type="submit">Maksa</Button>
+              </form>
+            </Grid>
+          }
           {(message.error) && (
             <Grid item xs={12}>
               <Alert severity="error">{message.error}</Alert>
@@ -879,11 +896,8 @@ const Apartment = () => {
                 <Button sx={{ mb: 2}} fullWidth variant="contained" color="info" onClick={handleCloseSaveModal}>
                   Peruuta ja muokkaa.
                 </Button>
-                <Button  sx={{ mb: 2 }}fullWidth variant="contained" color="primary" onClick={handleNewApartmentSubmit}>
-                  Tallenna
-                </Button>
-                <Button fullWidth variant="contained" color="secondary" onClick={handleNewApartmentSubmit}>
-                  Tallenna ja maksa
+                <Button  sx={{ mb: 2 }} fullWidth variant="contained" color="primary" onClick={handleNewApartmentSubmit}>
+                  Tallenna.
                 </Button>
               </Box>
             </Modal>

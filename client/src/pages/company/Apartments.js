@@ -245,7 +245,14 @@ const Aparments = () => {
                       <TableCell align="right">{apartment.available}</TableCell>
                       <TableCell align="right">
                         <Button fullWidth sx={{marginBottom: "4px"}} variant="contained" color="info" size="small" onClick={() => navigate("/company/apartment", { state : apartment })}>Muokkaa</Button>
-                        {(apartment.paid) ? "Julkaistu" : <Button fullWidth variant="contained" color="primary" size="small">Maksa</Button> }
+                        {(apartment.paid) ? ("Julkaistu") 
+                        : (
+                          <form method="POST" action="/api/stripe-one-time-payment">
+                            <input type="hidden" name="apartment" value={apartment._id}></input>
+                            <input type="hidden" name="token" value={token}></input>
+                            <Button fullWidth variant="contained" color="primary" size="small" type="submit">Maksa</Button>
+                          </form>
+                        )}
                       </TableCell>
                       <TableCell align="right">
                         <Button fullWidth sx={{marginBottom: "4px"}} variant="contained" color="secondary" size="small" onClick={() => navigate("/company/applications/" + apartment._id)}>Hakemukset {apartment.applicationsCount}</Button>
