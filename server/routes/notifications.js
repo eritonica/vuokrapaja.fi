@@ -19,27 +19,49 @@ const sendToApartmentCompany = async (apartmentId, message) => {
         notification: message,
       };
       await setNotification(notification);
+      let header = `Uusi hakemus saapunut`
+      let msg = `Hei\r\n\r\n`;
+      msg += message + "\r\n\r\n";
+      msg += "Olet saanut ilmoitukseesi uuden hakemusken, tarkastathan sen mahdollisimman pian.\r\n\r\n";
+      msg += "https://vuokrapaja.fi/company/application/" + application._id + "\r\n\r\n";
+      msg += `Ystävällisin terveisin, \r\n`;
+      msg += `https://vuokrapaja.fi/`;
+      mailer.sendMail(account.email, header, msg);
     }
   }
 };
 
 const sendToApplicationCreator = async (applicationId, message) => {
   let application = await applicationModel.findById(applicationId).exec();
+  console.log(application);
   if (application) {
-    let account = await accountModel.findById(application.account).exec();
+    let account = await accountModel.findById(application.creator).exec();
+    console.log(account);
     if (account) {
-      let notification = {
-        account: account._id,
-        notification: message + "|application|" + application._id,
-      };
-      await setNotification(notification);
+      if(message == "accepted") {
+        let notification = {
+          account: account._id,
+          notification: "Hakemus hyväksytty|application|" + application._id,
+        };
+        await setNotification(notification);
+      } else if(message == "rejected") {
+        let notification = {
+          account: account._id,
+          notification: "Hakemus hylätty|application|" + application._id,
+        };
+        await setNotification(notification);
+      }
       let header = `Hakemuksesi tilassa muutos.`
-      let message = `Hei\r\n\r\n`;
-      message += message + "\r\n\r\n";
-      message += "Hakemus ID: " + application._id + "\r\n\r\n";
-      message += `Ystävällisin terveisin, \r\n`;
-      message += `https://vuokrapaja.fi/`;
-      mailer.sendMail(account.email, header, message);
+      let msg = `Hei\r\n\r\n`;
+      if(message === "accepted") {
+        msg += "Hakemuksesi seuraavasta asunnosta on hyväksytty. Olethan mahdollisimman pian vuokranantajaan yhteydessä.\r\n\r\n";
+      } else if(message === "rejected") {
+        msg += "Hakemuksesi seuraavasta asunnosta on hylätty. Voit yrittää laittaa uuden hakemuksen tarkempien tietojen kanssa tai olla yhteydessä vuokranantajaan suoraan.\r\n\r\n";
+      }
+      msg += "https://vuokrapaja.fi/apartments/" + application.property + "\r\n\r\n";
+      msg += `Ystävällisin terveisin, \r\n`;
+      msg += `https://vuokrapaja.fi/`;
+      mailer.sendMail(account.email, header, msg);
     }
   }
 };

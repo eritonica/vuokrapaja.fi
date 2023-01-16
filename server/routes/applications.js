@@ -320,7 +320,7 @@ router.put("/applications/accept/:id", async (req, res) => {
         status: savedApplication.status,
         created: savedApplication.created,
       }
-      notifications.sendToApplicationCreator(application._id, "Your application has been accepted. Please contact the apartment company to schedule a visitation.");
+      notifications.sendToApplicationCreator(application._id, "Accepted");
       res.status(200).send({ "message": "Application accepted.", "application": application });
     } else {
       res.status(500).send({ "message": "Error saving application."});
