@@ -106,7 +106,7 @@ const Aparments = () => {
 
   useEffect(() => {
     const getApartments = async () => {
-      const response = await fetch(`/api/apartments/${company._id}`, {
+      const response = await fetch(`/api/apartments/company/${company._id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -131,7 +131,7 @@ const Aparments = () => {
   useEffect(paginateApartments, [pagination.perPage, apartments]);
 
   const handleDelete = async (id) => {
-    const response = await fetch(`/api/apartments/${id}`, {
+    const response = await fetch(`/api/apartments/company/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -245,7 +245,10 @@ const Aparments = () => {
                       <TableCell align="right">{apartment.available}</TableCell>
                       <TableCell align="right">
                         <Button fullWidth sx={{marginBottom: "4px"}} variant="contained" color="info" size="small" onClick={() => navigate("/company/apartment", { state : apartment })}>Muokkaa</Button>
-                        {(apartment.paid) ? ("Julkaistu") 
+                        {(apartment.paid) ? (
+
+                          <Button disabled="disabled" fullWidth variant="contained" color="primary" size="small" type="submit">Julkaistu</Button>
+                        ) 
                         : (
                           <form method="POST" action="/api/stripe-one-time-payment">
                             <input type="hidden" name="apartment" value={apartment._id}></input>

@@ -22,7 +22,9 @@ const ApartmentCard = ({ apartment }) => {
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <img src={"/" + apartment.images[0].path} alt={apartment.images[0].name} width="100%" height="100px" />
+            {(apartment.images.length > 0) &&
+              <img src={"/" + apartment.images[0].path} alt={apartment.images[0].name} width="100%" height="100px" />
+            }
           </Grid>
         </Grid>
         <Grid item xs={6} container direction="column" spacing={2}  style={{ cursor: 'pointer' }}>

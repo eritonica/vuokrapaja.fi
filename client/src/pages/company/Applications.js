@@ -66,7 +66,7 @@ const Applications = (props) => {
   useEffect(() => {
     console.log(id);
     const getApartment = async () => {
-      const response = await fetch(`/api/apartments/${company._id}`, {
+      const response = await fetch(`/api/apartments/company/${company._id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

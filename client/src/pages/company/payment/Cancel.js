@@ -8,24 +8,24 @@ const Cancel = () => {
         <Grid container spacing={2} sx={{pt:3}}>
           <Grid item xs={12}>
             <Typography variant="h4" component="h1" sx={{ color: "red" }} gutterBottom>
-              Maksutapahtuma epäonnistui
+              Haluamme ilmoittaa, että maksusi ei onnistunut.
             </Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography variant="h6" component="h2" gutterBottom>
-              Ilmoitustasi ei julkaistu.
+              Ilmoitustasi ei julkaistu. 
             </Typography>
             <Typography variant="body1" component="p" gutterBottom>
-              Koska peruutit maksutapahtuman tai maksutapahtuma epäonnistui, joten sinun ilmoitustasi ei julkaistu kaikkien näkyville. 
-              Voit yrittää uudestaan maksaa. Mahdollisia syitä on, että sinulla ei valitettavasti ollut katetta tai Stripe palvelussa
-              on menossa häiriö. 
+              Voitko tarkistaa, että maksutietosi ovat oikein ja yritä maksaa uudelleen? 
+              Jos sinulla on edelleen ongelmia, ole hyvä ja ota yhteyttä maksupalveluntarjoajaasi 
+              tai asiakaspalveluumme saadaksesi lisätietoja ja apua ongelman ratkaisemiseksi.
             </Typography>
             <Typography variant="body1" component="p" gutterBottom>
-              Ota sähköpostilla yhteyttä pankkisi maksutapahtuman kanssa jos sinulta kuitenkin veloitettiin ja päädyit tänne.
+              Toivotan sinulle hyvää päivän jatkoa.
             </Typography>
             <Typography variant="body1" component="p" gutterBottom>
-              Olemme pahoillamme jos virheellisesti maksutapahtuma päätyi epäonnistumiseen. Muuten toivomme sinun yrittävän myöhemmin
-              uudestaan.
+              Ystävällisin terveisin,
+              Vuokrapaja
             </Typography>
           </Grid>
         </Grid>

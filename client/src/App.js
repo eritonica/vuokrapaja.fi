@@ -34,6 +34,7 @@ import ActivationForm from './pages/registeration/ActivationForm';
 import RecoveryRequestForm from './pages/recovery/RequestForm';
 import RecoveryPasswordForm from './pages/recovery/PasswordForm';
 import PaymentCancel from './pages/company/payment/Cancel';
+import PaymentSuccess from './pages/company/payment/Success';
 
 
 // Theme selection
@@ -136,6 +137,7 @@ function App() {
               <Route path="/recovery" element={<RecoveryRequestForm/>} />
               <Route path="/recovery/password" element={<RecoveryPasswordForm/>} />
               <Route path="/stripe-payment-failure" element={<PaymentCancel/>} />
+              <Route path="/stripe-payment-success" element={<PaymentSuccess/>} />
             </Routes>
             <Gdpr />
         </ThemeProvider>

@@ -20,19 +20,26 @@ router.post("/search/", async (req, res) => {
     apartments = [...new Set(apartments)];
     // Now get those apartments.
     let foundApartments = await Apartments.getApartments(apartments);
+    //console.log(foundApartments);
     let filteredApartments = foundApartments.filter((apartment) => {
       let useFound = false;
       if(req.body.use) {
         if(apartment.use === req.body.use) {
           useFound = true;
+        } else if(req.body.use === "Muu" && apartment.use === "") {
+          useFound = true;
         }
       } else {
         useFound = true;
       }
+      //console.log(useFound);
       let roomFound = false;
       if(req.body.rooms.length > 0) {
         for(let room of req.body.rooms) {
           if(apartment.rooms.includes(room + "h")) {
+            roomFound = true;
+            break;
+          } else if(apartment.rooms.includes(room)) {
             roomFound = true;
             break;
           }
@@ -40,6 +47,7 @@ router.post("/search/", async (req, res) => {
       } else {
         roomFound = true;
       }
+      //console.log(roomFound);
       let houseTypeFound = false;
       if(req.body.houseType.length > 0) {
         for(let houseType of req.body.houseType) {
@@ -51,6 +59,7 @@ router.post("/search/", async (req, res) => {
       } else {
         houseTypeFound = true;
       }
+      //console.log(houseTypeFound);
       let priceFound = false;
       if(req.body.minPrice && req.body.maxPrice) {
         if(apartment.rent >= req.body.minPrice && apartment.rent <= req.body.maxPrice) {
@@ -59,6 +68,7 @@ router.post("/search/", async (req, res) => {
       } else {
         priceFound = true;
       }
+      //console.log(priceFound);
       let sizeFound = false;
       if(req.body.minSize && req.body.maxSize) {
         if(apartment.size >= req.body.minSize && apartment.size <= req.body.maxSize) {
@@ -67,6 +77,7 @@ router.post("/search/", async (req, res) => {
       } else {
         sizeFound = true;
       }
+      //console.log(sizeFound);
       let heatingFound = false;
       if(req.body.heating.length > 0) {
         for(let heating of req.body.heating) {
@@ -78,6 +89,7 @@ router.post("/search/", async (req, res) => {
       } else {
         heatingFound = true;
       }
+      //console.log(heatingFound);
       let hasFound = false;
       if(req.body.has.length > 0) {
         for(let has of req.body.has) {
@@ -89,6 +101,7 @@ router.post("/search/", async (req, res) => {
       } else {
         hasFound = true;
       }
+      //console.log(hasFound);
       let conditionFound = false;
       if(req.body.condition.length > 0) {
         for(let condition of req.body.condition) {
@@ -100,6 +113,7 @@ router.post("/search/", async (req, res) => {
       } else {
         conditionFound = true;
       }
+      //console.log(conditionFound);
       let kitchenTypeFound = false;
       if(req.body.kitchenType.length > 0) {
         for(let kitchenType of req.body.kitchenType) {
@@ -111,6 +125,7 @@ router.post("/search/", async (req, res) => {
       } else {
         kitchenTypeFound = true;
       }
+      //console.log(kitchenTypeFound);
       let suitableFound = false;
       if(req.body.suitable.length > 0) {
         for(let suitable of req.body.suitable) {
@@ -122,6 +137,7 @@ router.post("/search/", async (req, res) => {
       } else {
         suitableFound = true;
       }
+      //console.log(suitableFound);
       let showOnlyFound = false;
       if(req.body.showOnly.length > 0) {
         for(let showOnly of req.body.showOnly) {
@@ -145,10 +161,14 @@ router.post("/search/", async (req, res) => {
       } else {
         showOnlyFound = true;
       }
+      //console.log(showOnlyFound);
       return useFound && roomFound && houseTypeFound && priceFound && sizeFound && heatingFound && hasFound && conditionFound && kitchenTypeFound && suitableFound;
     });
+    //console.log(filteredApartments);
+    let PaidApartments = filteredApartments.filter(filteredApartments => filteredApartments.paid === true);
+    console.log(PaidApartments);
 
-    return res.status(200).json({ message: "success", apartments: filteredApartments });
+    return res.status(200).json({ message: "success", apartments: PaidApartments });
   } else {
     return res.status(404).json({ error: "No location specified." });
   }

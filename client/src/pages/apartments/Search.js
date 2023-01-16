@@ -15,6 +15,7 @@ const Search = (props) => {
 
   const [message, setMessage] = useState({ error: "", message: "" });
   const [searchedApartments, setSearchedApartments] = useState([]);
+  const [searchFailed, setSearchFailed] = useState(false);
 
   // Remember to include empty value in the city list, do not remove it!
   const [form, setForm] = useState((location.state) ? location.state : {
@@ -53,6 +54,9 @@ const Search = (props) => {
         setSearchedApartments([]);
       } else if(body.message === "success") {
         setSearchedApartments(body.apartments);
+        if(body.apartments.length == 0) {
+          setSearchFailed(true);
+        }
         setMessage({ error: "", message: "" });
       }
     }
@@ -104,6 +108,7 @@ const Search = (props) => {
 
   const onSearchChange = (event) => {
     setMessage({ error: "", message: "" });
+    setSearchFailed(false);
     if(event.target.name === "more") {
       setForm({ ...form, [event.target.name]: event.target.checked });
     } else {
@@ -116,6 +121,7 @@ const Search = (props) => {
 
   const onSearchLocationChange = (e, v) => {
     setMessage({ error: "", message: "" });
+    setSearchFailed(false);
     if(v !== null) {
       setForm({
         ...form,
@@ -523,16 +529,22 @@ const Search = (props) => {
               <Alert severity="error">{ message.error }</Alert>
             </Grid>
           )}
+          
+        </Grid>
+        { (searchedApartments.length > 0) &&
+          <ApartmentList apartments={searchedApartments} />
+        }
+        { (searchFailed == true) &&
           <Grid item xs={12}>
-            <Typography variant="body2" align="center">
+            <Alert severity='error' sx={{mt:2, mb: 2}}>Hakuehdoilla ei löytynyt yhtään ilmoitusta.</Alert>
+          </Grid>
+        }
+        <Grid item xs={12}>
+            <Typography variant="body2" align="center" sx={{mt:2}}>
               { name } sivustolta löytyy asuntoja Suomesta. Tämän hakulomakkeen avulla löydät sinua kiinnostavat asunnot.
             </Typography>
           </Grid>
-        </Grid>
       </Box>
-      { searchedApartments.length > 0 && (
-        <ApartmentList apartments={searchedApartments} />
-      )}
     </Container>
   )
 }

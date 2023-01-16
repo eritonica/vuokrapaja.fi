@@ -129,7 +129,6 @@ const apartmentSchema = new mongoose.Schema({
   },
   paid: {
     type: Boolean,
-    required: true,
     default: false,
   },
   created: {      // ilmoituksen luontipäivä

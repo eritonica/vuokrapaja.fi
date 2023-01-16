@@ -860,24 +860,17 @@ const Apartment = () => {
               </form>
             </Grid>
           }
-          {(message.success === "Ilmoitus lisätty onnistuneesti. Sinun tarvitsee vielä maksaa ilmoituksesi, että se tulee.") &&
-            <Grid item xs={12}>
-              <form method="POST" action="/api/stripe-one-time-payment">
-                <input type="hidden" name="apartment" value={form._id}></input>
-                <input type="hidden" name="token" value={token}></input>
-                <Button sx={{ mb: 2 }} fullWidth variant="contained" color="primary" type="submit">Maksa</Button>
-              </form>
-            </Grid>
-          }
           {(message.error) && (
             <Grid item xs={12}>
               <Alert severity="error">{message.error}</Alert>
             </Grid>
           )}
           <Grid item xs={12}>
-            <Button fullWidth variant="contained" color="primary" onClick={handleOpenSaveModal}>
-              Tallenna
-            </Button>
+            {(message.success !== "Ilmoitus lisätty onnistuneesti. Sinun tarvitsee vielä maksaa ilmoituksesi, että se tulee.") &&
+              <Button fullWidth variant="contained" color="primary" onClick={handleOpenSaveModal}>
+                Tallenna
+              </Button>
+            }
             <Modal
               open={saveModal.open}
               onClose={handleCloseSaveModal}
