@@ -9,7 +9,7 @@ import accountModel from "../schemas/account.js";
 
 const router = express.Router();
 
-const sendToApartmentCompany = async (apartmentId, message) => {
+const sendToApartmentCompany = async (apartmentId, application, message) => {
   let apartment = await apartmentModel.findById(apartmentId).exec();
   if (apartment) {
     let company = await companyModel.findById(apartment.company).exec();
@@ -26,7 +26,10 @@ const sendToApartmentCompany = async (apartmentId, message) => {
       msg += "https://vuokrapaja.fi/company/application/" + application._id + "\r\n\r\n";
       msg += `Ystävällisin terveisin, \r\n`;
       msg += `https://vuokrapaja.fi/`;
-      mailer.sendMail(account.email, header, msg);
+      let account = await accountModel.findById(company.manager).exec();
+      if(account) {
+        mailer.sendMail(account.email, header, msg);
+      }
     }
   }
 };

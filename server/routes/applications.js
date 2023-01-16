@@ -194,7 +194,7 @@ router.post('/applications', async (req, res) => {
       if(savedApplication) {
         let savedApplicants = await applicants.addApplicants(savedApplication._id, req.body.applicants);
         // write notification to company that new application has been created
-        notifications.sendToApartmentCompany(req.body.apartment, 
+        notifications.sendToApartmentCompany(req.body.apartment, application,
           "New application has been created on apartment" +
           " /company/applications/" + req.body.apartment + "" +
           " Please review it and contact the applicant.")
@@ -226,7 +226,7 @@ router.post('/applications', async (req, res) => {
     });
     let savedApplication = await application.save();
     if(savedApplication) {
-      notifications.sendToApartmentCompany(req.body.apartment, 
+      notifications.sendToApartmentCompany(req.body.apartment, application,
         "New application has been created on apartment" +
         " /company/applications/" + req.body.apartment + "" +
         " Please review it and contact the applicant.")
@@ -276,7 +276,7 @@ router.put("/applications/reject/:id", async (req, res) => {
         status: savedApplication.status,
         created: savedApplication.created,
       }
-      notifications.sendToApplicationCreator(application._id, "Your application has been rejected.");
+      notifications.sendToApplicationCreator(application._id, "rejected");
       res.status(200).send({ "message": "Application rejected.", "application": application });
     } else {
       res.status(500).send({ "message": "Error saving application."});
@@ -320,7 +320,7 @@ router.put("/applications/accept/:id", async (req, res) => {
         status: savedApplication.status,
         created: savedApplication.created,
       }
-      notifications.sendToApplicationCreator(application._id, "Accepted");
+      notifications.sendToApplicationCreator(application._id, "accepted");
       res.status(200).send({ "message": "Application accepted.", "application": application });
     } else {
       res.status(500).send({ "message": "Error saving application."});
