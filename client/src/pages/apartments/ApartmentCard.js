@@ -27,7 +27,7 @@ const ApartmentCard = ({ apartment }) => {
             }
           </Grid>
         </Grid>
-        <Grid item xs={6} container direction="column" spacing={2}  style={{ cursor: 'pointer' }}>
+        <Grid item xs={5}  container direction="column" spacing={2}  style={{ cursor: 'pointer' }}>
           <Grid item xs>
             <Typography gutterBottom variant="subtitle1">
               {apartment.title}
@@ -48,7 +48,7 @@ const ApartmentCard = ({ apartment }) => {
             </Typography>
           </Grid>
         </Grid>
-        <Grid item xs={2} container direction="column" spacing={2} textAlign="right"  style={{ cursor: 'pointer' }}>
+        <Grid item xs={3} container direction="column" spacing={2} textAlign="right"  style={{ cursor: 'pointer' }}>
           <Grid item xs>
             <Typography variant="subtitle1">{apartment.rooms}</Typography>
             <Typography variant="subtitle1">{apartment.size} m²</Typography>
