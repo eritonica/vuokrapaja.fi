@@ -21,7 +21,6 @@ const sendToApartmentCompany = async (apartmentId, application, message) => {
       await setNotification(notification);
       let header = `Uusi hakemus saapunut`
       let msg = `Hei\r\n\r\n`;
-      msg += message + "\r\n\r\n";
       msg += "Olet saanut ilmoitukseesi uuden hakemusken, tarkastathan sen mahdollisimman pian.\r\n\r\n";
       msg += "https://vuokrapaja.fi/company/application/" + application._id + "\r\n\r\n";
       msg += `Ystävällisin terveisin, \r\n`;

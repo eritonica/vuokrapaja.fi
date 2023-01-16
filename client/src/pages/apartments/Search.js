@@ -152,6 +152,7 @@ const Search = (props) => {
               options={locations}
               getOptionLabel={(option) => option.name}
               value={{ name : form.location}}
+              defaultValue="suomi"
               isOptionEqualToValue={(option, value) => option.name.toLowerCase().includes(value.name.toLowerCase()) }
               onChange={onSearchLocationChange}
               renderInput={(params) => <TextField {...params} required={true} label="Sijainti, esim katu, postinumero, kaupunginosa tai kaupunki" name="location" onChange={onSearchChange} />}
