@@ -48,7 +48,7 @@ const LeftDrawer = (props) => {
           </ListItemIcon>
           <ListItemText primary="Hae asuntoa" onClick={() => navigate("/apartments/search")}/>
         </ListItem>
-        {(token !== false) && (
+        {(token !== undefined) && (
           <ListItem button key="Profiili" component={Link} to="/profile" onClick={() => navigate("/profile")}>
             <ListItemIcon>
               <Person /> 
@@ -57,7 +57,7 @@ const LeftDrawer = (props) => {
           </ListItem>
         )}
         <Divider />
-        {(token !== false && profile.type !== "Rentee") && ( 
+        {(token !== undefined && profile.type !== "Rentee") && ( 
           <>
             <ListItem button key="Yritys" component={Link} to="/company" onClick={() => navigate("/company")}>
               <ListItemIcon>
@@ -118,7 +118,7 @@ const LeftDrawer = (props) => {
         </ListItem>
         <Divider />
         
-        {(token === false) 
+        {(token === undefined) 
           ? <>
               <ListItem button key="Login" component={Link} to="/login" onClick={() => navigate("/login")}>
                 <ListItemIcon>
