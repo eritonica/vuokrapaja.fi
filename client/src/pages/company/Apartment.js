@@ -522,7 +522,9 @@ const Apartment = () => {
                 name="use"
                 value={form.use}
                 label="Käyttötarkoitus"
-                onChange={onChange}>
+                onChange={onChange}
+                defaultValue="Asunto"
+                >
                 <MenuItem value="Asunto">Asunto</MenuItem>
                 <MenuItem value="Toimisto">Toimisto</MenuItem>
                 <MenuItem value="Liiketila">Liiketila</MenuItem>
