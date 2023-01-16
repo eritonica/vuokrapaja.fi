@@ -8,14 +8,11 @@ import SubjectIcon from '@mui/icons-material/Subject';
 import ArticleIcon from '@mui/icons-material/Article';
 import GradingIcon from '@mui/icons-material/Grading';
 import NotesIcon from '@mui/icons-material/Notes';
-import CallToActionIcon from '@mui/icons-material/CallToAction';
 
-import useDimensions from '../hooks/useDimensions';
 
 const LeftDrawer = (props) => {
   const token = useSelector((state) => state.app.token);
   const profile = useSelector((state) => state.app.profile);
-  const { height, width } = useDimensions();
   const [drawerState, setDrawerState] = useState({
     left: false,
   });
@@ -37,20 +34,20 @@ const LeftDrawer = (props) => {
       onClick={toggleDrawer(false)}
       onKeyDown={toggleDrawer(false)}>
       <List>
-        <ListItem button key="Home" component={Link} to="/" onClick={() => navigate("/")}>
+        <ListItem button={true} key="Home" component={Link} to="/" onClick={() => navigate("/")}>
           <ListItemIcon>
             <Home /> 
           </ListItemIcon>
           <ListItemText primary="Home" onClick={() => navigate("/")}/>
         </ListItem>
-        <ListItem button key="Hae asuntoa" component={Link} to="/apartments/search" onClick={() => navigate("/apartments/search")}>
+        <ListItem button={true} key="Hae asuntoa" component={Link} to="/apartments/search" onClick={() => navigate("/apartments/search")}>
           <ListItemIcon>
             <Search /> 
           </ListItemIcon>
           <ListItemText primary="Hae asuntoa" onClick={() => navigate("/apartments/search")}/>
         </ListItem>
         {(token !== undefined || token !== false) && (
-          <ListItem button key="Profiili" component={Link} to="/profile" onClick={() => navigate("/profile")}>
+          <ListItem button={true} key="Profiili" component={Link} to="/profile" onClick={() => navigate("/profile")}>
             <ListItemIcon>
               <Person /> 
             </ListItemIcon>
@@ -60,25 +57,25 @@ const LeftDrawer = (props) => {
         <Divider />
         {((token !== undefined || token !== false) && (profile.type === "Renter" || profile.type === "Broker")) && ( 
           <>
-            <ListItem button key="Yritys" component={Link} to="/company" onClick={() => navigate("/company")}>
+            <ListItem button={true} key="Yritys" component={Link} to="/company" onClick={() => navigate("/company")}>
               <ListItemIcon>
                 <AddBusiness /> 
               </ListItemIcon>
               <ListItemText primary="Yritys" onClick={() => navigate("/company")}/>
             </ListItem>
-            <ListItem button key="Tee ilmoitus" component={Link} to="/company/apartment" onClick={() => navigate("/company/apartment", { state : null })}>
+            <ListItem button={true} key="Tee ilmoitus" component={Link} to="/company/apartment" onClick={() => navigate("/company/apartment", { state : null })}>
               <ListItemIcon>
                 <DomainAdd />
               </ListItemIcon>
               <ListItemText primary="Tee ilmoitus" onClick={() => navigate("/company/apartment", { state : null })}/>
             </ListItem>
-            <ListItem button key="Ilmoitukset" component={Link} to="/company/apartments" onClick={() => navigate("/company/apartments")}>
+            <ListItem button={true} key="Ilmoitukset" component={Link} to="/company/apartments" onClick={() => navigate("/company/apartments")}>
               <ListItemIcon>
                 <Domain />
               </ListItemIcon>
               <ListItemText primary="Ilmoitukset" onClick={() => navigate("/company/apartments")}/>
             </ListItem>
-            <ListItem button key="Työntekijät" component={Link} to="/company/member" onClick={() => navigate("/company/member")}>
+            <ListItem button={true} key="Työntekijät" component={Link} to="/company/member" onClick={() => navigate("/company/member")}>
               <ListItemIcon>
                 <Groups3 /> 
               </ListItemIcon>
@@ -87,31 +84,31 @@ const LeftDrawer = (props) => {
             <Divider />
           </>
         )}
-        {/* <ListItem button key="Beta" component={Link} to="/info/beta" onClick={() => navigate("/info/beta")} sx={{ color: "red"}}>
+        {/* <ListItem button={true} key="Beta" component={Link} to="/info/beta" onClick={() => navigate("/info/beta")} sx={{ color: "red"}}>
           <ListItemIcon>
             <CallToActionIcon />
           </ListItemIcon>
           <ListItemText primary="Beta" onClick={() => navigate("/info/beta")}/>
         </ListItem> */}
-        <ListItem button key="Vuokralainen" component={Link} to="/info/rentee" onClick={() => navigate("/info/rentee")}>
+        <ListItem button={true} key="Vuokralainen" component={Link} to="/info/rentee" onClick={() => navigate("/info/rentee")}>
           <ListItemIcon>
             <SubjectIcon />
           </ListItemIcon>
           <ListItemText primary="Vuokralainen" onClick={() => navigate("/info/rentee")}/>
         </ListItem>
-        <ListItem button key="Vuokranantaja" component={Link} to="/info/renter" onClick={() => navigate("/info/renter")}>
+        <ListItem button={true} key="Vuokranantaja" component={Link} to="/info/renter" onClick={() => navigate("/info/renter")}>
           <ListItemIcon>
             <GradingIcon />
           </ListItemIcon>
           <ListItemText primary="Vuokranantaja" onClick={() => navigate("/info/renter")}/>
         </ListItem>
-        <ListItem button key="Käyttöehdot" component={Link} to="/info/terms" onClick={() => navigate("/info/terms")}>
+        <ListItem button={true} key="Käyttöehdot" component={Link} to="/info/terms" onClick={() => navigate("/info/terms")}>
           <ListItemIcon>
             <ArticleIcon /> 
           </ListItemIcon>
           <ListItemText primary="Käyttöehdot" onClick={() => navigate("/info/terms")}/>
         </ListItem>
-        <ListItem button key="Tietosuojaseloste" component={Link} to="/info/privacy" onClick={() => navigate("/info/privacy")}>
+        <ListItem button={true} key="Tietosuojaseloste" component={Link} to="/info/privacy" onClick={() => navigate("/info/privacy")}>
           <ListItemIcon>
             <NotesIcon /> 
           </ListItemIcon>
@@ -120,20 +117,20 @@ const LeftDrawer = (props) => {
         <Divider />
         {(token === undefined || token === false) 
           ? <>
-              <ListItem button key="Login" component={Link} to="/login" onClick={() => navigate("/login")}>
+              <ListItem button={true} key="Login" component={Link} to="/login" onClick={() => navigate("/login")}>
                 <ListItemIcon>
                   <Login />
                 </ListItemIcon>
                 <ListItemText primary="Kirjaudu" onClick={() => navigate("/login")}/>
               </ListItem>
-              <ListItem button key="Register" component={Link} to="/register" onClick={() => navigate("/register")}>
+              <ListItem button={true} key="Register" component={Link} to="/register" onClick={() => navigate("/register")}>
                 <ListItemIcon>
                   <AppRegistration />
                 </ListItemIcon>
                 <ListItemText primary="Rekisteröidy" onClick={() => navigate("/register")}/>
               </ListItem>
             </>
-          : <ListItem button key="Logout" component={Link} to="/logout" onClick={() => props.onLogout() }>
+          : <ListItem button={true} key="Logout" component={Link} to="/logout" onClick={() => props.onLogout() }>
               <ListItemIcon>
                 <Logout />
               </ListItemIcon>

@@ -54,7 +54,7 @@ const Search = (props) => {
         setSearchedApartments([]);
       } else if(body.message === "success") {
         setSearchedApartments(body.apartments);
-        if(body.apartments.length == 0) {
+        if(body.apartments.length === 0) {
           setSearchFailed(true);
         }
         setMessage({ error: "", message: "" });
@@ -535,7 +535,7 @@ const Search = (props) => {
         { (searchedApartments.length > 0) &&
           <ApartmentList apartments={searchedApartments} />
         }
-        { (searchFailed == true) &&
+        { (searchFailed === true) &&
           <Grid item xs={12}>
             <Alert severity='error' sx={{mt:2, mb: 2}}>Hakuehdoilla ei löytynyt yhtään ilmoitusta.</Alert>
           </Grid>

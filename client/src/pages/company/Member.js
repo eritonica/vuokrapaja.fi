@@ -13,7 +13,7 @@ const modalStyle = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  width: 250,
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
@@ -232,7 +232,7 @@ const Member = () => {
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description">
               <Box sx={modalStyle} component="form">
-                <Grid container spacing={2}>
+                <Grid container spacing={4}>
                   <Grid item xs={12}>
                     <Typography variant="h6" component="h1" gutterBottom>
                       Lisää työntekijä
