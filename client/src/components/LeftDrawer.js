@@ -86,12 +86,12 @@ const LeftDrawer = (props) => {
             <Divider />
           </>
         )}
-        <ListItem button key="Beta" component={Link} to="/info/beta" onClick={() => navigate("/info/beta")} sx={{ color: "red"}}>
+        {/* <ListItem button key="Beta" component={Link} to="/info/beta" onClick={() => navigate("/info/beta")} sx={{ color: "red"}}>
           <ListItemIcon>
             <CallToActionIcon />
           </ListItemIcon>
           <ListItemText primary="Beta" onClick={() => navigate("/info/beta")}/>
-        </ListItem>
+        </ListItem> */}
         <ListItem button key="Vuokralainen" component={Link} to="/info/rentee" onClick={() => navigate("/info/rentee")}>
           <ListItemIcon>
             <SubjectIcon />
