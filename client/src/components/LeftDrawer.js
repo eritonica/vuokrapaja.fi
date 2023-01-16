@@ -29,6 +29,7 @@ const LeftDrawer = (props) => {
     setDrawerState({ ...drawerState, left: open });
   }
 
+  console.log(token);
   const list = (anchor) => (
     <Box
       sx={{ width: 250 }}
@@ -48,7 +49,7 @@ const LeftDrawer = (props) => {
           </ListItemIcon>
           <ListItemText primary="Hae asuntoa" onClick={() => navigate("/apartments/search")}/>
         </ListItem>
-        {(token !== undefined) && (
+        {(token !== undefined || token !== false) && (
           <ListItem button key="Profiili" component={Link} to="/profile" onClick={() => navigate("/profile")}>
             <ListItemIcon>
               <Person /> 
@@ -57,7 +58,7 @@ const LeftDrawer = (props) => {
           </ListItem>
         )}
         <Divider />
-        {(token !== undefined && profile.type !== "Rentee") && ( 
+        {((token !== undefined || token !== false) && (profile.type === "Renter" || profile.type === "Broker")) && ( 
           <>
             <ListItem button key="Yritys" component={Link} to="/company" onClick={() => navigate("/company")}>
               <ListItemIcon>
@@ -117,8 +118,7 @@ const LeftDrawer = (props) => {
           <ListItemText primary="Tietosuojaseloste" onClick={() => navigate("/info/privacy")}/>
         </ListItem>
         <Divider />
-        
-        {(token === undefined) 
+        {(token === undefined || token === false) 
           ? <>
               <ListItem button key="Login" component={Link} to="/login" onClick={() => navigate("/login")}>
                 <ListItemIcon>

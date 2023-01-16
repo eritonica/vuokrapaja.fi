@@ -60,11 +60,11 @@ const TopBar = (props) => {
     let body = await result.json();
     console.log(body);
     if(body.message) {
-      navigate('/');
-      localStorage.removeItem('token');
       dispatch(setToken(undefined));
       dispatch(setProfile({}));
       dispatch(setCompany({}));
+      navigate('/');
+      localStorage.removeItem('token');
     }
   };
 
