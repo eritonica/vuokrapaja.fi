@@ -196,7 +196,7 @@ const TopBar = (props) => {
           { width > 448 &&
             <>
               <Box sx={{ flexGrow: 1 }} />
-              <Button color="inherit" onClick={ () => navigate("/info/beta") } sx={{ color: "red" }}>BETA</Button>
+              {/* <Button color="inherit" onClick={ () => navigate("/info/beta") } sx={{ color: "red" }}>BETA</Button> */}
               <Button color="inherit" onClick={ () => navigate("/info/renter") }>Vuokranantaja</Button>
               <Button color="inherit" onClick={ () => navigate("/info/rentee") }>Vuokralainen</Button>
             </>
