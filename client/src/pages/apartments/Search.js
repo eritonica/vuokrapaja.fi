@@ -99,13 +99,6 @@ const Search = (props) => {
     onSearchFormSend();
   };
 
-  useEffect(() => {
-    const getData = async () => {
-      console.log("Form dataa muutettu.");
-    };
-    getData();
-  }, [form]);
-
   const onSearchChange = (event) => {
     setMessage({ error: "", message: "" });
     setSearchFailed(false);

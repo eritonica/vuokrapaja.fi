@@ -44,7 +44,7 @@ const Profile = (props) => {
 				body: JSON.stringify(company)
 			});
 			let body = await response.json();
-			console.log(body);
+			// console.log(body);
 			if(body.message === "Company created.") {
 				setMessage({ success: "Tiedot päivitetty."});
 				dispatch(setCompany({...body.company, new: false}));
@@ -61,7 +61,7 @@ const Profile = (props) => {
 				body: JSON.stringify(company)
 			});
 			let body = await response.json();
-			console.log(body);
+			// console.log(body);
 			if(body.message === "Company updated.") {
 				setMessage({ success: "Tiedot päivitetty."});
 				dispatch(setCompany({...company, new: false}));

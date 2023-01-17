@@ -22,7 +22,7 @@ const ActivationForm = (props) => {
       },
     });
     let body = await result.json();
-    console.log(body);
+    // console.log(body);
     if(body.message === "Account activated, ready for use. Please add your profile information.") {
       navigate("/login?activated=true");
     } else {

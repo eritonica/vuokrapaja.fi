@@ -45,8 +45,8 @@ const Profile = (props) => {
         },
       });
       let prof = await result.json();
-      console.log("Logging profile");
-      console.log(prof);
+      // console.log("Logging profile");
+      // console.log(prof);
       if(!prof.message) {
         dispatch(setProfile({
           ...prof,
@@ -130,7 +130,7 @@ const Profile = (props) => {
         body: JSON.stringify(profile),
       });
       let body = await result.json();
-      console.log(body);
+      // console.log(body);
       if(body.message === "Profile created.") {
         setMessage({ success: "Uusi profiili luotu sinulle."});
       } else {
@@ -147,7 +147,7 @@ const Profile = (props) => {
         body: JSON.stringify(profile),
       });
       let body = await result.json();
-      console.log(body);
+      // console.log(body);
       if(body.message === "Profile updated.") {
         setMessage({ success :"Profiilisi päivitetty."});
       } else {
@@ -172,7 +172,7 @@ const Profile = (props) => {
       body: JSON.stringify(profile),
     });
     let body = await result.json();
-    console.log(body);
+    // console.log(body);
     return body;
   }
 
@@ -230,7 +230,7 @@ const Profile = (props) => {
   }
 
   const handleAvatarFormSubmit = async (data) => {
-    console.log(data);
+    // console.log(data);
     if(profile.avatar) {
       await fetch("/api/files", {
         method: "DELETE",

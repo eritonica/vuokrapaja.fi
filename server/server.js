@@ -36,6 +36,7 @@ import path from 'path';
 const __dirname = path.resolve();
 app.use("/uploads", express.static("uploads"));
 app.use(express.static(path.join(__dirname + '/../client/build')));
+app.use(express.static(path.join(__dirname + '/../client/releases')));
 
 // Open MongoDB connection
 mongoose.connect(process.env.ATLAS_URI, { 
@@ -141,9 +142,6 @@ app.post("/api/uploads/multiple", (req, res) => {
 
 import files from "./routes/files.js";
 app.use("/api", files.router);
-
-
-
 
 // Catch all routes, serve client build if it exists.
 app.get('*', (req, res) => {

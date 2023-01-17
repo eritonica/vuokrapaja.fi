@@ -169,11 +169,11 @@ router.post('/applications', async (req, res) => {
     res.status(400).send({"message": "No applicants provided."});
   }
   // check if token exists
-  console.log("POST /api/applications", req.body)
-  console.log("Headers: ", req.headers)
+  // console.log("POST /api/applications", req.body)
+  // console.log("Headers: ", req.headers)
   if(req.headers.token !== "undefined") {
     let account = await accounts.getAccountByToken(req.headers.token);
-    console.log("Fetched account: ", account);
+    // console.log("Fetched account: ", account);
     if(account) {
       let application = new applicationModel({
         property: req.body.apartment,

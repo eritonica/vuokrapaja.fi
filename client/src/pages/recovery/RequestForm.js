@@ -19,9 +19,9 @@ const RequestForm = (props) => {
         'Content-Type': 'application/json',
       },
     });
-    console.log(response);
+    // console.log(response);
     let body = await response.json();
-    console.log(body);
+    // console.log(body);
     if(body.message === "Recovery email sent.") {
       setRecoveryState({
         recoverySuccess: true,

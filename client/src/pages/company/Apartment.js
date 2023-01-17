@@ -8,7 +8,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
-import {  useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
 import FileUploader from '../../components/FileUploader.js';
 
@@ -108,9 +108,11 @@ const Apartment = () => {
     if (profile.role === 'Rentee') {
       navigate("/");
     }
-    // if company is not set, navigate to company info page
+    // if company is not set, check if account is member of company
+    // if it is member of more than one company, select now the first.
+    // TODO: create company selection page.
     if(company._id === undefined) {
-      navigate("/company");
+      navigate("/company")
     }
   }, [navigate, token, profile, company]);
 

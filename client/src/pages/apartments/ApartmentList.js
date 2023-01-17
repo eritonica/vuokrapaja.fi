@@ -65,7 +65,6 @@ const ApartmentList = ({apartments}) => {
   useEffect(paginateApartments, [pagination.perPage]);
 
   const onSortChange = (event) => {
-    console.log(event.target.value)
     setSort(event.target.value);
   }
 

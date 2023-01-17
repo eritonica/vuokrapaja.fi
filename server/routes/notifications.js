@@ -35,10 +35,10 @@ const sendToApartmentCompany = async (apartmentId, application, message) => {
 
 const sendToApplicationCreator = async (applicationId, message) => {
   let application = await applicationModel.findById(applicationId).exec();
-  console.log(application);
+  // console.log(application);
   if (application) {
     let account = await accountModel.findById(application.creator).exec();
-    console.log(account);
+    // console.log(account);
     if (account) {
       if(message == "accepted") {
         let notification = {

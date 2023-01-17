@@ -35,7 +35,7 @@ const RecoveryPasswordForm = (props) => {
         password: recoveryState.password,
       }),
     });
-    console.log(response);
+    // console.log(response);
     let body = await response.json();
     if(body.message === "Password changed.") {
       setRecoveryState({

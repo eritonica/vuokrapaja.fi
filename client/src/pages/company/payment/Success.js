@@ -25,9 +25,9 @@ const Success = () => {
           "token": security,
         }
       });
-      console.log(getResponse.status);
+      // console.log(getResponse.status);
       const getData = await getResponse.json();
-      console.log(getData);
+      // console.log(getData);
       if(getData.message === "success") {
         if(getData.apartment.paid === true) {
           setMessage({ error: true, message: "Apartment has already been published." });
@@ -42,9 +42,9 @@ const Success = () => {
           },
           body: JSON.stringify(getData.apartment),
         });
-        console.log(putResponse);
+        // console.log(putResponse);
         const putData = await putResponse.json();
-        console.log(putData);
+        // console.log(putData);
         if(putData.message === "Apartment updated.") {
           setMessage({ error: false, message: "Apartment published." });
         } else {

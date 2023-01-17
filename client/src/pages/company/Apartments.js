@@ -9,11 +9,11 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { useSelector } from 'react-redux';
 
 const Aparments = () => {
+  const navigate = useNavigate();
   const token = useSelector(state => state.app.token);
   const company = useSelector(state => state.app.company);
   const profile = useSelector(state => state.app.profile);
 
-  const navigate = useNavigate();
 
   const [apartments, setApartments] = useState([]);
   const [message, setMessage] = useState({ error: false, message: ""});
@@ -92,15 +92,17 @@ const Aparments = () => {
   }, [sort, apartments, paginateApartments]);
   
   useEffect(() => {
-    if(token === false) {
+    if (token === false) {
       navigate("/login");
     }
-    if(profile.role === 'Rentee') {
+    if (profile.role === 'Rentee') {
       navigate("/");
     }
-    // if company is not set, navigate to company info page
+    // if company is not set, check if account is member of company
+    // if it is member of more than one company, select now the first.
+    // TODO: create company selection page.
     if(company._id === undefined) {
-      navigate("/company");
+      navigate("/company")
     }
   }, [navigate, token, profile, company]);
 

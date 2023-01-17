@@ -38,6 +38,15 @@ const getCompaniesByMember = async (member) => {
   return companyList;
 }
 
+// GET /companies/member
+router.get("/companies/member/:user", async(req, res) => {
+  let companies = getCompaniesByMember(req.body.user);
+  if(companies) {
+    return res.status(200).json({ message: "Success", companies: companies });
+  } else {
+    return res.status(404).json({ message: "Zero companies found.", companies: [] });
+  }
+});
 
 // POST /companies/members
 // {

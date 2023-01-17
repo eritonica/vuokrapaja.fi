@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useCallback } from 'react';
 import { useParams } from "react-router-dom";
@@ -7,8 +6,13 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper
 import { FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 
+import { useDispatch, useSelector } from 'react-redux';
+import { setCompany } from '../../appSlice';
+
+
 const Applications = (props) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { id } = useParams();
   const company = useSelector(state => state.app.company);
   const token = useSelector(state => state.app.token);
@@ -35,7 +39,7 @@ const Applications = (props) => {
       pages: pages,
       applications: paginatedApplications
     });
-    console.log("Paginating applications");
+    // console.log("Paginating applications");
   }, [pagination, applications]);
 
   const sortApplications = useCallback(() => {
@@ -48,11 +52,11 @@ const Applications = (props) => {
         sortedApplications = applications.sort((a, b) => a.applicantsCount < b.applicantsCount);
         break;
       case "creation-asc":
-        console.log("Sorting applications by creation date ascending");
+        // console.log("Sorting applications by creation date ascending");
         sortedApplications = applications.sort((a, b) => new Date(a.created).getTime() > new Date(b.created).getTime());
         break;
       case "creation-desc":
-        console.log("Sorting applications by creation date descending");
+        // console.log("Sorting applications by creation date descending");
         sortedApplications = applications.sort((a, b) => new Date(a.created).getTime() < new Date(b.created).getTime());
         break;
       default:
@@ -64,7 +68,7 @@ const Applications = (props) => {
   
 
   useEffect(() => {
-    console.log(id);
+    // console.log(id);
     const getApartment = async () => {
       const response = await fetch(`/api/apartments/company/${company._id}`, {
         method: "GET",
@@ -74,7 +78,7 @@ const Applications = (props) => {
         }
       });
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       if(data.message === "success") {
         for(let i = 0; i < data.apartments.length; i++) {
           if(data.apartments[i]._id === id) {
@@ -96,7 +100,7 @@ const Applications = (props) => {
         }
       });
       const data = await response.json();
-      console.log("Applications applicants", data);
+      // console.log("Applications applicants", data);
       if(data.message === "Application found.") {
         setApplications(data.applications);
         setMessage({ error: false, message: ""});
@@ -115,7 +119,7 @@ const Applications = (props) => {
   useEffect(paginateApplications, [pagination.perPage, applications]);
 
   const onSortChange = (event) => {
-    console.log(event.target.value)
+    // console.log(event.target.value)
     setSort(event.target.value);
   }
 

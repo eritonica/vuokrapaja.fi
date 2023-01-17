@@ -27,7 +27,7 @@ const Landing = (props) => {
             <Alert severity="info" >
               Jos haluat Vuokrapajan Android sovelluksena voit ladata sen puhelimellasi seuraavasta linkistä.
             </Alert>
-            <Button fullWidth variant="contained" href="https://vuokrapaja.fi/releases/vuokrapaja-release-1.0.0-self-signed.apk" target="_blank" rel="noopener noreferrer" sx={{mt: 2}}>
+            <Button fullWidth variant="contained" href="https://vuokrapaja.fi/uploads/releases/vuokrapaja-release-1.0.0-self-signed.apk" target="_blank" rel="noopener noreferrer" sx={{mt: 2}}>
               <AndroidIcon sx={{ml: 1, mr: 1}} />Lataa Android sovellus
             </Button>
           </Grid>

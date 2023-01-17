@@ -33,13 +33,13 @@ const LoginForm = (props) => {
       body: JSON.stringify(loginState),
     });
     let body = await result.json();
-    console.log(body);
+    // console.log(body);
     if(body.token) {
       dispatch(setToken(body.token));
       navigate('/');
     } else {
       if (body.message === "Password is incorrect.") {
-        console.log(loginState.passwordResetCount)
+        // console.log(loginState.passwordResetCount)
         if(loginState.passwordResetCount >= 3) {
           setLoginState({ ...loginState, 
             loginError: true, 
@@ -78,7 +78,7 @@ const LoginForm = (props) => {
   }
 
   const onGoogleLogin = async (googleData) => {
-    console.log(googleData);
+    // console.log(googleData);
     const res = await fetch("/auth/google", {
       method: "POST",
       body: JSON.stringify({
@@ -89,7 +89,7 @@ const LoginForm = (props) => {
       }
     });
     const body = await res.json();
-    console.log(body);
+    // console.log(body);
     if (body.token) {
       dispatch(setToken(body.token));
       navigate('/');
