@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useCallback, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Container, Box, TextField, Button, Alert, Typography, Avatar} from '@mui/material';
 import { FormControl, Modal, InputLabel, Select, MenuItem, Paper, Tooltip } from '@mui/material';
@@ -12,7 +12,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import FileUploader from '../components/FileUploader.js';
 
 import { useSelector, useDispatch } from 'react-redux';
-import { setProfile } from '../appSlice';
+import { setProfile, setCompany } from '../appSlice';
 
 const modalStyle = {
   position: 'absolute',
@@ -29,6 +29,7 @@ const Profile = (props) => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.app.token);
   const profile = useSelector((state) => state.app.profile);
+  const company = useSelector((state) => state.app.company);
   const [message, setMessage] = useState(false);
   const [passwordForm, setPasswordForm] = useState(false);
   const [modal, setModal] = useState({ username: false, password: false, email: false, avatar: false});
@@ -62,6 +63,8 @@ const Profile = (props) => {
     // Don't know yet how to handle dispatch with useEffect
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  
 
   const handleOpenModal = (which) => {
     setMessage(false);

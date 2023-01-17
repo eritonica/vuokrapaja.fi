@@ -28,23 +28,32 @@ const getMembers = async (company) => {
 
 // Return companies if member is part of one
 const getCompaniesByMember = async (member) => {
-  let members = await memberModel.find({ account: member }).exec();
-  let companyList = [];
-  for (let i = 0; i < members.length; i++) {
-    let member = members[i];
-    let company = await companyModel.findOne({ _id: member.company }).exec();
-    companyList.push(company);
+  if (member === undefined) {
+    return [];
   }
-  return companyList;
+  let memberships = await memberModel.find({ account: member }).exec();
+  console.log(memberships);
+  let companies = [];
+  for(let membership in memberships) {
+    let company = await companyModel.find({ _id: membership.company }).exec();
+    console.log(company);
+    companies.push(company);
+  }
+  return companies;
 }
 
-// GET /companies/member
-router.get("/companies/member/:user", async(req, res) => {
-  let companies = getCompaniesByMember(req.body.user);
+// GET /member/companies/:user
+router.get("/member/companies/:user", async (req, res) => {
+  console.log(req.body.user);
+  if(req.body.user === undefined) {
+    return res.status(404).json({ message: "User identifier was not specified." });
+  }
+  let companies = await getCompaniesByMember(req.body.user);
+  console.log(companies);
   if(companies) {
     return res.status(200).json({ message: "Success", companies: companies });
   } else {
-    return res.status(404).json({ message: "Zero companies found.", companies: [] });
+    return res.status(404).json({ message: "No companies found.", companies: [] });
   }
 });
 

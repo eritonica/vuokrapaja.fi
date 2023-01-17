@@ -81,6 +81,7 @@ router.get("/profiles", async (req, res) => {
 		tmpProfile.email = account.email;
 	}
 	if(profile) {
+		tmpProfile.account = profile.account;
 		tmpProfile.type = profile.type;
 		tmpProfile.name = profile.name;
 		tmpProfile.profession = profile.profession;

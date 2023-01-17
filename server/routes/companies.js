@@ -103,6 +103,9 @@ router.post('/companies', async (req, res) => {
 
 // GET /companies/:id
 router.get('/companies/:id', async (req, res) => {
+	if(req.params.id === undefined) {
+		return res.status(404).json({ message: "Company not found" });
+	}
 	let company = await companyModel.findOne({ _id: req.params.id }).exec();
 	if (company) {
 		return res.status(200).json(company);

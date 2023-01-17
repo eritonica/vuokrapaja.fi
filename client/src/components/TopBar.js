@@ -48,33 +48,6 @@ const TopBar = (props) => {
     </Button>
   );
   
-  const getCompaniesByMember = async () => {
-    const response = await fetch(`/api/companies/member/${profile.account}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "token": token,
-      }
-    });
-    const data = response.json();
-    if(data.message === "Success") {
-      dispatch(setCompany(data.company[0]));
-    }
-  }
-
-  const checkMemberCompanies = useCallback(() => {
-    console.log("CHECK MEMBER COMPANIES");
-    console.log(token);
-    console.log(profile);
-    console.log(company);
-    if(company._id === undefined) {
-
-    }
-    console.log("CHECK MEMBER COMPANIES");
-  });
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(checkMemberCompanies, []);
 
   const onLogout = async () => {
     handleSnackbarOpen();
@@ -140,7 +113,7 @@ const TopBar = (props) => {
   const getNotifications = useCallback(() => {
     const loadNotifications = async () => {
       sleep(1000);
-      if(profile.id === undefined) {
+      if(profile.account === undefined) {
         return;
       }
       if(company._id === undefined) {
