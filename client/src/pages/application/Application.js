@@ -53,9 +53,9 @@ const Application = () => {
           'token': token
         }
       });
-      console.log(response);
+      // console.log(response);
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
       if(data.application !== undefined) {
         if(data.application.deposit[0] === "") {
           data.application.deposit = [];
@@ -75,7 +75,7 @@ const Application = () => {
       setError("Sinun pitää lisätä vähintään yksi hakija, jotta voisit lähettää hakemuksen.");
     } else {
       application.apartment = id;
-      console.log(application);
+      // console.log(application);
       const response = await fetch(`/api/applications/`, {
         method: 'POST',
         headers: {

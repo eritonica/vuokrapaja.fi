@@ -22,11 +22,11 @@ const CompanyApplication = (props) => {
         }
       });
       const responseData = await response.json();
-      console.log(responseData);
+      // console.log(responseData);
       if (!response.ok) {
         setMessage({ error: true, message: responseData.message });
       } else {
-        console.log(responseData.application.creator);
+        // console.log(responseData.application.creator);
         setApplication(responseData.application);
       }
     }
@@ -45,7 +45,7 @@ const CompanyApplication = (props) => {
       }
     });
     const responseData = await response.json();
-    console.log(responseData);
+    // console.log(responseData);
     if (!response.ok) {
       setMessage({ error: true, message: responseData.message });
     } else {
@@ -63,7 +63,7 @@ const CompanyApplication = (props) => {
       }
     });
     const responseData = await response.json();
-    console.log(responseData);
+    // console.log(responseData);
     if (!response.ok) {
       setMessage({ error: true, message: responseData.message });
     } else {

@@ -55,7 +55,7 @@ const Member = () => {
     setMemberModForm({
       ...member
     });
-    console.log(memberModForm);
+    // console.log(memberModForm);
     setModal({...modal, mod: true});
   }
 
@@ -93,7 +93,7 @@ const Member = () => {
       }
     });
     let body = await response.json();
-    console.log(body);
+    // console.log(body);
     if(body.message === "Member deleted.") {
       let members = await getMembers();
       dispatch(setCompany({...company, members: members}));

@@ -27,8 +27,8 @@ const Aparments = () => {
   });
   
   const paginateApartments = useCallback(() => {
-    console.log("Paginating apartments");
-    console.log(apartments);
+    // console.log("Paginating apartments");
+    // console.log(apartments);
     const pages = Math.ceil(apartments.length / pagination.perPage)
     let paginatedApartments = []
     for (let i = 0; i < pages; i++) {
@@ -36,7 +36,7 @@ const Aparments = () => {
       paginatedApartments.push(pageApartments);
     }
     if (paginatedApartments.length === 0) {
-      console.log("No apartments");
+      // console.log("No apartments");
       paginatedApartments = [[]];
     }
     setPagination({
@@ -44,7 +44,7 @@ const Aparments = () => {
       pages: pages,
       apartments: paginatedApartments
     });
-    console.log(pagination.apartments);
+    // console.log(pagination.apartments);
   }, [pagination, apartments]);
 
   const sortApartments = useCallback(() => {
@@ -63,19 +63,19 @@ const Aparments = () => {
         sortedApartments = apartments.sort((a, b) => b.size > a.size)
         break;
       case "creation-asc":
-        console.log("Sorting by creation date asc");
+        // console.log("Sorting by creation date asc");
         sortedApartments = apartments.sort((a, b) => new Date(a.created).getTime() > new Date(b.created).getTime());
         break;
       case "creation-desc":
-        console.log("Sorting by creation date desc");
+        // console.log("Sorting by creation date desc");
         sortedApartments = apartments.sort((a, b) => new Date(a.created).getTime() < new Date(b.created).getTime());
         break;
       case "release-asc":
-        console.log("Sorting by release date asc");
+        // console.log("Sorting by release date asc");
         sortedApartments = apartments.sort((a, b) => new Date(a.release).getTime() > new Date(b.release).getTime());
         break;
       case "release-desc":
-        console.log("Sorting by release date desc");
+        // console.log("Sorting by release date desc");
         sortedApartments = apartments.sort((a, b) => new Date(a.release).getTime() < new Date(b.release).getTime());
         break;
       case "applications-asc":
@@ -115,7 +115,7 @@ const Aparments = () => {
           "token": token,
         }
       });
-      console.log(response);
+      // console.log(response);
       const data = await response.json();
       if(data.message === "success") {
         setApartments(data.apartments);
@@ -150,7 +150,7 @@ const Aparments = () => {
   }
 
   const onSortChange = (event) => {
-    console.log(event.target.value)
+    // console.log(event.target.value)
     setSort(event.target.value);
   }
 

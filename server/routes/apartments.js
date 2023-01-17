@@ -26,11 +26,11 @@ const getApartments = async (ids) => {
 };
 
 router.get("/apartments/:id", async (req, res) => {
-  console.log(req.params.id);
+  // console.log(req.params.id);
   if(req.params.id !== "undefined") {
     let apartment = await apartmentModel.findById(req.params.id).exec();
     if(companies.checkPermission(req.session.account_id, apartment.company, "read")) {
-      console.log(apartment);
+      // console.log(apartment);
       res.status(200).json({ message: "success", apartment: apartment });
     } else {
       res.status(401).json({ message: "You do not have permission to read these apartments." });
@@ -42,7 +42,7 @@ router.get("/apartments/company/:company", async (req, res) => {
   // check if req.params.company is not undefined
   if (req.params.company !== "undefined") {
     if(companies.checkPermission(req.session.account._id, req.params.company, "read")) {
-      console.log(req.params.company);
+      // console.log(req.params.company);
       let apartments = await apartmentModel.find({ company: req.params.company }).exec();
       if (apartments) {
         let apartmentsArray = [];
@@ -185,8 +185,8 @@ router.put("/apartments/:id", async (req, res) => {
   if(req.params.id !== "undefined") {
     let apartment = await apartmentModel.findById(req.params.id).exec();
     if (companies.checkPermission(req.session.account._id, apartment._id, "write")) {
-      console.log(req.params);
-      console.log(req.body);
+      // console.log(req.params);
+      // console.log(req.body);
       apartment.rent = req.body.rent;
       apartment.rental = req.body.rental;
       apartment.release = req.body.release;
@@ -225,7 +225,7 @@ router.put("/apartments/:id", async (req, res) => {
       try {
         apartment.save();
       } catch(error) {
-        console.log(error);
+        // console.log(error);
       }
       return res.status(200).json({ message: "Apartment updated." });
     } else {

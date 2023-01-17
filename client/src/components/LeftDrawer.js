@@ -26,7 +26,7 @@ const LeftDrawer = (props) => {
     setDrawerState({ ...drawerState, left: open });
   }
 
-  console.log(token);
+  // console.log(token);
   const list = (anchor) => (
     <Box
       sx={{ width: 250 }}

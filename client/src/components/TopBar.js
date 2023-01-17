@@ -68,6 +68,7 @@ const TopBar = (props) => {
     console.log(profile);
     console.log(company);
     if(company._id === undefined) {
+
     }
     console.log("CHECK MEMBER COMPANIES");
   });
@@ -85,7 +86,7 @@ const TopBar = (props) => {
       body: JSON.stringify({ token: token }),
     });
     let body = await result.json();
-    console.log(body);
+    // console.log(body);
     if(body.message) {
       dispatch(setToken(undefined));
       dispatch(setProfile({}));
@@ -120,7 +121,7 @@ const TopBar = (props) => {
 
   const changeNotificationMessage = (notifications) => {
     for(let i = 0; i < notifications.length; i++) {
-      console.log(notifications[i].notification); // leave for debugging purposes and for adding new notifications
+      // console.log(notifications[i].notification); // leave for debugging purposes and for adding new notifications
       if(notifications[i].notification.startsWith('New application has been created')) {
         const words = notifications[i].notification.split(' ');
         for(let j = 0; j < words.length; j++) {
@@ -153,7 +154,7 @@ const TopBar = (props) => {
         },
       });
       let accountBody = await accountResult.json();
-      console.log(accountBody);
+      // console.log(accountBody);
       if(accountBody.message === 'success') {
         setAccountNotifications(accountBody.data);
       }
@@ -165,7 +166,7 @@ const TopBar = (props) => {
         },
       });
       let companyBody = await companyResult.json();
-      console.log(companyBody);
+      // console.log(companyBody);
       if(companyBody.message === 'success') {
         companyBody.data = changeNotificationMessage(companyBody.data);
         setCompanyNotifications(companyBody.data);

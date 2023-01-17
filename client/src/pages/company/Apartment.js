@@ -89,7 +89,7 @@ const Apartment = () => {
   });
 
   useEffect(() => {
-    console.log(location.state);
+    // console.log(location.state);
     if (location.state) {
       setForm({...form, ...(location.state), new: false});
       setMessage({...message, success: "Muokkaa ilmoitusta", error: false});
@@ -199,7 +199,7 @@ const Apartment = () => {
       ...form,
       images:  [...form.images, ...body.files]
     });
-    console.log(form.images);
+    // console.log(form.images);
     handleCloseFileUploader();
   }
 
@@ -247,7 +247,7 @@ const Apartment = () => {
         body: JSON.stringify(newApartment)
       });
       const body = await response.json();
-      console.log(body);
+      // console.log(body);
       handleCloseSaveModal();
       if (body.message === "Apartment created.") {
         setMessage({...message, success : "Ilmoitus lisätty onnistuneesti. Sinun tarvitsee vielä maksaa ilmoituksesi, että se tulee.", error: "" });
@@ -269,7 +269,7 @@ const Apartment = () => {
         body: JSON.stringify(newApartment)
       });
       const body = await response.json();
-      console.log(body);
+      // console.log(body);
       handleCloseSaveModal();
       if (body.message === "Apartment updated.") {
         setMessage({...message, success : "Ilmoitus päivitetty onnistuneesti. ", error: "" });

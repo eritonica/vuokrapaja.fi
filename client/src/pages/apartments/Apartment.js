@@ -32,7 +32,7 @@ const Apartment = () => {
         });
         let body = await response.json();
         if (body.message === "success") {
-          console.log(body.apartment);
+          // console.log(body.apartment);
           setApartment(body.apartment);
         }
       }
