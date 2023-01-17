@@ -62,27 +62,7 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const getCompanyByMembership = async () => {
-      if(profile.account === undefined) {
-        return;
-      }
-      const response = await fetch(`/api/member/companies/${profile.account}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "token": token,
-        }
-      });
-      const data = response.json();
-      console.log(data);
-      if(data.message === "Success") {
-        dispatch(setCompany({
-          ...company,
-          ...data.companies[0],
-          new: false,
-        }));
-      }
-    }
+    
     const getProfile = async (token) => {
       let response = await fetch("/api/profiles", {
         method: "GET",
@@ -110,15 +90,14 @@ function App() {
           "token": token
         },
       });
-      let body = await response.json();
-      if(!body.message) {
-        dispatch(setCompany({
-          ...company,
-          ...body,
-          new: false,
-        }));
-      } else {
-        getCompanyByMembership();
+      let companies = await response.json();
+      if(!companies.message) {
+        console.log(companies);
+          dispatch(setCompany({
+            ...company,
+            ...companies[0][0],
+            new: false,
+          }));
       }
     }
     if(token !== false) {

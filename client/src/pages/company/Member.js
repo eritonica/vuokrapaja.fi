@@ -32,14 +32,14 @@ const Member = () => {
 
   useEffect(() => {
     if(token === false) {
-      navigate("/login");
+      navigate("/");
     }
     if(profile.role === 'Rentee') {
       navigate("/");
     }
     // if company is not set, navigate to company info page
     if(company._id === undefined) {
-      navigate("/company");
+      navigate("/");
     }
   }, [navigate, token, profile, company]);
 

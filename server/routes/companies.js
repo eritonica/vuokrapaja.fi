@@ -1,6 +1,7 @@
 import express from 'express';
 
 import companyModel from '../schemas/company.js';
+import memberModel from '../schemas/member.js';
 
 import members from './members.js';
 
@@ -37,7 +38,7 @@ const createEmptyCompany = async (accountId) => {
 	if(hasCompany) {
 		return "Company exists";
 	} else {
-		let company = new companyModel({
+		let newCompany = new companyModel({
 			manager: accountId,
 			name: "",
 			ycode: "",
@@ -47,23 +48,27 @@ const createEmptyCompany = async (accountId) => {
 			email: "",
 			phone: ""
 		});
-		company.save();
-		return "Empty company created.";
+		newCompany.save();
+		let company = await companyModel.findOne({ manager: accountId }).exec();
+		if (company) {
+			let newMember = new memberModel({
+				account: accountId,
+				company: company._id,
+				role: "Manager",
+				permission: "read | write | delete"
+			});
+			newMember.save();
+			return "Empty company created.";
+		} else {
+			return "Empty company created, but not found afterwards. Should not be possible.";
+		}
 	}
 }
 
 // GET /companies
 router.get('/companies', async (req, res) => {
-	let companies = await companyModel.findOne({manager: req.session.account._id}).exec();
-	if(!companies) {
-		// Check if user is a member of a company.
-		let companies = await members.getCompaniesByMember(req.session.account._id);
-		if(companies.length === 0) {
-			return res.status(404).json({ error: true, message: "No companies found." });
-		} else {
-			return res.status(200).json(companies);
-		}
-	}
+	console.log(req.session.account._id);
+	let companies = await members.getCompaniesByMember(req.session.account._id);
 	return res.status(200).json(companies);
 });
 
@@ -87,7 +92,7 @@ router.post('/companies', async (req, res) => {
 		res.status(400).json({message: "Company already exists."});
 		return;
 	}
-	let company = new companyModel({
+	let newCompany = new companyModel({
 		manager: req.session.account._id,
 		name: req.body.name,
 		ycode: req.body.ycode,
@@ -97,8 +102,21 @@ router.post('/companies', async (req, res) => {
 		email: req.body.email,
 		phone: req.body.phone
 	});
-	company.save();
-	return res.status(200).json({ message: 'Company created.', company: company });
+	newCompany.save();
+	let company = await companyModel.findOne({ manager: accountId }).exec();
+	if (company) {
+		let newMember = new memberModel({
+			account: accountId,
+			company: company._id,
+			role: "Manager",
+			permission: "read | write | delete"
+		});
+		newMember.save();
+		return res.status(200).json({ message: 'Company created.', company: company });
+	} else {
+		return res.status(400).json({ message: 'Failed to create company.' });
+	}
+	
 });
 
 // GET /companies/:id

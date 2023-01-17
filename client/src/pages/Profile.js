@@ -54,7 +54,7 @@ const Profile = (props) => {
           new: false,
         }));
       } else if(prof.message === "Unauthorized") {
-        navigate("/login");
+        navigate("/");
       }
     }
     if(token !== false) {

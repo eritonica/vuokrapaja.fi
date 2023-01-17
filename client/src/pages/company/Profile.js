@@ -21,11 +21,14 @@ const Profile = (props) => {
 
 	useEffect(() => {
     if(token === false) {
-      navigate("/login");
+      navigate("/");
     }
     if(profile.role === 'Rentee') {
       navigate("/");
     }
+		if(company._id === undefined) {
+			navigate("/");
+		}
   }, [navigate, token, profile]);
 
 	const onChange = (e) => {

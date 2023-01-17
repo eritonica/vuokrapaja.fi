@@ -28,15 +28,10 @@ const getMembers = async (company) => {
 
 // Return companies if member is part of one
 const getCompaniesByMember = async (member) => {
-  if (member === undefined) {
-    return [];
-  }
   let memberships = await memberModel.find({ account: member }).exec();
-  console.log(memberships);
   let companies = [];
-  for(let membership in memberships) {
-    let company = await companyModel.find({ _id: membership.company }).exec();
-    console.log(company);
+  for(let i = 0; i < memberships.length; i++) {
+    let company = await companyModel.find({ _id: memberships[i].company }).exec();
     companies.push(company);
   }
   return companies;
