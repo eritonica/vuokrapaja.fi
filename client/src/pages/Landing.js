@@ -15,7 +15,7 @@ const Landing = (props) => {
         <Box sx={{ marginTop: "40px", flexGrow: 1}}>
           <Grid container spacing={2} sx={{pt:3}}>
             <Grid item xs={12}>
-              <img src="house1.jpg" alt="house" style={{width: "100%"}} />
+              <img src="pajakuva1.png" alt="house" style={{width: "100%"}} />
             </Grid>
           </Grid>
         </Box>

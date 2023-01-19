@@ -192,7 +192,6 @@ const TopBar = (props) => {
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' } }}
             onClick={() => navigate("/")}>
-            { name }
           </Typography>
           { width > 448 &&
             <>
