@@ -46,18 +46,18 @@ const Applications = (props) => {
     let sortedApplications = [...applications];
     switch (sort) {
       case "applicants-asc":
-        sortedApplications = applications.sort((a, b) => a.applicantsCount > b.applicantsCount);
+        sortedApplications = applications.sort((a, b) => a.applicantsCount - b.applicantsCount);
         break;
       case "applicants-desc":
-        sortedApplications = applications.sort((a, b) => a.applicantsCount < b.applicantsCount);
+        sortedApplications = applications.sort((a, b) => a.applicantsCount - b.applicantsCount);
+        sortApplications = sortApplications.reverse();
         break;
       case "creation-asc":
-        // console.log("Sorting applications by creation date ascending");
-        sortedApplications = applications.sort((a, b) => new Date(a.created).getTime() > new Date(b.created).getTime());
+        sortedApplications = applications.sort((a, b) => new Date(a.created) - new Date(b.created));
         break;
       case "creation-desc":
-        // console.log("Sorting applications by creation date descending");
-        sortedApplications = applications.sort((a, b) => new Date(a.created).getTime() < new Date(b.created).getTime());
+        sortedApplications = applications.sort((a, b) => new Date(a.created) - new Date(b.created));
+        sortApplications = sortApplications.reverse();
         break;
       default:
         sortedApplications = applications.sort((a, b) => a.applicantsCount - b.applicantsCount);

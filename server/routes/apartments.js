@@ -243,6 +243,7 @@ router.delete("/apartments/:id", async (req, res) => {
     if(!apartment) return res.status(404).json({ message: "Apartment not found." });
     if (companies.checkPermission(req.session.account._id, apartment.company, "delete")) {
       apartmentModel.findByIdAndDelete(req.params.id).exec();
+      locations.removeFromLocations(req.params.id)
       return res.status(200).json({ message: "Apartment deleted." });
     } else {
       return res.status(403).json({ message: "You are not the creator of this apartment." });

@@ -1,4 +1,5 @@
 import express from 'express';
+import mongoose from 'mongoose';
 
 import locationModel from '../schemas/location.js';
 import sessions from './sessions.js';
@@ -41,15 +42,12 @@ const removeFromLocations = async(apartment) => {
   let locations = await locationModel.find().exec();
   if (locations) {
     for (let i = 0; i < locations.length; i++) {
-      if(locations[i].apartments.length == 0) {
-        locations[i].remove(); // Does this work?
+      if(locations[i].apartments.length === 0) {
+        await locationModel.deleteOne({ _id: locations[i]._id }).exec();
         continue;
-      }
-      for (let x = 0; x < locations[i].apartments.length; x++) {
-        if (locations[i].apartments[x] == apartment) { // Maybe a bug because ObjectID == string
-          delete locations[i].apartments[x];
-          locations[i].save(); // Need testing, maybe? :D
-        } 
+      } else {
+        let filtered = locations[i].apartments.filter((a) => !a.equals(mongoose.Types.ObjectId(apartment)));
+        await locationModel.findByIdAndUpdate(locations[i]._id, { apartments: filtered }).exec();
       }
     }
     return true;
@@ -143,4 +141,5 @@ export default {
   getLocation,
   getLocations,
   removeLocation,
+  removeFromLocations,
 };
