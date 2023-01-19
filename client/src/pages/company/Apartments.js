@@ -130,7 +130,7 @@ const Aparments = () => {
   useEffect(paginateApartments, [pagination.perPage, apartments]);
 
   const handleDelete = async (id) => {
-    const response = await fetch(`/api/apartments/company/${id}`, {
+    const response = await fetch(`/api/apartments/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
