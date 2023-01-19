@@ -48,44 +48,48 @@ const Aparments = () => {
   }, [pagination, apartments]);
 
   const sortApartments = useCallback(() => {
-    let sortedApartments = [...apartments];
+    console.log("Sorting called!");
+    console.log(sort);
+    let sortedApartments;
+    console.log(sortedApartments);
     switch (sort) {
       case "price-asc":
-        sortedApartments = apartments.sort((a, b) => a.rent < b.rent)
+        sortedApartments = apartments.sort((a, b) => parseInt(a.rent) - parseInt(b.rent))
         break;
       case "price-desc":
-        sortedApartments = apartments.sort((a, b) => a.rent > b.rent)
+        sortedApartments = apartments.sort((a, b) => parseInt(a.rent) - parseInt(b.rent))
+        sortedApartments = sortedApartments.reverse();
         break;
       case "size-asc":
-        sortedApartments = apartments.sort((a, b) => a.size < b.size)
+        sortedApartments = apartments.sort((a, b) => parseInt(a.size) - parseInt(b.size))
         break;
       case "size-desc":
-        sortedApartments = apartments.sort((a, b) => b.size > a.size)
+        sortedApartments = apartments.sort((a, b) => parseInt(a.size) - parseInt(b.size))
+        sortedApartments = sortedApartments.reverse();
         break;
       case "creation-asc":
-        // console.log("Sorting by creation date asc");
-        sortedApartments = apartments.sort((a, b) => new Date(a.created).getTime() > new Date(b.created).getTime());
+        sortedApartments = apartments.sort((a, b) => new Date(a.created) - new Date(b.created));
         break;
       case "creation-desc":
-        // console.log("Sorting by creation date desc");
-        sortedApartments = apartments.sort((a, b) => new Date(a.created).getTime() < new Date(b.created).getTime());
+        sortedApartments = apartments.sort((a, b) => new Date(a.created) - new Date(b.created));
+        sortedApartments = sortedApartments.reverse();
         break;
       case "release-asc":
-        // console.log("Sorting by release date asc");
-        sortedApartments = apartments.sort((a, b) => new Date(a.release).getTime() > new Date(b.release).getTime());
+        sortedApartments = apartments.sort((a, b) => new Date(a.release) - new Date(b.release));
         break;
       case "release-desc":
-        // console.log("Sorting by release date desc");
-        sortedApartments = apartments.sort((a, b) => new Date(a.release).getTime() < new Date(b.release).getTime());
+        sortedApartments = apartments.sort((a, b) => new Date(a.release) - new Date(b.release));
+        sortedApartments = sortedApartments.reverse();
         break;
       case "applications-asc":
-        sortedApartments = apartments.sort((a, b) => a.applicationsCount > b.applicationsCount)
+        sortedApartments = apartments.sort((a, b) => a.applicationsCount - b.applicationsCount)
         break;
       case "applications-desc":
-        sortedApartments = apartments.sort((a, b) => a.applicationsCount < b.applicationsCount)
+        sortedApartments = apartments.sort((a, b) => a.applicationsCount - b.applicationsCount)
+        sortedApartments = sortedApartments.reverse();
         break;
       default:
-        sortedApartments = apartments.sort((a, b) => a.rent - b.rent)
+        sortedApartments = apartments.sort((a, b) => parseInt(a.rent) - parseInt(b.rent))
         break;
     }
     paginateApartments(sortedApartments);

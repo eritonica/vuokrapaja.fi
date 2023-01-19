@@ -84,7 +84,7 @@ const Search = (props) => {
       let searchables = body.map((obj) => {
         return { name : obj.location.toLowerCase() };
       });
-      searchables = searchables.sort((a, b) => { return a.name.length > b.name.length });
+      searchables = searchables.sort((a, b) => a.name.length - b.name.length );
       searchables = searchables.filter((obj, pos, arr) => {
         return arr.map(mapObj => mapObj['name']).indexOf(obj.name) === pos;
       });

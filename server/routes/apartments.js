@@ -26,11 +26,11 @@ const getApartments = async (ids) => {
 };
 
 router.get("/apartments/:id", async (req, res) => {
-  // console.log(req.params.id);
+  console.log(req.params.id);
   if(req.params.id !== "undefined") {
     let apartment = await apartmentModel.findById(req.params.id).exec();
-    if(companies.checkPermission(req.session.account_id, apartment.company, "read")) {
-      // console.log(apartment);
+    if(companies.checkPermission(req.session.account._id, apartment.company, "read")) {
+      console.log(apartment);
       res.status(200).json({ message: "success", apartment: apartment });
     } else {
       res.status(401).json({ message: "You do not have permission to read these apartments." });

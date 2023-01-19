@@ -29,31 +29,35 @@ const ApartmentList = ({apartments}) => {
     let sortedApartments = [...apartments];
     switch (sort) {
       case "price-asc":
-        sortedApartments = apartments.sort((a, b) => a.rent < b.rent)
+        sortedApartments = apartments.sort((a, b) => a.rent - b.rent);
         break;
       case "price-desc":
-        sortedApartments = apartments.sort((a, b) => a.rent > b.rent)
+        sortedApartments = apartments.sort((a, b) => a.rent - b.rent);
+        sortApartments = sortApartments.reverse();
         break;
       case "size-asc":
-        sortedApartments = apartments.sort((a, b) => a.size < b.size)
+        sortedApartments = apartments.sort((a, b) => a.size - b.size);
         break;
       case "size-desc":
-        sortedApartments = apartments.sort((a, b) => b.size > a.size)
+        sortedApartments = apartments.sort((a, b) => b.size - a.size);
+        sortApartments = sortApartments.reverse();
         break;
       case "creation-asc":
-        sortedApartments = apartments.sort((a, b) => new Date(a.created).getTime() < new Date(b.created).getTime())
+        sortedApartments = apartments.sort((a, b) => new Date(a.created).getTime() - new Date(b.created).getTime());
         break;
       case "creation-desc":
-        sortedApartments = apartments.sort((a, b) => new Date(b.created).getTime() > new Date(a.created).getTime())
+        sortedApartments = apartments.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
+        sortApartments = sortApartments.reverse();
         break;
       case "release-asc":
-        sortedApartments = apartments.sort((a, b) => new Date(a.release).getTime() < new Date(b.release).getTime())
+        sortedApartments = apartments.sort((a, b) => new Date(a.release).getTime() - new Date(b.release).getTime());
         break;
       case "release-desc":
-        sortedApartments = apartments.sort((a, b) => new Date(a.release).getTime() > new Date(b.release).getTime())
+        sortedApartments = apartments.sort((a, b) => new Date(a.release).getTime() - new Date(b.release).getTime());
+        sortApartments = sortApartments.reverse();
         break;
       default:
-        sortedApartments = apartments.sort((a, b) => a.rent - b.rent)
+        sortedApartments = apartments.sort((a, b) => a.rent - b.rent);
         break;
     }
     paginateApartments(sortedApartments)

@@ -37,6 +37,27 @@ const getLocations = async (location) => {
   }
 };
 
+const removeFromLocations = async(apartment) => {
+  let locations = await locationModel.find().exec();
+  if (locations) {
+    for (let i = 0; i < locations.length; i++) {
+      if(locations[i].apartments.length == 0) {
+        locations[i].remove(); // Does this work?
+        continue;
+      }
+      for (let x = 0; x < locations[i].apartments.length; x++) {
+        if (locations[i].apartments[x] == apartment) { // Maybe a bug because ObjectID == string
+          delete locations[i].apartments[x];
+          locations[i].save(); // Need testing, maybe? :D
+        } 
+      }
+    }
+    return true;
+  } else {
+    return false;
+  }
+} 
+
 const removeLocation = async (location, apartment) => {
   let foundLocation = await locationModel.findOne({ location: location }).exec();
   if (foundLocation) {
