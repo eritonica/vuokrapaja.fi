@@ -41,6 +41,12 @@ const Search = (props) => {
       navigate("/apartments/search", { state: form });
     } else {
       // TODO: Search apartments
+      if(form.location == "") {
+        setForm({
+          ...form,
+          location: "suomi"
+        });
+      }
       const response = await fetch(`/api/search`, {
         method: "POST",
         headers: {
