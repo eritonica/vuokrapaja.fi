@@ -18,4 +18,18 @@ const sendMail = async (email, subject, text) => {
   return info;
 };
 
-export default { sendMail };
+const createHostAddress = () => {
+  let domain = process.env.DOMAIN;
+  let protocol = process.env.PROTOCOL
+  let port = process.env.PORT;
+  if(domain == "localhost") {
+    return `${protocol}://${domain}:${port}`;
+  } else {
+    return `${protocol}://${domain}`;
+  }
+}
+
+export default { 
+  sendMail,
+  createHostAddress
+};

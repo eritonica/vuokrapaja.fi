@@ -10,6 +10,10 @@ import accountModel from "../schemas/account.js";
 const router = express.Router();
 
 const sendToApartmentCompany = async (apartmentId, application, message) => {
+  let hostAddress = mailer.createHostAddress();
+  if(hostAddress == "://") {
+    throw new Error("Host address is empty, check your environment.");
+  }
   let apartment = await apartmentModel.findById(apartmentId).exec();
   if (apartment) {
     let company = await companyModel.findById(apartment.company).exec();
@@ -22,9 +26,9 @@ const sendToApartmentCompany = async (apartmentId, application, message) => {
       let header = `Uusi hakemus saapunut`
       let msg = `Hei\r\n\r\n`;
       msg += "Olet saanut ilmoitukseesi uuden hakemusken, tarkastathan sen mahdollisimman pian.\r\n\r\n";
-      msg += "https://vuokrapaja.fi/company/application/" + application._id + "\r\n\r\n";
+      msg += `${hostAddress}/company/application/` + application._id + "\r\n\r\n";
       msg += `Ystävällisin terveisin, \r\n`;
-      msg += `https://vuokrapaja.fi/`;
+      msg += `Hoosat Oy`;
       let account = await accountModel.findById(company.manager).exec();
       if(account) {
         mailer.sendMail(account.email, header, msg);
@@ -34,6 +38,7 @@ const sendToApartmentCompany = async (apartmentId, application, message) => {
 };
 
 const sendToApplicationCreator = async (applicationId, message) => {
+  let hostAddress = mailer.createHostAddress();
   let application = await applicationModel.findById(applicationId).exec();
   // console.log(application);
   if (application) {
@@ -60,9 +65,9 @@ const sendToApplicationCreator = async (applicationId, message) => {
       } else if(message === "rejected") {
         msg += "Hakemuksesi seuraavasta asunnosta on hylätty. Voit yrittää laittaa uuden hakemuksen tarkempien tietojen kanssa tai olla yhteydessä vuokranantajaan suoraan.\r\n\r\n";
       }
-      msg += "https://vuokrapaja.fi/apartments/" + application.property + "\r\n\r\n";
+      msg += `${hostAddress}/company/application/` + application.property + "\r\n\r\n";
       msg += `Ystävällisin terveisin, \r\n`;
-      msg += `https://vuokrapaja.fi/`;
+      msg += `Hoosat Oy`;
       mailer.sendMail(account.email, header, msg);
     }
   }
