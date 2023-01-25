@@ -1,10 +1,24 @@
 import nodemailer from "nodemailer";
 
+const emailRegex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+
+const isValidEmail = (email) => {
+    return emailRegex.test(email);
+}
+
+const isValidSubject = (subject) => {
+  return subject.length >= 5 && subject.length <= 100;
+}
+
+const isValidText = (text) => {
+  return text.length >= 10 && text.length <= 10000;
+}
+
 const sendMail = async (email, subject, text) => {
   if(!email.trim()) throw new Error('Email address is required');
   if(!subject.trim()) throw new Error('Subject is required');
   if(!text.trim()) throw new Error('Text is required');
-  if(!isValidEmail(to)) {
+  if(!isValidEmail(email)) {
     throw new Error(`An error occurred while sending email: invalid email address.`);
   }
   if(!isValidSubject(subject)) {
@@ -15,7 +29,7 @@ const sendMail = async (email, subject, text) => {
     throw new Error(`Text is too short or long for email.`);
   }
   let transporter = nodemailer.createTransport({
-    service: process.env.SERVICE,
+    service: "gmail",
     auth: {
       user: process.env.GMAIL_USERNAME,
       pass: process.env.GMAIL_PASSWORD,

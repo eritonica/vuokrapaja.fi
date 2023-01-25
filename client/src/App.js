@@ -93,11 +93,13 @@ function App() {
       let companies = await response.json();
       if(!companies.message) {
         console.log(companies);
+        if(companies[0] !== undefined) {
           dispatch(setCompany({
             ...company,
             ...companies[0][0],
             new: false,
           }));
+        }
       }
     }
     if(token !== false) {

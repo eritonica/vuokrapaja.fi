@@ -102,14 +102,14 @@ router.post('/companies', async (req, res) => {
 		email: req.body.email,
 		phone: req.body.phone
 	});
-	newCompany.save();
-	let company = await companyModel.findOne({ manager: accountId }).exec();
+	await newCompany.save();
+	let company = await companyModel.findOne({ manager: req.session.account._id }).exec();
 	if (company) {
 		let newMember = new memberModel({
-			account: accountId,
+			account: req.session.account._id,
 			company: company._id,
-			role: "Manager",
-			permission: "read | write | delete"
+			role: "admin",
+			permissions: "read | write | delete"
 		});
 		newMember.save();
 		return res.status(200).json({ message: 'Company created.', company: company });

@@ -11,7 +11,7 @@ const confirmAdmin = (code) => {
   return crypto.compare(code, process.env.ADMIN_PASSWORD);
 }
 
-router.get("/admin/accounts/", async () => {
+router.get("/admin/", async () => {
   if(req.body === undefined || req.body.code === undefined) {
     return res.status(400).json({ "result": "error", "message": "Stop messing around, use the correct data or get the hell out of here!" });
   } 

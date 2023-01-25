@@ -18,7 +18,6 @@ const TopBar = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const token = useSelector((state) => state.app.token);
-  const name = useSelector((state) => state.app.name);
   const profile = useSelector((state) => state.app.profile);
   const company = useSelector((state) => state.app.company);
   const [usermenuAnchor, setUsermenuAnchor] = useState(null);
@@ -196,7 +195,7 @@ const TopBar = (props) => {
           { width > 448 &&
             <>
               <Box sx={{ flexGrow: 1 }} />
-              <Button color="inherit" onClick={ () => navigate("/info/beta") } sx={{ color: "red" }}>BETA</Button>
+              {/* <Button color="inherit" onClick={ () => navigate("/info/beta") } sx={{ color: "red" }}>BETA</Button> */}
               <Button color="inherit" onClick={ () => navigate("/info/renter") }>Vuokranantaja</Button>
               <Button color="inherit" onClick={ () => navigate("/info/rentee") }>Vuokralainen</Button>
             </>

@@ -26,9 +26,6 @@ const Profile = (props) => {
     if(profile.role === 'Rentee') {
       navigate("/");
     }
-		if(company._id === undefined) {
-			navigate("/");
-		}
   }, [navigate, token, profile]);
 
 	const onChange = (e) => {
@@ -37,6 +34,7 @@ const Profile = (props) => {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		console.log(company);
 		if(company.new === true) {
 			let response = await fetch("/api/companies", {
 				method: "POST",
@@ -46,8 +44,9 @@ const Profile = (props) => {
 				},
 				body: JSON.stringify(company)
 			});
+			console.log(response);
 			let body = await response.json();
-			// console.log(body);
+			console.log(body);
 			if(body.message === "Company created.") {
 				setMessage({ success: "Tiedot päivitetty."});
 				dispatch(setCompany({...body.company, new: false}));
@@ -64,7 +63,7 @@ const Profile = (props) => {
 				body: JSON.stringify(company)
 			});
 			let body = await response.json();
-			// console.log(body);
+			console.log(body);
 			if(body.message === "Company updated.") {
 				setMessage({ success: "Tiedot päivitetty."});
 				dispatch(setCompany({...company, new: false}));
