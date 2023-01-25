@@ -6,8 +6,22 @@ import accounts from "./accounts.js";
 const router = express.Router();
 
 const getProfileById = async (id) => {
-    return await profileModel.findOne({ account: id }).exec();
+  let profile = await profileModel.findOne({ account: id }).exec();
+	if(!profile) {
+		throw new Error("Can not find profile with the account id.");
+	} else {
+		return profile;
+	}
 };
+
+const getProfileByToken = async (token) => {
+	let account = await accounts.getAccountByToken(token);
+	if(!account) {
+		throw new Error("Can not find account with the token.")
+	} else {
+		return getProfileById(account._id);
+	}
+}
 
 const createEmptyProfile = async(accountId) => {
 	let hasProfile = await profileModel.findOne({ account: accountId }).exec();
@@ -134,5 +148,6 @@ router.delete("/profiles", async (req, res) => {
 export default {
 	router,
 	getProfileById,
+	getProfileByToken,
 	createEmptyProfile,
 }

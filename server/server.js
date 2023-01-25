@@ -31,6 +31,16 @@ app.use(cors({ origin : (origin, callback) => {
   return callback(null, true);
 }, credentials: true }));
 
+// For error debugging!! Remember to use /api/path
+app.use((req, res, next) => {
+  if(!req.path.startsWith("/api/")) {
+    console.log(`${req.method} ${req.path} `);
+    console.log(req.params);
+    console.log(req.originalUrl);
+  }
+  next();
+});
+
 // Static route, serve client build if it exists.
 import path from 'path';
 const __dirname = path.resolve();
@@ -69,6 +79,8 @@ app.delete("/auth/google", async (req, res) => {
 });
 
 // Routes, loading these could be automated without ES6 import/export support
+import referral from './routes/referral.js';
+app.use("/api", referral.router);
 import stripe from "./routes/stripe.js";
 app.use("/api", stripe.router);
 import notifications from "./routes/notifications.js";
@@ -89,8 +101,8 @@ import companies from './routes/companies.js';
 app.use("/api", sessions.checkSession, companies.router);
 import members from './routes/members.js';
 app.use("/api", sessions.checkSession, members.router);
-import aparments from './routes/apartments.js';
-app.use("/api", sessions.checkSession, aparments.router);
+import apartments from './routes/apartments.js';
+app.use("/api", sessions.checkSession, apartments.router);
 
 // File uploading multipart form data
 const storage = multer.diskStorage({

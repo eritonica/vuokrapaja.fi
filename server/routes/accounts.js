@@ -3,7 +3,6 @@ import crypto from "../dependancies/crypto.js";
 import mailer from "../dependancies/mailer.js";
 import sessions from "./sessions.js";
 import profiles from "./profiles.js";
-import companies from "./companies.js";
 
 import accountModel from "../schemas/account.js";
 import profileModel from "../schemas/profile.js";
@@ -209,6 +208,7 @@ router.delete("/accounts/", async (req, res) => {
     }
   });
 });
+
 
 export default {
   router,

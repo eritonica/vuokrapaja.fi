@@ -1,12 +1,16 @@
-import { useState } from 'react';
-import { Container, Box, TextField, Button, Alert } from '@mui/material';
+import { useState, useCallback, useEffect } from 'react';
+import { useParams } from "react-router-dom";
+import { Container, Box, TextField, Button, Alert, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { AppRegistration } from "@mui/icons-material";
 
 // Needs rewriting to use Redux
 
 const RegisterForm = (props) => {
+  const { code } = useParams();
+
   const [registerState, setRegisterState] = useState({
+    offer: {},
     username: '',
     email: '',
     password: '',
@@ -40,6 +44,43 @@ const RegisterForm = (props) => {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
   }
+
+  const checkOffers = useCallback( () => {
+      const getOfferByCode = async () => {
+        console.log(code);
+        if(code === undefined) {
+          return;
+        }
+        try {
+          const result = await fetch(`/api/referral/${code}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+          const response = await result.json();
+          console.log(response);
+          if(!response) {
+            console.log(response);
+          } else {
+            if(response.message.recipient === undefined) {
+              console.log("Undefined response.message.recipient");
+            } else {
+              setRegisterState({
+                ...registerState,
+                email: response.message.recipient,
+                offer: response.message
+              });
+            }
+          }
+        } catch (error) {
+          console.log(error);
+        }
+      }
+      getOfferByCode();
+  }, [code]);
+
+  useEffect(checkOffers, [checkOffers]);
 
   const handleRegister = async (event) => {
     event.preventDefault();
@@ -92,6 +133,13 @@ const RegisterForm = (props) => {
     <Container maxWidth="sm">
       <Box component={'form'} onSubmit={handleRegister} sx={{ marginTop: "40px", flexGrow: 1}}>
         <Grid container spacing={2}>
+          { (registerState.offer !== {} && code !== undefined) &&
+            <Grid item xs={12}>
+              <Typography>Hei, sinulle on lähetetty rekisteröitymisen yhteyteen tarjous:</Typography>
+              <Typography style={{color: "red"}}>Ensimmäiseen ilmoitukseen: {registerState.offer.deal} alennus.</Typography>
+              <Typography>Tarjous aktivoituu kun teet Vuokrapajassa ilmoituksen.</Typography>
+            </Grid>
+          }
           <Grid item xs={12}>
             <TextField fullWidth name="username" label="Käyttäjänimi" onChange={handleChange} />
           </Grid>
@@ -101,7 +149,7 @@ const RegisterForm = (props) => {
             </Grid>
           )}
           <Grid item xs={12}>
-            <TextField fullWidth name="email" type="email" label="Sähköpostiosoite" onChange={handleChange} />
+            <TextField fullWidth name="email" type="email" label="Sähköpostiosoite" value={registerState.email}onChange={handleChange} />
           </Grid>
           {registerState.emailError && (
             <Grid item xs={12}>

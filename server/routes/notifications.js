@@ -31,7 +31,7 @@ const sendToApartmentCompany = async (apartmentId, application, message) => {
       msg += `Hoosat Oy`;
       let account = await accountModel.findById(company.manager).exec();
       if(account) {
-        mailer.sendMail(account.email, header, msg);
+        await mailer.sendMail(account.email, header, msg);
       }
     }
   }
@@ -68,7 +68,7 @@ const sendToApplicationCreator = async (applicationId, message) => {
       msg += `${hostAddress}/company/application/` + application.property + "\r\n\r\n";
       msg += `Ystävällisin terveisin, \r\n`;
       msg += `Hoosat Oy`;
-      mailer.sendMail(account.email, header, msg);
+      await mailer.sendMail(account.email, header, msg);
     }
   }
 };

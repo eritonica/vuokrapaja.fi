@@ -33,7 +33,7 @@ const RenterInfo = (props) => {
                   <ListItemIcon>
                     <MUIIcon />
                   </ListItemIcon>
-                  <ListItemText primary="Rekisteröidy palveluun ja kirjaudu tai kirjaudu Google tunnuksillasi." />
+                  <ListItemText primary="Rekisteröidy palveluun kirjautuaksesi tai kirjaudu Google tunnuksillasi." />
                 </ListItem>
                 <ListItem>
                   <ListItemIcon>
@@ -54,26 +54,30 @@ const RenterInfo = (props) => {
                   <ListItemText primary="Voit alkaa ilmoittamaan kiinteistöjäsi." />
                 </ListItem>
               </List>
+              <Typography variant="body1" component="p" style={{fontWeight: "bold"}} gutterBottom>
+                Vuokrattavien kiinteistöjen ilmoittaminen on maksullista. Ilmoituksen
+                hinta 65€ sisältäen arvonlisäveron. 
+              </Typography>
+              <Typography variant="body1" component="p" style={{fontWeight: "bold"}} gutterBottom>
+                Joka kolmas ilmoitus on ilmainen. 
+              </Typography>
               <Typography variant="body1" component="p" gutterBottom>
-                Kiinteistöjen ilmoittaminen on maksullista. Ilmoituksen
-                tekeminen maksaa 25€ + alv 24%. Ilmoituksen tekeminen onnistuu
-                järjestelmän käyttöliittymää käyttäen. Ilmoituksen
+                Ilmoituksen tekeminen onnistuu järjestelmän käyttöliittymää käyttäen. Ilmoituksen
                 tekemisen ja maksamisen jälkeen ilmoitus näkyy kaikille palvelun käyttäjille.
               </Typography>
             </Grid>
             <Grid item xs={12}>
+              <Typography variant="body1" component="p" style={{fontWeight: "bold"}} gutterBottom>
+                Ilmoituksen tekijä vastaa ilmoituksen oikeellisuudesta.
+              </Typography>
               <Typography variant="body1" component="p" gutterBottom>
                 Pidätämme kaiken oikeuden kieltää ilmoituksen tekeminen, jos
                 ilmoituksen tekijä ei täytä palvelun käyttöehtoja.
               </Typography>
               <Typography variant="body1" component="p" gutterBottom>
                 Pidätämme oikeuden muuttaa ilmoitusten tekemisen hintaa. Ilmoitukset
-                maksetaan yksi ilmoitus kerrallaan. Joten jos haluat ilmoittaa
-                useita kiinteistöjä, niin sinun tulee maksaa jokainen ilmoitus
-                erikseen.
+                maksetaan yksi ilmoitus kerrallaan. 
               </Typography>
-            </Grid>
-            <Grid item xs={12}>
               <Typography variant="body1" component="p" gutterBottom>
                 Ilmoitusta tehdessäsi on pakollista antaa kiinteistön osoite.
                 Kiinteistön osoite on pakollinen, koska ilmoituksen tekijä
@@ -86,11 +90,7 @@ const RenterInfo = (props) => {
                 vuokralaiselta tietoja joita palvelussa ei voi kysyä.
               </Typography>
               <Typography variant="body1" component="p" gutterBottom>
-                Sinulla on myös mahdollisuus muokata ilmoituksia ja poistaa ilmoituksia. Ja ilmoittaa,
-                että kiinteistö on vuokrattu. 
-              </Typography>
-              <Typography variant="body1" component="p" gutterBottom>
-                Ilmoituksen tekijä vastaa ilmoituksen oikeellisuudesta.
+                Voit luoda, muokata ja poistaa ilmoituksia. Ja ilmoittaa ilmoituksen hakijoille, että onko heidän hakemus hyväksytty tai hylätty.
               </Typography>
             </Grid>
             <Grid item xs={12}>

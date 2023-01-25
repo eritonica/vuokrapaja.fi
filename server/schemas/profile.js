@@ -8,7 +8,7 @@ const profileSchema = new mongoose.Schema({
 			required: true,
 	},
 	type: {
-			type: String, // Rentee, Renter, Broker
+			type: String, // Rentee, Renter, Broker, Reseller
 			required: true,
 	},
 	name: {

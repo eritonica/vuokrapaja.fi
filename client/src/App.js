@@ -134,7 +134,8 @@ function App() {
               <Route path="/company/apartment" element={<NewApartment/>} />
               <Route path="/login" element={<LoginForm/>} />
               <Route path="/profile" element={<Profile/>} />
-              <Route path="/register" element={<RegisterForm/>} />
+              <Route path="/register/" element={<RegisterForm/>} />
+              <Route path="/register/:code" element={<RegisterForm/>} />
               <Route path="/register/activation" element={<ActivationForm/>} />
               <Route path="/recovery" element={<RecoveryRequestForm/>} />
               <Route path="/recovery/password" element={<RecoveryPasswordForm/>} />
