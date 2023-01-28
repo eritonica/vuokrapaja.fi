@@ -50,6 +50,11 @@ const removeFromLocations = async(apartment) => {
         await locationModel.findByIdAndUpdate(locations[i]._id, { apartments: filtered }).exec();
       }
     }
+    for(let i = 0; i < locations.length; i++) {
+      if(locations[i].apartments.length === 0) {
+        await locationModel.deleteOne({ _id: locations[i]._id }).exec();
+      }
+    }
     return true;
   } else {
     return false;
