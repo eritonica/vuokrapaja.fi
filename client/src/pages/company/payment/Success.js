@@ -9,60 +9,79 @@ const Success = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const apartmentID = searchParams.get("apartment");
   const security = searchParams.get("security");
+  const token = searchParams.get("token");
   
   const [message, setMessage] = useState({ error: false, message: ""});
-
-  
 
   const setAparmentPaid = useCallback(() => {
     // Do async request to set Apartment paid as true.
     // TODO: cancel and renew the token for security here.
     const getApartment = async () => {
-      const getResponse = await fetch(`/api/apartments/${apartmentID}`, {
+      const paymentGetResult = await fetch(`/api/payments/${security}`, {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
-          "token": security,
+          "Content-type": "application/json",
+          "token": token,
         }
       });
-      console.log(getResponse);
-      const getData = await getResponse.json();
-      console.log(getData);
-      if(getData.message === "success") {
-        if(getData.apartment.paid === true) {
-          setMessage({ error: true, message: "Apartment has already been published." });
-          return;
-        }
-        getData.apartment.paid = true;
-        const putResponse = await fetch(`/api/apartments/${apartmentID}`, {
-          method: "PUT",
+      let payment = await paymentGetResult.json();
+      console.log(payment);
+      if(payment.result === "success") {
+        const getResponse = await fetch(`/api/apartments/${apartmentID}`, {
+          method: "GET",
           headers: {
             "Content-Type": "application/json",
-            "token": security,
-          },
-          body: JSON.stringify(getData.apartment),
+            "token": token,
+          }
         });
-        console.log(putResponse);
-        const putData = await putResponse.json();
-        console.log(putData);
-        if(putData.message === "Apartment updated.") {
-          setMessage({ error: false, message: "Apartment published." });
+        console.log(getResponse);
+        let getData = await getResponse.json();
+        console.log(getData);
+        if(getData.message === "success") {
+          if(getData.apartment.paid === true) {
+            setMessage({ error: true, message: "Apartment has already been published." });
+            return;
+          }
+          getData.apartment.paid = true;
+          const putResponse = await fetch(`/api/apartments/${apartmentID}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              "token": token,
+            },
+            body: JSON.stringify(getData.apartment),
+          });
+          console.log(putResponse);
+          const putData = await putResponse.json();
+          console.log(putData);
+          if(putData.message === "Apartment updated.") {
+            const paymentPostResult = await fetch(`/api/payments/`, {
+              method: "PUT",
+              headers: {
+                "Content-type": "application/json",
+                "token": token,
+              },
+              body: JSON.stringify({ code : payment.message.code })
+            });
+            payment = await paymentPostResult.json();
+            console.log(payment);
+            if(payment.result === "success") {
+              setMessage({ error: false, message: "Apartment published." });
+            }
+          } else {
+            setMessage({ error: true, message: "Could not publish apartment."});
+          }
         } else {
-          setMessage({ error: true, message: "Could not publish apartment."});
+          setMessage({ error: true, message: getData.message });
         }
-      } else {
-        setMessage({ error: true, message: getData.message });
       }
+      
     }
     getApartment();
-  },[apartmentID, security]);
-
-  //http://localhost:3000/stripe-payment-success?apartment=633bf2a64e502f3a81993dea&security=m7hfEWVfr32vsfjZhwaK2UQp7XotKoBE
+  },[apartmentID, security, token]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(setAparmentPaid, []);
-
-  
+  useEffect(setAparmentPaid, [setAparmentPaid]);
 
   return (
     <Container maxWidth="md" sx={{mt: 4, pb: 4, mb: 4}} component={Paper}>

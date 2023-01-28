@@ -27,34 +27,15 @@ const RenteeInfo = (props) => {
                 hakuehdot ja voit alkaa etsiä kiinteistöjä. Kiinteistöjen
                 hakeminen on maksutonta.
               </Typography>
+            </Grid>
+            <Grid item xs={12}>
               <Typography variant="h6" component="h2" gutterBottom>
-                Kiinteistön hakeminen
+                Hakemuksen tekeminen
               </Typography>
               <Typography variant="body1" component="p" gutterBottom>
-                Sinun tarvitsee tehdä rekisteröityä palveluun, jos haluat
-                hakea kiinteistöä vuokrattavaksi, jos vuokranantaja on
-                valinnut käyttää palvelun hakemus järjestelmää.
-              </Typography>
-              <Typography variant="h6" component="h2" gutterBottom>
-                Rekisteröityminen
-              </Typography>
-              <Typography variant="body1" component="p" gutterBottom>
-                Rekisteröityminen palveluun on maksutonta. Rekisteröitymisen
-                jälkeen voit hakea kiinteistöjä vuokrattavaksi. Rekisteröitymisen
-                jälkeen voit myös muokata hakemustasi, jos vuokranantaja on
-                valinnut käyttää palvelun hakemus järjestelmää.
-              </Typography>
-              <Typography variant="h6" component="h2" gutterBottom>
-                Hakemus järjestelmä
-              </Typography>
-              <Typography variant="body1" component="p" gutterBottom>
-                Vuokranantaja voi valita käyttää hakemus järjestelmää. Hakemus
-                järjestelmä on palvelun sisäinen hakemus järjestelmä, jossa
-                vuokralainen voi hakea kiinteistöä vuokrattavaksi. Hakemus
-                järjestelmässä vuokralainen voi muokata hakemustaan, kun
-                vuokranantaja on hyväksynyt hakemuksen. Hakemus järjestelmässä
-                vuokralainen voi myös peruuttaa hakemuksen, kun vuokranantaja
-                ei ole hyväksynyt hakemusta.
+                Kun olet löytänyt sinua kiinnostavan kohteen voit tehdä
+                siitä maksutta hakemuksen. Tieto hakemuksestasi menee
+                suoraan vuokranantajalle.
               </Typography>
             </Grid>
             <Grid item xs={12}>

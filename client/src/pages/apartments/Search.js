@@ -8,6 +8,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 
 import ApartmentList from './ApartmentList';
 
+
 const Search = (props) => {
   const name = useSelector((state) => state.app.name);
   const navigate = useNavigate();
@@ -40,25 +41,23 @@ const Search = (props) => {
     if(props.landing) {
       navigate("/apartments/search", { state: form });
     } else {
-      // TODO: Search apartments
-      if(form.location == "") {
-        setForm({
-          ...form,
-          location: "suomi"
-        });
-      }
       const response = await fetch(`/api/search`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify(form)
+        body: JSON.stringify({
+          ...form,
+          location: (location === "") ? "suomi" : form.location
+        })
       });
       let body = await response.json();
+      setSearchedApartments([]);
       if(body.error === "No location specified.") {
         setMessage({ error: "Et valinnut sijaintia josta etsiä. Yritätkö oikeasti hakea koko maailman asuntoilmoitukset?", message: "" });
-        setSearchedApartments([]);
       } else if(body.message === "success") {
+        console.log("Just searched apartments");
+        console.log(body.apartments);
         setSearchedApartments(body.apartments);
         if(body.apartments.length === 0) {
           setSearchFailed(true);

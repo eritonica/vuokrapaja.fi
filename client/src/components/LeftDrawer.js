@@ -8,6 +8,7 @@ import SubjectIcon from '@mui/icons-material/Subject';
 import ArticleIcon from '@mui/icons-material/Article';
 import GradingIcon from '@mui/icons-material/Grading';
 import NotesIcon from '@mui/icons-material/Notes';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 
 
 const LeftDrawer = (props) => {
@@ -80,6 +81,17 @@ const LeftDrawer = (props) => {
                 <Groups3 /> 
               </ListItemIcon>
               <ListItemText primary="Työntekijät" onClick={() => navigate("/company/member")}/>
+            </ListItem>
+            <Divider />
+          </>
+        )}
+        {((token !== undefined || token != false) && (profile.type === "Reseller")) && (
+          <>
+            <ListItem button={true} key="Jälleenmyynti" component={Link} to="/referrals" onClick={() => navigate("/referrals")}>
+              <ListItemIcon>
+                <MonetizationOnIcon /> 
+              </ListItemIcon>
+              <ListItemText primary="Jälleenmyynti" onClick={() => navigate("/referrals")}/>
             </ListItem>
             <Divider />
           </>

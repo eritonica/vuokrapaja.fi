@@ -256,6 +256,7 @@ const Aparments = () => {
                           <form method="POST" action="/api/stripe-one-time-payment">
                             <input type="hidden" name="apartment" value={apartment._id}></input>
                             <input type="hidden" name="token" value={token}></input>
+                            <input type="hidden" name="company" value={company._id}></input>
                             <Button fullWidth variant="contained" color="primary" size="small" type="submit">Maksa</Button>
                           </form>
                         )}

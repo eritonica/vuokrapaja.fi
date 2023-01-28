@@ -3,73 +3,72 @@ import { Box, Grid, Typography, FormControl, InputLabel, Select, MenuItem, Butto
 import ApartmentCard from "./ApartmentCard"
 
 const ApartmentList = ({apartments}) => {
-  const [sort, setSort] = useState("price-asc")
+  const [sorting, setSorting] = useState("price-asc");
+
   const [pagination, setPagination] = useState({
     currentPage: 1,
     pages: 1,
-    perPage: 20,
-    apartments : [apartments],
+    perPage: 5,
+    apartments: apartments
   });
 
-  const paginateApartments = useCallback(() => {
-    const pages = Math.ceil(apartments.length / pagination.perPage)
-    let paginatedApartments = []
-    for(let i = 0; i < pages; i++) {
-      let pageApartments = apartments.slice(i * pagination.perPage, (i + 1) * pagination.perPage)
-      paginatedApartments.push(pageApartments);
-    }
-    setPagination({
-      ...pagination,
-      pages: pages,
-      apartments: paginatedApartments
-    })
-  }, [pagination, apartments])
-
-  const sortApartments = useCallback(() => {
+  const apartmentsChanged = useCallback(() => {
     let sortedApartments = [...apartments];
-    switch (sort) {
+    switch (sorting) {
       case "price-asc":
         sortedApartments = apartments.sort((a, b) => a.rent - b.rent);
         break;
       case "price-desc":
         sortedApartments = apartments.sort((a, b) => a.rent - b.rent);
-        sortApartments = sortApartments.reverse();
+        sortedApartments = sortedApartments.reverse();
         break;
       case "size-asc":
         sortedApartments = apartments.sort((a, b) => a.size - b.size);
         break;
       case "size-desc":
         sortedApartments = apartments.sort((a, b) => b.size - a.size);
-        sortApartments = sortApartments.reverse();
+        sortedApartments = sortedApartments.reverse();
         break;
       case "creation-asc":
         sortedApartments = apartments.sort((a, b) => new Date(a.created).getTime() - new Date(b.created).getTime());
         break;
       case "creation-desc":
         sortedApartments = apartments.sort((a, b) => new Date(b.created).getTime() - new Date(a.created).getTime());
-        sortApartments = sortApartments.reverse();
+        sortedApartments = sortedApartments.reverse();
         break;
       case "release-asc":
         sortedApartments = apartments.sort((a, b) => new Date(a.release).getTime() - new Date(b.release).getTime());
         break;
       case "release-desc":
         sortedApartments = apartments.sort((a, b) => new Date(a.release).getTime() - new Date(b.release).getTime());
-        sortApartments = sortApartments.reverse();
+        sortedApartments = sortedApartments.reverse();
         break;
       default:
         sortedApartments = apartments.sort((a, b) => a.rent - b.rent);
         break;
     }
-    paginateApartments(sortedApartments)
-  }, [apartments, sort, paginateApartments]);
+    const pages = Math.ceil(sortedApartments.length / pagination.perPage)
+    let paginatedApartments = []
+    for(let i = 0; i < pages; i++) {
+      let pagesStart = pagination.currentPage * pagination.perPage - pagination.perPage;
+      let pagesEnd = pagination.currentPage * pagination.perPage;
+      console.log(pagesStart + " - " + pagesEnd);
+      paginatedApartments = sortedApartments.slice(pagesStart, pagesEnd)
+      
+    }
+    setPagination({
+      ...pagination,
+      pages: pages,
+      apartments: paginatedApartments
+    });
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(sortApartments, [sort]);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(paginateApartments, [pagination.perPage]);
+  }, [apartments, pagination, sorting])
+
+  useEffect(apartmentsChanged, [apartments, pagination.perPage, pagination.currentPage, sorting]);
 
   const onSortChange = (event) => {
-    setSort(event.target.value);
+    console.log("Sort changed");
+    setSorting(event.target.value);
   }
 
   const onPerPageChange = (event) => {
@@ -99,7 +98,7 @@ const ApartmentList = ({apartments}) => {
               labelId="order-label"
               id="order"
               name="sort"
-              value={sort}
+              value={sorting}
               label="Järjestys"
               onChange={onSortChange}>
               <MenuItem value="price-asc">Hinnan mukaan nouseva</MenuItem>
@@ -122,6 +121,7 @@ const ApartmentList = ({apartments}) => {
               value={pagination.perPage}
               label="Kohteita sivulla"
               onChange={onPerPageChange}>
+              <MenuItem value="1">1</MenuItem>
               <MenuItem value="5">5</MenuItem>
               <MenuItem value="10">10</MenuItem>
               <MenuItem value="20">20</MenuItem>
@@ -131,7 +131,7 @@ const ApartmentList = ({apartments}) => {
             </Select>
           </FormControl>
         </Grid>
-        {pagination.apartments[pagination.currentPage-1].map((apartment) => (
+        {pagination.apartments.map((apartment) => (
           <Grid item xs={12} sm={6} md={6} key={apartment._id}>
             <ApartmentCard apartment={apartment} />
           </Grid>

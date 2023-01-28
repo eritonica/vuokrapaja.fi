@@ -38,8 +38,10 @@ const sendOffer = async (seller, recipient, name, message, deal) => {
     let msg = `Ystävällisin terveisin,\r\n\r\n`;
     msg += `Olet saanut tarjouksen https://vuokrapaja.fi vuokravälitys palvelusta.\r\n`;
     msg += `Viesti tarjoajalta:\r\n\r\n${message}\r\n\r\n`;
-    msg += `Huomioi, että tarjous ei ole enään voimassa jos olet aikaisemmin\r\nVuokrapajaan rekisteröitynyt sähköpostiosoitteella johon tarjouksen sait.`;
-    msg += `Voit hyväksyä tarjouksen seuraamalla seuraavaa linkkiä:\r\n`;
+    if(deal !== "") {
+      msg += `Tarjous koodi on: ${deal}`;
+    }
+    msg += `Voit hyväksyä tarjouksen rekisteröitymällä Vuokrapajaan ja tekemällä ilmoituksen:\r\n`;
     msg += `${activationLink}`;
     await mailer.sendMail(recipient, header, msg);
     return true;

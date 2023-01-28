@@ -16,8 +16,8 @@ let port = process.env.PORT || 8080;
 
 // Middleware
 app.set("trust proxy", 1);
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({ extended: true, limit: '50mb'}));
 
 // CORS
 let allowedDomains = JSON.parse(process.env.CORS_ORIGIN) || [ "http://localhost:3000" ];
@@ -79,6 +79,10 @@ app.delete("/auth/google", async (req, res) => {
 });
 
 // Routes, loading these could be automated without ES6 import/export support
+import finders from "./routes/finders.js";
+app.use("/api", finders.router);
+import payments from "./routes/payments.js";
+app.use("/api", payments.router);
 import referral from './routes/referral.js';
 app.use("/api", referral.router);
 import stripe from "./routes/stripe.js";
@@ -112,7 +116,8 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     let randomToken = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
     cb(null, randomToken + "-" + file.originalname);
-  }
+  },
+  limits: { fileSize: 1000000*50 }
 });
 
 const upload = multer({ 

@@ -4,6 +4,7 @@ import companyModel from '../schemas/company.js';
 import memberModel from '../schemas/member.js';
 
 import members from './members.js';
+import sessions from './sessions.js';
 
 
 const router = express.Router();
@@ -16,6 +17,18 @@ const getCompany = async (id) => {
 		return null;
 	}
 };
+
+const getCompaniesByToken = async (token) => {
+	let account = sessions.checkSession(token);
+	if(account === undefined || account._id === undefined) {
+		return false;
+	}
+	let companies = members.getCompaniesByMember(account._id);
+	if(companies == undefined) {
+		return false;
+	}
+	return companies;
+} 
 
 const checkPermission = async (user, company, perm) => {
 	let companyMembers = await members.getMembers(company);
@@ -184,5 +197,6 @@ export default {
 	router,
 	checkPermission,
 	createEmptyCompany,
-	getCompany
+	getCompany,
+	getCompaniesByToken
 };
