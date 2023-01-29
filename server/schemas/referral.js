@@ -10,8 +10,7 @@ const ReferralSchema = new mongoose.Schema({
         required: true
     },
     seller: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Account',
+        type: String,
         required: true
     },
     deal: {
