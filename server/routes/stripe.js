@@ -4,7 +4,7 @@ import crypto from "../dependancies/crypto.js";
 import apartments from "./apartments.js";
 import sessions from "./sessions.js";
 import payment from "../schemas/payment.js";
-import accounts from "../accounts.js";
+import accounts from "./accounts.js";
 import referralSchema from "../schemas/referral.js";
 
 const router = express.Router();
