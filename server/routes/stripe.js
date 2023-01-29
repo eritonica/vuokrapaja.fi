@@ -4,6 +4,8 @@ import crypto from "../dependancies/crypto.js";
 import apartments from "./apartments.js";
 import sessions from "./sessions.js";
 import payment from "../schemas/payment.js";
+import accounts from "../accounts.js";
+import referralSchema from "../schemas/referral.js";
 
 const router = express.Router();
 
@@ -21,6 +23,21 @@ router.post("/stripe-one-time-payment", async (req, res) => {
     }
     if(req.body.company === undefined) {
       return res.status(400).json({ result: "error", message: "Company id not found."});
+    }
+    let account = await accounts.getAccountByToken(session.token);
+    if(account) {
+      let referral = await referralSchema.find({ recipient: accounts.email }).exec();
+      if(referral.deal.startsWith("free: ")) {
+        let months = parseInt(referral.deal.split(": ")[1]);
+        let elapsedTime = Date.now() - referral.created;
+        let elapsedMonths = elapsedTime / (1000 * 60 * 60 * 24 * 30);
+        if(elapsedMonths <= months) {
+          console.log("Referral deal is still valid");
+          return res.redirect(303, success_url);
+        } else {
+          console.log("Referral deal has expired");
+        }
+      }
     }
     let code = crypto.generateString(12);
     let paidApartmentsCount = apartments.countPaidAparmentsByCompany(req.body.company);
