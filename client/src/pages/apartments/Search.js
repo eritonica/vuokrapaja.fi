@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { Container, Box, TextField, Button, Typography, Paper, Autocomplete, FormControlLabel, Alert } from '@mui/material';
 import { FormControl, InputLabel, Select, MenuItem, Checkbox, ListItemText } from '@mui/material';
+import DocumentMeta from 'react-document-meta';
 
 import Grid from '@mui/material/Unstable_Grid2';
 
@@ -13,6 +14,17 @@ const Search = (props) => {
   const name = useSelector((state) => state.app.name);
   const navigate = useNavigate();
   const location = useLocation();
+  const meta = {
+    title: 'Vuokrapaja etusivu ja asuntojen etsintä',
+    description: "Vuokrapaja on asuntojen haku ja ilmoitus palvelu. Vuokrapajaan voi ilmoittaa vuokrattavan kiinteistön ja se on sen jälkeen kaikkien haettavissa.",
+    canonical: 'http://vuokrapaja.fi',
+    meta: {
+      charset: 'utf-8',
+      name: {
+          keywords: 'react,meta,document,html,tags,asunto,vuokra,toimisto,varasto,halli,talli,kerrostalo,omakotitalo,rivitalo,paritalo'
+      }
+    }
+  }
 
   const [message, setMessage] = useState({ error: "", message: "" });
   const [searchedApartments, setSearchedApartments] = useState([]);
@@ -136,6 +148,7 @@ const Search = (props) => {
 
   return (
     <Container maxWidth="md" component={Paper}>
+      <DocumentMeta {...meta} />
       <Box sx={{ mt: 4, pb: 4, mb: 4 }}>
         <Grid container spacing={2}>
           <Grid item xs={12}  sx={{pt:3}}>

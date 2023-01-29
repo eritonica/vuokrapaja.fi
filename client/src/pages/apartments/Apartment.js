@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Box, Grid, Typography, Paper, Table, TableBody, TableCell, TableRow, Button } from "@mui/material";
 import { useSelector } from 'react-redux';
+import DocumentMeta from 'react-document-meta';
 
 import ImageList from './ImageList';
 import Map from './Map';
@@ -11,6 +12,17 @@ const Apartment = () => {
   const { id } = useParams();
   const [apartment, setApartment] = useState({});
   const token = useSelector(state => state.token);
+  const meta = {
+    title: '',
+    description: "",
+    canonical: 'http://vuokrapaja.fi',
+    meta: {
+      charset: 'utf-8',
+      name: {
+          keywords: 'react,meta,document,html,tags,asunto,vuokra,toimisto,varasto,halli,talli,kerrostalo,omakotitalo,rivitalo,paritalo'
+      }
+    }
+  }
 
   const [cellWidth, setCellWidth] = useState("50%");
 
@@ -34,6 +46,8 @@ const Apartment = () => {
         if (body.message === "success") {
           // console.log(body.apartment);
           setApartment(body.apartment);
+          meta.title = body.apartment.address;
+          meta.description = body.apartment.description;
         }
       }
       fetchApartment();
@@ -46,6 +60,7 @@ const Apartment = () => {
 
   return (
     <Container maxWidth="md" component={Paper}>
+      <DocumentMeta {...meta} />
       <Box sx={{ mt: 4, pb: 4, mb: 4 }}>
         <Grid container spacing={2} >
           <Grid item xs={12}>

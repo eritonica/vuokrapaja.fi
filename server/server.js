@@ -79,8 +79,6 @@ app.delete("/auth/google", async (req, res) => {
 });
 
 // Routes, loading these could be automated without ES6 import/export support
-import finders from "./routes/finders.js";
-app.use("/api", finders.router);
 import payments from "./routes/payments.js";
 app.use("/api", payments.router);
 import referral from './routes/referral.js';
