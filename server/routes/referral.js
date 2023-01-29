@@ -39,7 +39,11 @@ const sendOffer = async (seller, recipient, name, message, deal) => {
     msg += `Olet saanut tarjouksen https://vuokrapaja.fi vuokravälitys palvelusta.\r\n`;
     msg += `Viesti tarjoajalta:\r\n\r\n${message}\r\n\r\n`;
     if(deal !== "") {
-      msg += `Tarjous koodi on: ${deal}`;
+      if(deal.startsWith("code: ")) {
+        msg += `Tarjous koodi on: ${deal.split(": ")[1]}`;
+      } else if(deal.startsWith("free: ")) {
+        msg += `Tarjous on ilmaiseksi ${deal.split(": ")[1]} kuukauden ilmoitukset.`
+      }
     }
     msg += `Voit hyväksyä tarjouksen rekisteröitymällä Vuokrapajaan ja tekemällä ilmoituksen:\r\n`;
     msg += `${activationLink}`;
