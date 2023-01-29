@@ -1,6 +1,6 @@
 # Asuntojen/mökkien vuokraus sovellus
 
-Opiframen opikoodia projekti, tekkinä React + Material UI, Node.js + Sqlite3.
+Kiinteistöjen vuokraussovellus, tekkinä React + Material UI, Node.js + MongoDB.
 
 
 # Server .env file
@@ -13,24 +13,35 @@ DOMAIN=localhost
 # The port number to listen on. Defaults to 8080.
 PORT=8080
 # Cors origin domain array
-CORS_ORIGIN=[http://localhost:3000]
+CORS_ORIGIN=["http://localhost:3000", "http://localhost:8080"]
 # The account activation link, where to send the user with activation code.
-ACTIVATION_LINK=/api/accounts/activate
+ACTIVATION_LINK=http://localhost:3000/register/activation?code=
+# The password recovery link, where to send the user with reset code.
+RECOVERY_LINK=http://localhost:3000/recovery/password?code=
 
 # Certificate and key for https
-HTTPS_CERT=/etc/letsencrypt/live/localhost/cert.pem
-HTTPS_KEY=/etc/letsencrypt/live/localhost/privkey.pem
-HTTPS_CA=/etc/letsencrypt/live/localhost/chain.pem
+HTTPS_CERT=
+HTTPS_KEY=
+HTTPS_CA=
 
 # The database connection string
-ATLAS_URI = mongodb+srv://<username>:<password>@cluster0.mzhbh.mongodb.net/<collection>?retryWrites=true&w=majority
+ATLAS_URI=
 
 # The account information for sending mail through the gmail service.
-GMAIL_USERNAME=gmail address
-GMAIL_PASSWORD=Your app password
+GMAIL_USERNAME=
+GMAIL_PASSWORD=
 
 SESSION_TTL=3600000
 
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+
+STRIPE_PRIVATE=
+STRIPE_ONETIMEPAYMENT=
+STRIPE_SUCCESS=http://localhost:3000/stripe-payment-success
+STRIPE_CANCEL=http://localhost:3000/stripe-payment-failure
+
+ADMIN_PASSWORD=
 ```
 
 # Run server
