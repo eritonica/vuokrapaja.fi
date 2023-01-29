@@ -156,7 +156,7 @@ const RegisterForm = (props) => {
                 </>)
               : (registerState.offer.deal !== undefined && registerState.offer.deal.startsWith("free: ")) && (<>
                 <Typography style={{color: "red"}}>Saat {registerState.offer.deal.split(": ")[1]} kuukaudeksi ilmaiset ilmoitukset.</Typography>
-                <Typography>Tarjous on aktivoitu { new Date(registerState.offer.created).toLocaleString() } tälle sähköpostiosoitteelle.</Typography>
+                <Typography>Tarjous on aktivoitu { new Date(registerState.offer.created).toLocaleString() } seuraavalle sähköpostiosoitteelle.</Typography>
               </>)
               }
             </Grid>
