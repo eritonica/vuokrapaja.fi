@@ -24,30 +24,13 @@ router.post("/stripe-one-time-payment", async (req, res) => {
     if(req.body.company === undefined) {
       return res.status(400).json({ result: "error", message: "Company id not found."});
     }
-    let account = await accounts.getAccountByToken(session.token);
-    if(account) {
-      let referral = await referralSchema.find({ recipient: accounts.email }).exec();
-      if(referral.deal.startsWith("free: ")) {
-        let months = parseInt(referral.deal.split(": ")[1]);
-        let elapsedTime = Date.now() - referral.created;
-        let elapsedMonths = elapsedTime / (1000 * 60 * 60 * 24 * 30);
-        if(elapsedMonths <= months) {
-          console.log("Referral deal is still valid");
-          return res.redirect(303, success_url);
-        } else {
-          console.log("Referral deal has expired");
-        }
-      }
-    }
+    
     let code = crypto.generateString(12);
     let paidApartmentsCount = apartments.countPaidAparmentsByCompany(req.body.company);
     if(paidApartmentsCount === undefined) {
       return res.status(500).json({ result: "error", message: "Could not calculate published apartments."});
     }
     let success_url = process.env.STRIPE_SUCCESS + "?apartment=" + req.body.apartment + "&security=" + code + "&token=" + req.body.token;
-    if(paidApartmentsCount % 3 === 0) {
-      return res.redirect(303, success_url);
-    }
     const pay = new payment({
       account: session.account,
       code: code,
@@ -57,6 +40,27 @@ router.post("/stripe-one-time-payment", async (req, res) => {
     await pay.save();
     // FI12 7997 7990 6600 99
     // HOLVFIHH
+    let account = await accounts.getAccountByToken(session.token);
+    console.log(account);
+    if(account) {
+      let referral = await referralSchema.find({ recipient: account.email }).exec();
+      console.log(referral);
+      if(referral[0].deal.startsWith("free: ")) {
+        let months = parseInt(referral[0].deal.split(": ")[1]);
+        console.log(months);
+        let elapsedTime = Date.now() - referral[0].created;
+        let elapsedMonths = elapsedTime / (1000 * 60 * 60 * 24 * 30);
+        if(elapsedMonths <= months) {
+          console.log("Referral deal is still valid");
+          return res.redirect(303, success_url + "&free=month");
+        } else {
+          console.log("Referral deal has expired");
+        }
+      }
+    }
+    if(paidApartmentsCount % 3 === 0) {
+      return res.redirect(303, success_url + "&free=third");
+    }
     const secret = process.env.STRIPE_PRIVATE;
     const stripe = new Stripe(secret);
     const stripeSession = await stripe.checkout.sessions.create({

@@ -1,15 +1,18 @@
 import { useCallback, useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-import { Container, Box,Typography, Paper } from '@mui/material';
+import { Container, Box,Typography, Paper, Button } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 
 const Success = () => {
+  const navigate = useNavigate();
   // eslint-disable-next-line no-unused-vars
   const [searchParams, setSearchParams] = useSearchParams();
   const apartmentID = searchParams.get("apartment");
   const security = searchParams.get("security");
   const token = searchParams.get("token");
+  const free = searchParams.get("free");
   
   const [message, setMessage] = useState({ error: false, message: ""});
 
@@ -89,9 +92,19 @@ const Success = () => {
         {(message.message === "Apartment published." || message.message === "Apartment has already been published.") 
         ? <Grid container spacing={2} sx={{pt:3}}>
             <Grid item xs={12}>
-              <Typography variant="h4" component="h1" sx={{ color: "green" }} gutterBottom>
-                Haluamme ilmoittaa, että maksusi onnistui.
-              </Typography>
+              { (free == undefined)
+              ? <Typography variant="h4" component="h1" sx={{ color: "green" }} gutterBottom>
+                  Haluamme ilmoittaa, että maksusi onnistui.
+                </Typography>
+              : (free == "month") 
+              ? <Typography variant="h4" component="h1" sx={{ color: "green" }} gutterBottom>
+                  Haluamme ilmoittaa, että ilmoituksesi on julkaistu ilmaiseksi.
+                </Typography>
+              : (free == "third")
+              && <Typography variant="h4" component="h1" sx={{ color: "green" }} gutterBottom>
+                  Haluamme ilmoittaa, että ilmoituksesi on julkaistu ilmaiseksi.
+                </Typography>
+              }
             </Grid>
             <Grid item xs={12}>
               <Typography variant="h6" component="h2" gutterBottom>
@@ -110,6 +123,9 @@ const Success = () => {
                 Ystävällisin terveisin,
                 Vuokrapaja
               </Typography>
+              <Button sx={{ mb: 2}} fullWidth variant="contained" color="info" onClick={() => { navigate("/company/apartments")}}>
+                Palaa ilmoituksiisi.
+              </Button>
             </Grid>
           </Grid>
         : ( message.message === "Could not publish apartment.") ? 

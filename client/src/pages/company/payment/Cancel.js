@@ -1,7 +1,9 @@
-import { Container, Box,Typography, Paper } from '@mui/material';
+import { Container, Box,Typography, Paper, Button } from '@mui/material';
+import { useNavigate } from "react-router-dom";
 import Grid from '@mui/material/Unstable_Grid2';
 
 const Cancel = () => {
+  const navigate = useNavigate();
   return (
     <Container maxWidth="md" sx={{mt: 4, pb: 4, mb: 4}} component={Paper}>
       <Box sx={{ marginTop: "40px", flexGrow: 1}}>
@@ -27,6 +29,9 @@ const Cancel = () => {
               Ystävällisin terveisin,
               Vuokrapaja
             </Typography>
+            <Button sx={{ mb: 2}} fullWidth variant="contained" color="info" onClick={() => { navigate("/company/apartments")}}>
+              Palaa ilmoituksiisi.
+            </Button>
           </Grid>
         </Grid>
       </Box>
