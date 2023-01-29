@@ -66,7 +66,7 @@ const getActiveOfferByEmail = async (email) => {
 const getActiveOfferByCode = async(code) => {
   let offer = await referral.findOne({ code: code, active: true}).exec();
   if(!offer) {
-		throw new Error("Can not find active offer with the email.");
+		throw new Error("Can not find active offer with the code.");
 	} else {
 		return offer;
 	}
@@ -86,66 +86,60 @@ const useOffer = async (token) => {
 
 router.get("/referral/:code", async (req, res) => {
   if(req.params === undefined || req.params.code === undefined) {
-    return res.status(404).json({ "result": "error", "message": "code is empty."});
+    return res.status(404).json({ result: "error", message: "code is empty."});
   }
   try {
     let offer = await getActiveOfferByCode(req.params.code);
     if(offer) {
       console.log(offer);
-      return res.status(200).json({ "result" : "success", "message": offer });
+      return res.status(200).json({ result : "success", message: offer });
     } else {
-      return res.status(404).json({ "result" : "error", "message": "Offer not found by offer code." });
+      return res.status(404).json({ result : "error", message: "Offer not found by offer code." });
     }
   } catch (error) {
-    return res.status(500).json({ "result": "error", "message": error });
+    return res.status(500).json({ result: "error", message: error });
   }
 });
 
 router.post("/referral/", async (req, res) => {
-  if(req.body === undefined || req.body.token === undefined) {
-    return res.status(404).json({ "result": "error", "message": "token is empty."});
+  if(req.body.api_code === undefined || req.body.account === undefined || req.body.recipient === undefined || req.body.name === undefined || req.body.message === undefined || req.body.deal === undefined) {
+    return res.status(400).json({ result: "error", message: "Required data is undefined" });
   }
-  if(req.body.recipient === undefined || req.body.name === undefined || req.body.message === undefined || req.body.deal === undefined) {
-    
-  }
-  try {
-    let profile = profiles.getProfileByToken(req.body.token);
-    if(!profile) {
-      return res.status(400).json({ "result": "error", "message": "Could not find profile with the token." });
-    }
-    if(profile.type !== "Reseller") {
-      return res.status(400).json({ "result": "error", "message": "Profile is not reseller profile." });
-    }
-    let account = await account.findOne({ email : req.body.recipient }).exec();
-    if(account !== undefined && account.email !== undefined) {
-      let result = await sendOffer(profile.account, req.body.recipient, req.body.name, req.body.message, req.body.deal);
-      if(result === true) {
-        return res.status(200).json({ "result": "success", "message": "Offer has been sent to the recipient email." })
+  if(crypto.compare(req.body.api_code, process.env.ADMIN_PASSWORD)) {
+    try {
+      let account = await account.findOne({ email : req.body.recipient }).exec();
+      if(account !== undefined && account.email !== undefined) {
+        let result = await sendOffer(req.body.account, req.body.recipient, req.body.name, req.body.message, req.body.deal);
+        if(result === true) {
+          return res.status(200).json({ result: "success", message: "Offer has been sent to the recipient email." })
+        } else {
+          return res.status(500).json({ result : "error", message: "For some reason could not send the offer." });
+        }
       } else {
-        return res.status(500).json({ "result" : "error", "message": "For some reason could not send the offer." });
+        return res.status(400).json({ result : "error", message: "Account with the email already exists, offer invalid." });
       }
-    } else {
-      return res.status(400).json({ "result" : "error", "message": "Account with the email already exists, offer invalid." });
+    } catch (error) {
+      return res.status(500).json({ result: "error", message: error });
     }
-  } catch (error) {
-    return res.status(500).json({ "result": "error", "message": error });
+  } else {
+    return res.status(401).json({ result: "error", message: "You are not authorized." });
   }
 });
 
 
 router.put("/referral/", async (req, res) => {
   if(req.body === undefined || req.body.token === undefined) {
-    return res.status(404).json({ "result": "error", "message": "token is empty."});
+    return res.status(404).json({ result: "error", message: "token is empty."});
   }
   try {
     let Offer = useOffer(req.body.token);
     if(Offer) {
-      return res.status(200).json({ "result" : "success", "message": Offer });
+      return res.status(200).json({ result : "success", message: Offer });
     } else {
-      return res.status(404).json({ "result" : "error", "message": "Offer not found with the token." });
+      return res.status(404).json({ result : "error", message: "Offer not found with the token." });
     }
   } catch (error) {
-    return res.status(500).json({ "result": "error", "message": error });
+    return res.status(500).json({ result: "error", message: error });
   }
 });
 
