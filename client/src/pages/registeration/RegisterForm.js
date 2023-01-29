@@ -149,12 +149,12 @@ const RegisterForm = (props) => {
           { (registerState.offer !== {} && code !== undefined) &&
             <Grid item xs={12}>
               <Typography>Hei, sinulle on lähetetty rekisteröitymisen yhteyteen tarjous:</Typography>
-              {(registerState.offer.deal.startsWith("code: "))
+              {(registerState.offer.deal !== undefined && registerState.offer.deal.startsWith("code: "))
               ? (<>
                   <Typography style={{color: "red"}}>Käytä ilmoittaessa koodia: {registerState.offer.deal.split(": ")[1]} </Typography>
                   <Typography>Tarjous aktivoituu kun teet Vuokrapajassa ilmoituksen.</Typography>
                 </>)
-              : (registerState.offer.deal.startsWith("free: ")) && (<>
+              : (registerState.offer.deal !== undefined && registerState.offer.deal.startsWith("free: ")) && (<>
                 <Typography style={{color: "red"}}>Saat {registerState.offer.deal.split(": ")[1]} kuukaudeksi ilmaiset ilmoitukset.</Typography>
                 <Typography>Tarjous on aktivoitu { new Date(registerState.offer.created).toLocaleString() } tälle sähköpostiosoitteelle.</Typography>
               </>)
