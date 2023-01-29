@@ -12,10 +12,10 @@ const Apartment = () => {
   const { id } = useParams();
   const [apartment, setApartment] = useState({});
   const token = useSelector(state => state.token);
-  const meta = {
+  let meta = {
     title: '',
     description: "",
-    canonical: 'http://vuokrapaja.fi',
+    canonical: 'http://vuokrapaja.fi/apartments/',
     meta: {
       charset: 'utf-8',
       name: {
@@ -48,6 +48,7 @@ const Apartment = () => {
           setApartment(body.apartment);
           meta.title = body.apartment.address;
           meta.description = body.apartment.description;
+          meta.canonical = meta.canonical + "/" + id;
         }
       }
       fetchApartment();
