@@ -2,7 +2,7 @@ import express from "express";
 import mailer from "../dependancies/mailer.js";
 import crypto from "../dependancies/crypto.js";
 import referral from "../schemas/referral.js";
-import account from "../schemas/account.js";
+import accountSchema from "../schemas/account.js";
 import accounts from "./accounts.js";
 import profiles from "./profiles.js";
 
@@ -26,7 +26,7 @@ const sendOffer = async (seller, recipient, name, message, deal) => {
   try {
     const newOffer = new referral({
       recipient: recipient,
-      code: token,
+      code: code,
       seller: seller,
       deal: deal,
       active: true,
@@ -35,7 +35,7 @@ const sendOffer = async (seller, recipient, name, message, deal) => {
     });
     newOffer.save();
     let header = `Vuokrapaja.fi tarjous`;
-    let msg = `Ystävällisin terveisin,\r\n\r\n`;
+    let msg = `Ystävällisin terveisin ${name},\r\n\r\n`;
     msg += `Olet saanut tarjouksen https://vuokrapaja.fi vuokravälitys palvelusta.\r\n`;
     msg += `Viesti tarjoajalta:\r\n\r\n${message}\r\n\r\n`;
     if(deal !== "") {
@@ -97,7 +97,7 @@ router.get("/referral/:code", async (req, res) => {
       return res.status(404).json({ result : "error", message: "Offer not found by offer code." });
     }
   } catch (error) {
-    return res.status(500).json({ result: "error", message: error });
+    return res.status(500).json({ result: "error", message: error.message });
   }
 });
 
@@ -105,11 +105,16 @@ router.post("/referral/", async (req, res) => {
   if(req.body.api_code === undefined || req.body.account === undefined || req.body.recipient === undefined || req.body.name === undefined || req.body.message === undefined || req.body.deal === undefined) {
     return res.status(400).json({ result: "error", message: "Required data is undefined" });
   }
-  if(crypto.compare(req.body.api_code, process.env.ADMIN_PASSWORD)) {
+  console.log(req.body);
+  let encrypted = process.env.ADMIN_PASSWORD;
+  if(crypto.compare(req.body.api_code, encrypted)) {
+    console.log("API PASS CONFIRMED");
     try {
-      let account = await account.findOne({ email : req.body.recipient }).exec();
-      if(account !== undefined && account.email !== undefined) {
+      let account = await accountSchema.findOne({ email : req.body.recipient }).exec();
+      console.log(account);
+      if(account === null) {
         let result = await sendOffer(req.body.account, req.body.recipient, req.body.name, req.body.message, req.body.deal);
+        console.log(result);
         if(result === true) {
           return res.status(200).json({ result: "success", message: "Offer has been sent to the recipient email." })
         } else {
@@ -119,6 +124,7 @@ router.post("/referral/", async (req, res) => {
         return res.status(400).json({ result : "error", message: "Account with the email already exists, offer invalid." });
       }
     } catch (error) {
+      console.log(error);
       return res.status(500).json({ result: "error", message: error });
     }
   } else {
