@@ -71,16 +71,29 @@ const RegisterForm = (props) => {
                 email: response.message.recipient,
                 offer: response.message
               });
+              localStorage.setItem("offer", JSON.stringify(response.message));
             }
           }
         } catch (error) {
           console.log(error);
         }
       }
-      getOfferByCode();
+      let offer = localStorage.getItem("offer");
+      if(offer) {
+        offer = JSON.parse(offer);
+        setRegisterState({
+          ...registerState,
+          email: offer.recipient,
+          offer: offer
+        });
+      }
+      if(code !== undefined) {
+        getOfferByCode();
+      }
   }, [code]);
 
   useEffect(checkOffers, [checkOffers]);
+
 
   const handleRegister = async (event) => {
     event.preventDefault();
@@ -136,8 +149,16 @@ const RegisterForm = (props) => {
           { (registerState.offer !== {} && code !== undefined) &&
             <Grid item xs={12}>
               <Typography>Hei, sinulle on lähetetty rekisteröitymisen yhteyteen tarjous:</Typography>
-              <Typography style={{color: "red"}}>Ensimmäiseen ilmoitukseen: {registerState.offer.deal} alennus.</Typography>
-              <Typography>Tarjous aktivoituu kun teet Vuokrapajassa ilmoituksen.</Typography>
+              {(registerState.offer.deal.startsWith("code: "))
+              ? (<>
+                  <Typography style={{color: "red"}}>Käytä ilmoittaessa koodia: {registerState.offer.deal.split(": ")[1]} </Typography>
+                  <Typography>Tarjous aktivoituu kun teet Vuokrapajassa ilmoituksen.</Typography>
+                </>)
+              : (registerState.offer.deal.startsWith("free: ")) && (<>
+                <Typography style={{color: "red"}}>Saat {registerState.offer.deal.split(": ")[1]} kuukaudeksi ilmaiset ilmoitukset.</Typography>
+                <Typography>Tarjous on aktivoitu { new Date(registerState.offer.created).toLocaleString() } tälle sähköpostiosoitteelle.</Typography>
+              </>)
+              }
             </Grid>
           }
           <Grid item xs={12}>
