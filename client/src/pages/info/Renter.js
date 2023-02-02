@@ -71,7 +71,7 @@ const RenterInfo = (props) => {
                 Ilmoituksen tekijä vastaa ilmoituksen oikeellisuudesta.
               </Typography>
               <Typography variant="body1" component="p" gutterBottom>
-                Pidätämme kaiken oikeuden kieltää ilmoituksen tekeminen, jos
+                Pidätämme kaiken oikeuden kieltää ilmoituksen tekemisen, jos
                 ilmoituksen tekijä ei täytä palvelun käyttöehtoja.
               </Typography>
               <Typography variant="body1" component="p" gutterBottom>
@@ -82,7 +82,7 @@ const RenterInfo = (props) => {
                 Ilmoitusta tehdessäsi on pakollista antaa kiinteistön osoite.
                 Kiinteistön osoite on pakollinen, koska ilmoituksen tekijä
                 vastaa kiinteistön osoitteen oikeellisuudesta. Jos kiinteistön
-                osoite on virheellinen, niin ilmoitus poistetaan järjestelmästä.
+                osoite on virheellinen, ilmoitus poistetaan järjestelmästä.
               </Typography>
               <Typography variant="body1" component="p" gutterBottom>
                 Voit myös ilmoittaa kiinteistölle oman hakemus linkin, jossa voi hakea kiinteistöä vuokralle.
@@ -90,7 +90,7 @@ const RenterInfo = (props) => {
                 vuokralaiselta tietoja joita palvelussa ei voi kysyä.
               </Typography>
               <Typography variant="body1" component="p" gutterBottom>
-                Voit luoda, muokata ja poistaa ilmoituksia. Ja ilmoittaa ilmoituksen hakijoille, että onko heidän hakemus hyväksytty tai hylätty.
+                Voit luoda, muokata ja poistaa ilmoituksia. Pystyt myös ilmoittamaan hakijoille, onko heidän hakemus hyväksytty vai hylätty. 
               </Typography>
             </Grid>
             <Grid item xs={12}>

@@ -35,6 +35,7 @@ import RecoveryRequestForm from './pages/recovery/RequestForm';
 import RecoveryPasswordForm from './pages/recovery/PasswordForm';
 import PaymentCancel from './pages/company/payment/Cancel';
 import PaymentSuccess from './pages/company/payment/Success';
+import IdRequest from './pages/application/IdRequest';
 
 
 // Theme selection
@@ -126,6 +127,7 @@ function App() {
               <Route path="/info/privacy" element={<Privacy/>} />
               <Route path="/info/terms" element={<Terms/>} />
               <Route path="/application/:id" element={<Application/>} />
+              <Route path="/application/id-request/:validation" element={<IdRequest />} />
               <Route path="/apartments/:id" element={<Apartment/>} />
               <Route path="/apartments/search" element={<ApartmentsSearch/>} />
               <Route path="/company" element={<Company/>} />

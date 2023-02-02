@@ -102,19 +102,17 @@ router.get("/referral/:code", async (req, res) => {
 });
 
 router.post("/referral/", async (req, res) => {
+  console.log("Called POST /api/referral/");
   if(req.body.api_code === undefined || req.body.account === undefined || req.body.recipient === undefined || req.body.name === undefined || req.body.message === undefined || req.body.deal === undefined) {
     return res.status(400).json({ result: "error", message: "Required data is undefined" });
   }
-  console.log(req.body);
   let encrypted = process.env.ADMIN_PASSWORD;
   if(crypto.compare(req.body.api_code, encrypted)) {
     console.log("API PASS CONFIRMED");
     try {
       let account = await accountSchema.findOne({ email : req.body.recipient }).exec();
-      console.log(account);
       if(account === null) {
         let result = await sendOffer(req.body.account, req.body.recipient, req.body.name, req.body.message, req.body.deal);
-        console.log(result);
         if(result === true) {
           return res.status(200).json({ result: "success", message: "Offer has been sent to the recipient email." })
         } else {

@@ -10,15 +10,21 @@ import profileModel from "../schemas/profile.js";
 const router = express.Router();
 
 const getAccountByEmail = async (email) => {
-  return await accountModel.findOne({ email: email }).exec(); 
+  let account = await accountModel.findOne({ email: email }).exec(); 
+  account.password = "";
+  return account;
 }
 
 const getAccountById = async (id) => {
-  return await accountModel.findOne({ _id: id }).exec();
+  let account = await accountModel.findOne({ _id: id }).exec();
+  account.password = "";
+  return account;
 }
 
 const getAccountByUsername = async (username) => {
-  return await accountModel.findOne({ username: username }).exec();
+  let account = await accountModel.findOne({ username: username }).exec();
+  account.password = "";
+  return account;
 }
 
 const getAccountByToken = async (token) => {

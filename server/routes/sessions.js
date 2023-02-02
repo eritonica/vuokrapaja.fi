@@ -1,6 +1,6 @@
 import express from "express";
 import crypto from "../dependancies/crypto.js";
-import accounts from "./accounts.js";
+import accountModel from "../schemas/account.js";
 
 import sessionModel from "../schemas/session.js";
 
@@ -26,13 +26,11 @@ const getSessionByToken = async (token) => {
 
 // Session check middleware
 const checkSession = async (req, res, next) => {
-  let session = await sessionModel.findOne({ token: req.headers.token }).exec();
+  let session = await sessionModel.findOne({ token: req.headers.token }).populate("account").exec();
   if (session) {
     if(session.updated.getTime() + process.env.SESSION_TTL > Date.now()) {
-      req.session = {};
-      let account = await accounts.getAccountById(session.account);
-      if(account) {
-        req.session.account = account;
+      if(session.account !== undefined, session.account._id !== undefined) {
+        req.session = session
         next();
       } else {
         res.status(401).json({ message: "Invalid session." });
@@ -63,7 +61,7 @@ const createSession = async (id) => {
 //  "password": "string"
 // }
 router.post("/sessions", async (req, res) => {
-  let account = await accounts.getAccountByEmail(req.body.email);
+  let account = await accountModel.findOne({ email: req.body.email }).exec();
   if (account) {
     if (account.active == false) {
       res.status(400).json({ message: "Account not activated." });

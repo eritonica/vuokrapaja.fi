@@ -12,6 +12,7 @@ const CompanyApplication = (props) => {
   const token = useSelector(state => state.app.token);
   const [application, setApplication] = useState({});
   const [message, setMessage] = useState({ error: false, message: ""});
+  const [idNumbers, setIdNumbers] = useState();
 
   const fetchApplication = useCallback(() => {
     const fetchApplication = async () => {
@@ -22,11 +23,9 @@ const CompanyApplication = (props) => {
         }
       });
       const responseData = await response.json();
-      // console.log(responseData);
       if (!response.ok) {
         setMessage({ error: true, message: responseData.message });
       } else {
-        // console.log(responseData.application.creator);
         setApplication(responseData.application);
       }
     }
@@ -34,7 +33,37 @@ const CompanyApplication = (props) => {
   }, [id, token]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(fetchApplication, [fetchApplication]);
+  useEffect(fetchApplication, [fetchApplication, token]);
+
+  const getIDAnswer = useCallback(() => {
+    const fetchIDAnswer = async () => {
+      const result = await fetch(`/api/id-request/${id}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "token": token,
+        }
+      });
+      const response = await result.json();
+      console.log(response);
+      if(response.result === "success") {
+        let numbers = response.numbers.split(", ")
+        numbers = numbers.map((number) => {
+          number = number.split("||");
+          return {
+            applicant: number[0],
+            name: number[1],
+            number: number[2],
+          }
+        })
+        setIdNumbers(numbers);
+        console.log(numbers);
+      }
+    }
+    fetchIDAnswer();
+  }, [token]);
+
+  useEffect(getIDAnswer, [getIDAnswer, token]);
 
   const handleReject = async () => {
     const response = await fetch(`/api/applications/reject/${id}`, {
@@ -63,12 +92,29 @@ const CompanyApplication = (props) => {
       }
     });
     const responseData = await response.json();
-    // console.log(responseData);
     if (!response.ok) {
       setMessage({ error: true, message: responseData.message });
     } else {
       setMessage({ error: false, message: responseData.message });
       setApplication(responseData.application);
+    }
+  }
+
+  const sendIDRequestTo = async (to) => {
+    const result = await fetch(`/api/id-request/credit-check`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "token": token,
+      },
+      body: JSON.stringify({
+        requested: to,
+        application: application._id
+      })
+    });
+    const response = await result.json();
+    if(response.result === "success") {
+      setMessage({ error: false, message: "ID request sent!" });
     }
   }
 
@@ -186,14 +232,55 @@ const CompanyApplication = (props) => {
             </List>
           </Grid>
           <Grid item xs={2}></Grid>
-          {/* { application && (application.status === "pending" && application.creator !== undefined) 
-            ? <Grid item xs={8} sx={{mt: 2, mb: 2, pb: 2}}>
-                <Button fullWidth variant="contained" color="primary">Pyydä hakijoiden henkilötunnuksia luottotietojen tarkistukseen</Button>
+          { (idNumbers !== undefined) &&
+            <>
+              <Grid item xs={12} component={Paper}>
+                <Typography variant="h5" component="h2" gutterBottom>
+                  Henkilötunnukset
+                </Typography>
+                <TableContainer>
+                  <Table sx={{ minWidth: 350 }} aria-label="Hakijat">
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Nimi</TableCell>
+                        <TableCell>Henkilötunnus</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      { (idNumbers !== undefined) && idNumbers.map((idNubmer) => (
+                        <TableRow
+                          key={idNubmer._id}
+                          sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                        >
+                          <TableCell component="th" scope="row">{idNubmer.name}</TableCell>
+                          <TableCell>{idNubmer.number}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
               </Grid>
-            : <Grid item xs={8} sx={{mt: 2, mb: 2, pb: 2}}>
+              <Grid item xs={12}>
+                <Alert severity="info">Henkilötunnukset ovat poistettu järjestelmästä kun avasit hakemuksen. Ne poistuvat kokonaan jos poistut sivulta.</Alert>
+              </Grid>
+            </>
+          }
+          { (idNumbers === undefined && message.message === "ID request sent!") && 
+            <Grid item xs={12}>
+              <Alert severity="success">Hakijoille on lähetetty henkilötunnus pyyntö.</Alert>
+            </Grid>
+          }
+          { 
+            (idNumbers == undefined) ?
+            ((application && application.status === "pending" && application.creator !== undefined) 
+            ? <Grid item xs={12} sx={{mt: 2, mb: 2, pb: 2}}>
+                <Button fullWidth variant="contained" color="primary" onClick={() => sendIDRequestTo(application.creator)}>Pyydä hakijoiden henkilötunnuksia luottotietojen tarkistukseen</Button>
+              </Grid>
+            : <Grid item xs={12} sx={{mt: 2, mb: 2, pb: 2}}>
                 <Button fullWidth variant="contained" color="primary" disabled>Ota yhteyttä hakijaan pyytääksesi henkilötunnusta luottotietojen tarkistukseen.</Button>
               </Grid>
-          } */}
+            ) : ("")
+          }
           <Grid item xs={2}></Grid>
           { application && (application.status !== "accepted" && application.status !== "rejected" && application.status !== "cancelled") && (
             <Grid item xs={12} sx={{mt: 2, mb: 2, pb: 2}}  component={Paper}>
