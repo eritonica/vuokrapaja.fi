@@ -47,7 +47,7 @@ const Terms = (props) => {
                 2. Palveluntarjoaja
               </Typography>
               <Typography variant="body1" component="p" gutterBottom>
-                Toni Lukkaroinen
+                Hoosat Oy
                 044 937 5656
                 toni.lukkaroinen@gmail.com
               </Typography>

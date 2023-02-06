@@ -19,13 +19,13 @@ const Privacy = (props) => {
                 1. Rekisterin pitäjä
               </Typography>
               <Typography variant="body1" component="p" gutterBottom>
-                {name} on palvelu, jonka rekisteriä ylläpitää Toni Lukkaroinen. 
+                {name} on palvelu, jonka rekisteriä ylläpitää Hoosat Oy. 
               </Typography>
               <Typography variant="h6" component="h2" gutterBottom>
                 2. Yhteystiedot rekisteriasioita varten
               </Typography>
               <Typography variant="body1" component="p" gutterBottom>
-                Toni Lukkaroinen
+                Hoosat Oy
                 044 937 5656
                 toni.lukkaroinen@gmail.com
               </Typography>
