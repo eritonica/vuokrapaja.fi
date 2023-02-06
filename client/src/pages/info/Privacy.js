@@ -27,7 +27,7 @@ const Privacy = (props) => {
               <Typography variant="body1" component="p" gutterBottom>
                 Hoosat Oy
                 044 937 5656
-                toni.lukkaroinen@gmail.com
+                toni.lukkaroinen@hoosat.i
               </Typography>
               <Typography variant="h6" component="h2" gutterBottom>
                 3. Rekisterin nimi
