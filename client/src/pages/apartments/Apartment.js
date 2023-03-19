@@ -65,7 +65,10 @@ const Apartment = () => {
       <Box sx={{ mt: 4, pb: 4, mb: 4 }}>
         <Grid container spacing={2} >
           <Grid item xs={12}>
-            <Typography variant="h4" component="h2" gutterBottom>
+            <Typography variant="h3" component="h3" gutterBottom>
+              { apartment.address + ", " + apartment.zip + ", " + apartment.city }
+            </Typography>
+            <Typography variant="h4" component="h4" gutterBottom>
               {apartment.rooms + ", " + apartment.type + ", " + apartment.rent + "€/kk, " + apartment.size + "m²"}
             </Typography>
           </Grid>
