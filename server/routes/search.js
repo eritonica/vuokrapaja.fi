@@ -3,8 +3,21 @@ import express from "express";
 import Locations from "./locations.js";
 import Apartments from "./apartments.js";
 import Companies from "./companies.js";
+import apartmentModel from "../schemas/apartment.js";
 
 const router = express.Router();
+
+
+
+router.get("/search/latest/:sort", async (req, res) => {
+  // console.log(req.params.id);
+  let sort = -1;
+  if(req.params.sort == "ASC") {
+    sort = 1;
+  }
+  let apartments = await apartmentModel.find({ paid: true }).sort({ _id: sort }).limit(6).exec();
+  return res.status(200).json({ message: "success", apartments: apartments });
+});
 
 // POST /search/
 router.post("/search/", async (req, res) => {

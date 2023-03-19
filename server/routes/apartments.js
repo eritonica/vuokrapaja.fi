@@ -241,6 +241,8 @@ router.put("/apartments/:id", async (req, res) => {
   }
 });
 
+
+
 // DELETE /apartments/:id
 router.delete("/apartments/:id", async (req, res) => {
   if(req.params.id !== "undefined") {

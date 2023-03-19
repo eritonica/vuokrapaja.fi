@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector } from 'react-redux';
 import { Container, Box, Paper, Typography, Alert, Button } from '@mui/material';
 import GitHubIcon from '@mui/icons-material/GitHub';
@@ -5,9 +6,30 @@ import AndroidIcon from '@mui/icons-material/Android';
 import Grid from '@mui/material/Unstable_Grid2';
 
 import SearchApartments from './apartments/Search.js';
+import ApartmentListLatest from './apartments/ApartmentListLatest';
 
 const Landing = (props) => {
   const name = useSelector((state) => state.app.name);
+  const [searchedApartments, setSearchedApartments] = useState([]);
+
+  const listNewApartments = useCallback(() => {
+    const fetchNewApartments = async () => {
+      const response = await fetch(`/api/search/latest/DESC`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json"
+        },
+      });
+      let body = await response.json();
+      setSearchedApartments([]);
+      if(body.message === "success") {
+        setSearchedApartments(body.apartments);
+      }
+    }
+    fetchNewApartments();
+  }, []);
+
+  useEffect(listNewApartments, []);
 
   return (
     <>
@@ -21,6 +43,17 @@ const Landing = (props) => {
         </Box>
       </Container>
       <SearchApartments landing={true} />
+      { (searchedApartments.length > 0) &&
+        <Container maxWidth="md" sx={{mt: 4, pb: 4, mb: 4}} component={Paper}>
+          <Box sx={{ marginTop: "40px", flexGrow: 1}}>
+            <Grid container spacing={2} sx={{pt:3}}>
+              <Grid item xs={12}>
+                <ApartmentListLatest apartments={searchedApartments} />
+              </Grid>
+            </Grid>
+          </Box>
+        </Container>
+      }
       <Container maxWidth="md" sx={{mt: 4, pb: 4, mb: 4}} component={Paper}>
         <Box sx={{ marginTop: "40px", flexGrow: 1}}>
           <Grid item xs={12} sx={{pt: 3}}>
