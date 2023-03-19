@@ -45,16 +45,18 @@ router.post("/stripe-one-time-payment", async (req, res) => {
     if(account) {
       let referral = await referralSchema.find({ recipient: account.email }).exec();
       console.log(referral);
-      if(referral[0].deal.startsWith("free: ")) {
-        let months = parseInt(referral[0].deal.split(": ")[1]);
-        console.log(months);
-        let elapsedTime = Date.now() - referral[0].created;
-        let elapsedMonths = elapsedTime / (1000 * 60 * 60 * 24 * 30);
-        if(elapsedMonths <= months) {
-          console.log("Referral deal is still valid");
-          return res.redirect(303, success_url + "&free=month");
-        } else {
-          console.log("Referral deal has expired");
+      if(referral.length > 0) {
+        if(referral[0].deal.startsWith("free: ")) {
+          let months = parseInt(referral[0].deal.split(": ")[1]);
+          console.log(months);
+          let elapsedTime = Date.now() - referral[0].created;
+          let elapsedMonths = elapsedTime / (1000 * 60 * 60 * 24 * 30);
+          if(elapsedMonths <= months) {
+            console.log("Referral deal is still valid");
+            return res.redirect(303, success_url + "&free=month");
+          } else {
+            console.log("Referral deal has expired");
+          }
         }
       }
     }
@@ -77,7 +79,11 @@ router.post("/stripe-one-time-payment", async (req, res) => {
     });
     return res.redirect(303, stripeSession.url);
   } catch (error) {
-    return res.status(500).json({"result": "error", "message": "Something went wrong!" });
+    if (typeof error === "object" && error !== null) {
+      return res.status(500).json({ result: "error", message: error.toString() });
+    } else {
+      return res.status(500).json({ result: "error", message: "Unknown error" });
+    }
   }
 });
 
