@@ -51,6 +51,12 @@ const RenterInfo = (props) => {
                   <ListItemIcon>
                     <MUIIcon />
                   </ListItemIcon>
+                  <ListItemText primary="Yksityisenä vuokranantajana voit laittaa yritysprofiiliin oman nimesi ja 0000000-0 y-tunnuksen" />
+                </ListItem>
+                <ListItem>
+                  <ListItemIcon>
+                    <MUIIcon />
+                  </ListItemIcon>
                   <ListItemText primary="Voit alkaa ilmoittamaan kiinteistöjäsi." />
                 </ListItem>
               </List>

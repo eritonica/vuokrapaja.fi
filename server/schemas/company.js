@@ -14,7 +14,6 @@ const companySchema = new mongoose.Schema({
 	},
 	ycode: {
 		type: String,
-		unique: true,
 		required: true,
 	},
 	address: {
