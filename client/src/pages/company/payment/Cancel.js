@@ -2,6 +2,10 @@ import { Container, Box,Typography, Paper, Button } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 import Grid from '@mui/material/Unstable_Grid2';
 
+/**
+ * Represents the component for displaying a cancellation message.
+ * @returns {JSX.Element} The JSX element containing the cancellation message.
+ */
 const Cancel = () => {
   const navigate = useNavigate();
   return (

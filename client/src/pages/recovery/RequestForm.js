@@ -3,6 +3,12 @@ import { Container, Box, TextField, Button, Alert } from '@mui/material';
 import { Password } from "@mui/icons-material";
 import Grid from '@mui/material/Unstable_Grid2';
 
+/**
+ * Represents the RequestForm component for password recovery request.
+ * @function
+ * @param {Object} props - The component's props.
+ * @returns {JSX.Element} The JSX element containing the RequestForm component.
+ */
 const RequestForm = (props) => {
   const [recoveryState, setRecoveryState] = useState({
     email: '',
@@ -11,6 +17,10 @@ const RequestForm = (props) => {
     recoveryErrorMessage: '',
   });
 
+  /**
+   * Handles the password recovery form submission.
+   * @param {Event} event - The form submission event.
+   */
   const handleRecovery = async (event) => {
     event.preventDefault();
     let response = await fetch('/api/accounts/recovery/' + recoveryState.email, {
@@ -37,6 +47,10 @@ const RequestForm = (props) => {
 
   }
 
+  /**
+   * Handles changes in the input fields.
+   * @param {Event} event - The input change event.
+   */
   const handleChange = (event) => {
     setRecoveryState({ ...recoveryState, [event.target.name]: event.target.value });
   }

@@ -4,8 +4,12 @@ import { Container, Box, TextField, Button, Alert, Typography } from '@mui/mater
 import Grid from '@mui/material/Unstable_Grid2';
 import { AppRegistration } from "@mui/icons-material";
 
-// Needs rewriting to use Redux
-
+/**
+ * Represents the RegisterForm component for user registration.
+ * @function
+ * @param {Object} props - The component's props.
+ * @returns {JSX.Element} The JSX element containing the RegisterForm component.
+ */
 const RegisterForm = (props) => {
   const { code } = useParams();
 
@@ -29,6 +33,10 @@ const RegisterForm = (props) => {
   });
 
 
+  /**
+   * Handles changes in the input fields.
+   * @param {Event} event - The input change event.
+   */
   const handleChange = (event) => {
     setRegisterState({ ...registerState, 
       usernameError : false,
@@ -40,11 +48,19 @@ const RegisterForm = (props) => {
       [event.target.name]: event.target.value });
   }
 
+  /**
+   * Validates the email format.
+   * @param {string} email - The email address to validate.
+   * @returns {boolean} true if the email is valid, false otherwise.
+   */
   const validateEmail = (email) => {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
   }
 
+  /**
+   * Checks if there is an offer with the given activation code and sets the state accordingly.
+   */
   const checkOffers = useCallback( () => {
       const getOfferByCode = async () => {
         console.log(code);
@@ -95,6 +111,10 @@ const RegisterForm = (props) => {
   useEffect(checkOffers, [checkOffers]);
 
 
+  /**
+   * Handles the user registration form submission.
+   * @param {Event} event - The form submission event.
+   */
   const handleRegister = async (event) => {
     event.preventDefault();
     if(registerState.username.length < 3) {

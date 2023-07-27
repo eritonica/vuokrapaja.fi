@@ -41,6 +41,11 @@ import IdRequest from './pages/application/IdRequest';
 // Theme selection
 import appTheme from './themes/AppTheme';
 
+/**
+ * Represents the root component of the application.
+ * @function App
+ * @returns {JSX.Element} The JSX element representing the App component.
+ */
 function App() {
   let dispatch = useDispatch();
   document.title = useSelector((state) => state.app.name);
@@ -48,8 +53,14 @@ function App() {
   let profile = useSelector((state) => state.app.profile);
   let company = useSelector((state) => state.app.company);
 
-  // Token update management is here since it is App level, 
-  // in logout action it is removed from localstorage and Redux state management.
+  /**
+   * The effect hook for updating the token in the Redux store from local storage.
+   * @function
+   * @name useEffect
+   * @param {Function} effect - The effect function to be executed.
+   * @param {Array} deps - The dependencies array to control the effect's execution.
+   * @returns {void}
+   */
   useEffect(() => {
     let tmpToken = localStorage.getItem("token");
     if(tmpToken) {
@@ -61,9 +72,16 @@ function App() {
     // Don't know yet how to handle dispatch with useEffect
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
+  
+  /**
+   * The effect hook for fetching and updating the user profile and company information.
+   * @function
+   * @name useEffect
+   * @param {Function} effect - The effect function to be executed.
+   * @param {Array} deps - The dependencies array to control the effect's execution.
+   * @returns {void}
+   */
   useEffect(() => {
-    
     const getProfile = async (token) => {
       let response = await fetch("/api/profiles", {
         method: "GET",
@@ -117,9 +135,10 @@ function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
 
-  // Keep router routes in most used order, so that the most used routes are at the top
-  // and the least used routes are at the bottom. This way the most used routes are
-  // rendered first and the least used routes are rendered last.
+  /**
+   * Renders the main application layout with different routes.
+   * @returns {JSX.Element} The JSX element representing the application layout.
+   */
   return (
       <div className="App">
         <ThemeProvider theme={appTheme}>

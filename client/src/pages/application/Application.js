@@ -9,6 +9,10 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
+/**
+ * Represents the application component for submitting rental applications.
+ * @returns {JSX.Element} The JSX element containing the application form.
+ */
 const Application = () => {
   const { id } = useParams();
   const token = useSelector((state) => state.app.token);

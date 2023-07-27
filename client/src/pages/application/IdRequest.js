@@ -4,13 +4,22 @@ import { Container, Box, TextField, Button, Alert } from '@mui/material';
 import { Login } from "@mui/icons-material";
 import Grid from '@mui/material/Unstable_Grid2';
 
+/**
+ * Represents the component for handling ID requests and credit checks.
+ * @param {Object} props - The component props.
+ * @returns {JSX.Element} The JSX element containing the ID request form.
+ */
 const IdRequest = (props) => {
   const [message, setMessage] = useState()
   const { validation } = useParams();
   const [applicants, setApplicants] = useState([{
     code: "",
   }]);
-
+  
+  /**
+   * Handler for submitting the ID request and credit check.
+   * @returns {Promise<void>}
+   */
   const onSubmit = async () => {
     let numbers = applicants.map((applicant) => applicant._id + "||" + applicant.name + "||" + applicant.code);
     numbers = numbers.join(", ");
@@ -32,6 +41,11 @@ const IdRequest = (props) => {
     }
   }
 
+  /**
+   * Handler for updating the applicant's code when input changes.
+   * @param {Object} changedApplicant - The applicant object whose code is changed.
+   * @param {Event} event - The input change event.
+   */
   const onChange = (changedApplicant, event) => {
     let tmpApplicants = applicants.map((applicant) => {
       if(applicant._id === changedApplicant._id) {
@@ -42,6 +56,10 @@ const IdRequest = (props) => {
     setApplicants(tmpApplicants);
   }
 
+  /**
+   * Fetch the list of applicants from the API using the validation parameter.
+   * @type {Function}
+   */
   const getApplicants = useCallback(() => {
     const fetchApplicants = async () => {
       console.log("fetch applicants from id-request");

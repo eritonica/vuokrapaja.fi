@@ -7,7 +7,12 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCompany } from '../../appSlice';
 
-
+/**
+ * Represents the Profile component.
+ * @function
+ * @param {Object} props - The component's props.
+ * @returns {JSX.Element} The JSX element containing the Profile component.
+ */
 const Profile = (props) => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -28,10 +33,20 @@ const Profile = (props) => {
     }
   }, [navigate, token, profile]);
 
+  /**
+   * Handles the change of company data.
+   * @function
+   * @param {Event} e - The event object representing the change event.
+   */
 	const onChange = (e) => {
 		dispatch(setCompany({...company, [e.target.name]: e.target.value}));
 	}
 
+  /**
+   * Handles the form submission.
+   * @function
+   * @param {Event} e - The event object representing the form submission event.
+   */
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		console.log(company);

@@ -13,7 +13,18 @@ import LeftDrawer from "./LeftDrawer";
 
 import useDimensions from "../hooks/useDimensions";
 
-
+/**
+ * TopBar Component - Displays the top app bar with navigation links, user menu, and notifications.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {Function} props.onLogout - A function to handle the logout action when the "Poistu" (Logout) button is clicked.
+ *
+ * @example
+ * <TopBar onLogout={() => handleLogout()} />
+ *
+ * @returns {JSX.Element} JSX.Element
+ */
 const TopBar = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();

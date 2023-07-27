@@ -19,7 +19,11 @@ const modalStyle = {
   boxShadow: 24,
   p: 4,
 };
-
+/**
+ * Represents the Member component.
+ * @function
+ * @returns {JSX.Element} The JSX element containing the Member component.
+ */
 const Member = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -63,14 +67,29 @@ const Member = () => {
     setModal({...modal, mod: false});
   }
 
+  /**
+   * Handles the change of memberAddForm.
+   * @function
+   * @param {Event} e - The event object representing the change event.
+   */
   const onChange = (e) => {
     setMemberAddForm({...memberAddForm, [e.target.name]: e.target.value});
 	}
 
+  /**
+   * Handles the change of memberModForm.
+   * @function
+   * @param {Event} e - The event object representing the change event.
+   */
   const onChangeMember = async (e) => {
     setMemberModForm({...memberModForm, [e.target.name]: e.target.value});
   }
 
+  /**
+   * Fetches the members for the company.
+   * @function
+   * @returns {Object[]} An array of member objects.
+   */
   const getMembers = async () => {
     setError("");
     let response = await fetch('/api/companies/members/' + company._id, {
@@ -84,6 +103,11 @@ const Member = () => {
     return body.members;
   }
 
+  /**
+   * Deletes a member from the company.
+   * @function
+   * @param {Object} member - The member object to be deleted.
+   */
   const deleteMember = async (member) => {
     let response = await fetch("/api/companies/members/" + member._id, {
       method: "DELETE",
@@ -115,6 +139,11 @@ const Member = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [company._id]);
 
+  /**
+   * Adds a new member to the company.
+   * @function
+   * @returns {Object} The response object containing the message.
+   */
   const addMember = async () => {
     setError("");
     let response = await fetch('/api/companies/members', {
@@ -134,6 +163,11 @@ const Member = () => {
     return body;
   }
 
+  /**
+   * Modifies an existing member of the company.
+   * @function
+   * @returns {Object} The response object containing the message.
+   */
   const modMember = async () => {
     setError("");
     let response = await fetch('/api/companies/members/' + memberModForm._id, {
@@ -153,6 +187,11 @@ const Member = () => {
     return body;
   }
 
+  /**
+   * Handles the member add form submission.
+   * @function
+   * @param {Event} e - The event object representing the form submission event.
+   */
   const handleMemberAddForm = async (e) => {
     e.preventDefault();
     let res = await addMember();
@@ -171,6 +210,11 @@ const Member = () => {
     }
   };
 
+  /**
+   * Handles the member modification form submission.
+   * @function
+   * @param {Event} e - The event object representing the form submission event.
+   */
   const handleMemberModForm = async (e) => {
     e.preventDefault();
     let res = await modMember();
@@ -187,6 +231,12 @@ const Member = () => {
     }
   }
 
+  /**
+   * Translates the role value to a user-readable format.
+   * @function
+   * @param {string} role - The role value to be translated.
+   * @returns {string} The translated role value.
+   */
   const translateRole = (role) => {
     if(role === "admin") {
       return "Ylläpitäjä";
@@ -201,6 +251,12 @@ const Member = () => {
     }
   }
 
+  /**
+   * Translates the permissions value to a user-readable format.
+   * @function
+   * @param {string} permissions - The permissions value to be translated.
+   * @returns {string} The translated permissions value.
+   */
   const translatePermissions = (permissions) => {
     if(permissions === "read | write | delete") {
       return "Luku, kirjoitus ja poisto";

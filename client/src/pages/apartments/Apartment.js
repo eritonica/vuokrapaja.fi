@@ -7,6 +7,17 @@ import DocumentMeta from 'react-document-meta';
 import ImageList from './ImageList';
 import Map from './Map';
 
+/**
+ * Apartment Component - A React component that displays detailed information about a single apartment.
+ *
+ * @component
+ * @example
+ * return (
+ *   <Apartment />
+ * );
+ *
+ * @returns {JSX.Element} A JSX Element representing the Apartment component.
+ */
 const Apartment = () => {
   const navigate = useNavigate();
   const { id } = useParams();
@@ -54,7 +65,10 @@ const Apartment = () => {
       fetchApartment();
     }
   }, [id, navigate, token]);
-
+  
+  /**
+   * Handles the click event when the user wants to apply for the apartment.
+   */
   const handleApplicationClick = () => {
     navigate("/application/" + id);
   }

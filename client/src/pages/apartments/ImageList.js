@@ -4,6 +4,19 @@ import { IconButton } from "@mui/material"
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
+/**
+ * ImageList Component - A React component that displays a list of images along with navigation controls.
+ *
+ * @component
+ * @example
+ * return (
+ *   <ImageList images={imageDataArray} />
+ * );
+ *
+ * @param {Object} props - The component props.
+ * @param {Array} props.images - An array of image objects to display in the list.
+ * @returns {JSX.Element} A JSX Element representing the ImageList component.
+ */
 const ImageList = ({ images }) => {
   const [image, setImage] = useState((images === undefined) ? "" : images[0]);
   const [imageList, setImageList] = useState((images === undefined) ? { 
@@ -18,10 +31,19 @@ const ImageList = ({ images }) => {
     end: 5
   });
 
+  /**
+   * Handle click event when an image in the list is clicked.
+   *
+   * @param {Object} image - The image object that was clicked.
+   */
   const onImageClick = (image) => {
     setImage(image);
   }
 
+  /**
+   * Handle click event when the back arrow button is clicked.
+   * Move the image list one position back.
+   */
   const onBackClick = () => {
     if (imageList.index > 0) {
       setImageList({
@@ -32,7 +54,11 @@ const ImageList = ({ images }) => {
       });
     }
   }
-
+  
+  /**
+   * Handle click event when the forward arrow button is clicked.
+   * Move the image list one position forward.
+   */
   const onForwardClick = () => {
     if (imageList.index < imageList.images.length - 1) {
       setImageList({

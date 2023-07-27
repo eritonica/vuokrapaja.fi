@@ -25,6 +25,11 @@ const modalStyle = {
   p: 4,
 };
 
+/**
+ * Represents an Apartment component.
+ * @function
+ * @returns {JSX.Element} The JSX element containing the Apartment component.
+ */
 const Apartment = () => {
   const navigate = useNavigate();
   const token = useSelector((state) => state.app.token);
@@ -88,6 +93,10 @@ const Apartment = () => {
     new: true,
   });
 
+  /**
+   * Initializes the form based on the location state or sets it to a new form if no location state exists.
+   * @function
+   */
   useEffect(() => {
     // console.log(location.state);
     if (location.state) {
@@ -101,6 +110,10 @@ const Apartment = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  /**
+   * Handles navigation and checks conditions before rendering the component.
+   * @function
+   */
   useEffect(() => {
     if (token === false) {
       navigate("/");
@@ -113,10 +126,21 @@ const Apartment = () => {
     }
   }, [navigate, token, profile, company]);
 
+  /**
+   * Handles form field changes.
+   * @function
+   * @param {Event} e - The event object.
+   */
   const onChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
+  /**
+   * Handles changes to the selected city.
+   * @function
+   * @param {Event} e - The event object.
+   * @param {object|null} v - The selected city object or null.
+   */
   const onSearchCityChange = (e, v) => {
     if (v !== null) {
       setForm({
@@ -131,6 +155,12 @@ const Apartment = () => {
     }
   }
 
+  /**
+   * Handles changes to the selected country.
+   * @function
+   * @param {Event} e - The event object.
+   * @param {object|null} v - The selected country object or null.
+   */
   const onSearchCountryChange = (e, v) => {
     if (v !== null) {
       setForm({
@@ -145,30 +175,51 @@ const Apartment = () => {
     }
   }
 
+  /**
+   * Opens the file uploader modal.
+   * @function
+   */
   const handleOpenFileUploader = () => {
     setFileModal({
       open: true
     });
   }
 
+  /**
+   * Closes the file uploader modal.
+   * @function
+   */
   const handleCloseFileUploader = () => {
     setFileModal({
       open: false
     });
   }
 
+  /**
+   * Opens the save modal.
+   * @function
+   */
   const handleOpenSaveModal = () => {
     setSaveModal({
       open: true
     });
   }
 
+  /**
+   * Closes the save modal.
+   * @function
+   */
   const handleCloseSaveModal = () => {
     setSaveModal({
       open: false
     });
   }
 
+  /**
+   * Removes an image from the form and the server.
+   * @function
+   * @param {number} index - The index of the image to be removed.
+   */
   const removeImage = async (index) => {
     let images = form.images;
     await fetch("/api/files", {
@@ -188,6 +239,11 @@ const Apartment = () => {
     });
   }
 
+  /**
+   * Handles the file upload and updates the form state with the uploaded files.
+   * @function
+   * @param {object} body - The response body containing uploaded files and a message.
+   */
   const handleFileUpload = (body) => {
     if (body.message !== "Files uploaded successfully.") {
       setMessage({...message, error : "Virhe tapahtui tiedostoja lähettäessä. Yritä uudelleen."});
@@ -200,6 +256,11 @@ const Apartment = () => {
     handleCloseFileUploader();
   }
 
+  /**
+   * Handles the form submission for creating or updating an apartment.
+   * @function
+   * @param {Event} e - The event object.
+   */
   const handleNewApartmentSubmit =  async(e) => {
     e.preventDefault();
     if (token === false) {

@@ -5,7 +5,11 @@ import { Container, Box, Button, Typography, Alert, Grid } from '@mui/material';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material';
 import { List, ListItem, ListItemText } from '@mui/material';
 
-
+/**
+ * Represents the CompanyApplication component.
+ * @function
+ * @returns {JSX.Element} The JSX element containing the CompanyApplication component.
+ */
 const CompanyApplication = (props) => {
   const { id } = useParams();
   const company = useSelector(state => state.app.company);
@@ -35,6 +39,10 @@ const CompanyApplication = (props) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(fetchApplication, [fetchApplication, token]);
 
+  /**
+   * Fetches the ID numbers from the server.
+   * @function
+   */
   const getIDAnswer = useCallback(() => {
     const fetchIDAnswer = async () => {
       const result = await fetch(`/api/id-request/${id}`, {
@@ -65,6 +73,10 @@ const CompanyApplication = (props) => {
 
   useEffect(getIDAnswer, [getIDAnswer, token]);
 
+  /**
+   * Handles the rejection of the application.
+   * @function
+   */
   const handleReject = async () => {
     const response = await fetch(`/api/applications/reject/${id}`, {
       method: "PUT",
@@ -83,6 +95,10 @@ const CompanyApplication = (props) => {
     }
   }
 
+  /**
+   * Handles the acceptance of the application.
+   * @function
+   */
   const handleAccept = async () => {
     const response = await fetch(`/api/applications/accept/${id}`, {
       method: "PUT",
@@ -100,6 +116,11 @@ const CompanyApplication = (props) => {
     }
   }
 
+  /**
+   * Sends a request to fetch ID numbers for credit check.
+   * @function
+   * @param {string} to - The recipient of the ID request.
+   */
   const sendIDRequestTo = async (to) => {
     const result = await fetch(`/api/id-request/credit-check`, {
       method: "POST",

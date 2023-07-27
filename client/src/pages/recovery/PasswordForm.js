@@ -4,6 +4,12 @@ import { Container, Box, TextField, Button, Alert } from '@mui/material';
 import { Password } from "@mui/icons-material";
 import Grid from '@mui/material/Unstable_Grid2';
 
+/**
+ * Represents the RecoveryPasswordForm component.
+ * @function
+ * @param {Object} props - The component's props.
+ * @returns {JSX.Element} The JSX element containing the RecoveryPasswordForm component.
+ */
 const RecoveryPasswordForm = (props) => {
 
   const [recoveryState, setRecoveryState] = useState({
@@ -16,6 +22,10 @@ const RecoveryPasswordForm = (props) => {
 
   const [searchParams] = useSearchParams();
 
+  /**
+   * Handles the password recovery form submission.
+   * @param {Event} event - The form submission event.
+   */
   const handleRecovery = async (event) => {
     event.preventDefault();
     if(recoveryState.password !== recoveryState.passwordconfirm) {
@@ -51,6 +61,10 @@ const RecoveryPasswordForm = (props) => {
     }
   }
 
+  /**
+   * Handles changes in the input fields.
+   * @param {Event} event - The input change event.
+   */
   const handleChange = (event) => {
     setRecoveryState({ ...recoveryState, [event.target.name]: event.target.value });
   }

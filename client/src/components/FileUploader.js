@@ -5,6 +5,22 @@ import Grid from '@mui/material/Unstable_Grid2';
 
 import { useSelector } from 'react-redux';
 
+/**
+ * FileUploader Component
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {boolean} props.multiple - If true, allows selecting and uploading multiple files.
+ * @param {Function} props.fileUploadCallback - A callback function called after the file upload is complete. It receives the upload result as an argument.
+ *
+ * @example
+ * <FileUploader
+ *   multiple={true}
+ *   fileUploadCallback={(uploadResult) => console.log(uploadResult)}
+ * />
+ *
+ * @returns {JSX.Element} JSX.Element
+ */
 const FileUploader = (props) => {
   const token = useSelector((state) => state.app.token);
   const [files, setFiles] = useState([]);

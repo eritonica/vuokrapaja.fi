@@ -8,6 +8,11 @@ import Grid from '@mui/material/Unstable_Grid2';
 
 import { useSelector } from 'react-redux';
 
+/**
+ * Represents the Apartments component.
+ * @function
+ * @returns {JSX.Element} The JSX element containing the Apartments component.
+ */
 const Aparments = () => {
   const navigate = useNavigate();
   const token = useSelector(state => state.app.token);
@@ -26,6 +31,10 @@ const Aparments = () => {
     apartments : [apartments],
   });
   
+  /**
+   * Paginates the apartments array.
+   * @function
+   */
   const paginateApartments = useCallback(() => {
     // console.log("Paginating apartments");
     // console.log(apartments);
@@ -47,6 +56,10 @@ const Aparments = () => {
     // console.log(pagination.apartments);
   }, [pagination, apartments]);
 
+  /**
+   * Sorts the apartments array based on the selected sort option.
+   * @function
+   */
   const sortApartments = useCallback(() => {
     console.log("Sorting called!");
     console.log(sort);
@@ -133,6 +146,11 @@ const Aparments = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(paginateApartments, [pagination.perPage, apartments]);
 
+  /**
+   * Handles the deletion of an apartment.
+   * @function
+   * @param {string} id - The ID of the apartment to be deleted.
+   */
   const handleDelete = async (id) => {
     const response = await fetch(`/api/apartments/${id}`, {
       method: "DELETE",
@@ -150,11 +168,21 @@ const Aparments = () => {
     }
   }
 
+  /**
+   * Handles the change of the sort option.
+   * @function
+   * @param {Event} event - The event object.
+   */
   const onSortChange = (event) => {
     // console.log(event.target.value)
     setSort(event.target.value);
   }
 
+  /**
+   * Handles the change of the apartments per page.
+   * @function
+   * @param {Event} event - The event object.
+   */
   const onPerPageChange = (event) => {
     setPagination({
       ...pagination,

@@ -8,10 +8,19 @@ import Grid from '@mui/material/Unstable_Grid2';
 import SearchApartments from './apartments/Search.js';
 import ApartmentListLatest from './apartments/ApartmentListLatest';
 
+/**
+ * Represents the Landing component for the landing page of the application.
+ * @function
+ * @param {Object} props - The component's props.
+ * @returns {JSX.Element} The JSX element containing the Landing component.
+ */
 const Landing = (props) => {
   const name = useSelector((state) => state.app.name);
   const [searchedApartments, setSearchedApartments] = useState([]);
 
+  /**
+   * Fetches the latest apartments and sets them in the state.
+   */
   const listNewApartments = useCallback(() => {
     const fetchNewApartments = async () => {
       const response = await fetch(`/api/search/latest/DESC`, {

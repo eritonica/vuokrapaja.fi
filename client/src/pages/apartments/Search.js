@@ -9,7 +9,13 @@ import Grid from '@mui/material/Unstable_Grid2';
 
 import ApartmentList from './ApartmentList';
 
-
+/**
+ * Search Component for searching rental properties.
+ *
+ * @param {Object} props - Component props.
+ * @param {boolean} props.landing - If true, the component is being used on the landing page.
+ * @returns {JSX.Element} JSX Element representing the Search component.
+ */
 const Search = (props) => {
   const name = useSelector((state) => state.app.name);
   const navigate = useNavigate();

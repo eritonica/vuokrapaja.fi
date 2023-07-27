@@ -5,6 +5,10 @@ import { useNavigate } from "react-router-dom";
 import { Container, Box,Typography, Paper, Button } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 
+/**
+ * Represents the component for displaying a success message after a payment is made.
+ * @returns {JSX.Element} The JSX element containing the success message.
+ */
 const Success = () => {
   const navigate = useNavigate();
   // eslint-disable-next-line no-unused-vars
@@ -18,7 +22,6 @@ const Success = () => {
 
   const setAparmentPaid = useCallback(() => {
     // Do async request to set Apartment paid as true.
-    // TODO: cancel and renew the token for security here.
     const getApartment = async () => {
       const paymentGetResult = await fetch(`/api/payments/${security}`, {
         method: "GET",

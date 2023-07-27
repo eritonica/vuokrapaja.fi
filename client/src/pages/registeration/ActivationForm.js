@@ -4,6 +4,12 @@ import { Container, Box, TextField, Button, Alert } from '@mui/material';
 import { Login } from "@mui/icons-material";
 import Grid from '@mui/material/Unstable_Grid2';
 
+/**
+ * Represents the ActivationForm component for user account activation.
+ * @function
+ * @param {Object} props - The component's props.
+ * @returns {JSX.Element} The JSX element containing the ActivationForm component.
+ */
 const ActivationForm = (props) => {
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -13,6 +19,10 @@ const ActivationForm = (props) => {
   });
   //const navigate = useNavigate();
 
+  /**
+   * Handles the user account activation form submission.
+   * @param {Event} event - The form submission event.
+   */
   const handleActivation = async (event) => {
     event.preventDefault();
     let result = await fetch('/api/accounts/activate/' + searchParams.get("code"), {
@@ -31,9 +41,12 @@ const ActivationForm = (props) => {
         activationErrorMessage: body.message,
       });
     }
-
   }
 
+  /**
+   * Handles changes in the input fields.
+   * @param {Event} event - The input change event.
+   */
   const handleChange = (event) => {
     setSearchParams({ ...searchParams, [event.target.name]: event.target.value });
   }

@@ -1,13 +1,29 @@
 import { useNavigate } from 'react-router-dom';
 import { Typography, Paper} from '@mui/material';
 
-
 import Grid from '@mui/material/Unstable_Grid2';
 
+/**
+ * ApartmentCard Component - A React component that represents a card displaying information about an apartment.
+ *
+ * @component
+ * @example
+ * return (
+ *   <ApartmentCard apartment={apartmentData} />
+ * );
+ *
+ * @param {Object} props - The component props.
+ * @param {Object} props.apartment - The apartment object containing information to display in the card.
+ * @returns {JSX.Element} A JSX Element representing the ApartmentCard component.
+ */
 const ApartmentCard = ({ apartment }) => {
 
   const navigate = useNavigate();
-
+  
+  /**
+   * Handles the click event when the user clicks on the apartment card.
+   * Navigates to the detailed view of the apartment.
+   */
   const onApartmentClick = () => {
     navigate(`/apartments/${apartment._id}`);
   }

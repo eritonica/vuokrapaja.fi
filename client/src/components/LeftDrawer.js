@@ -10,7 +10,18 @@ import GradingIcon from '@mui/icons-material/Grading';
 import NotesIcon from '@mui/icons-material/Notes';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 
-
+/**
+ * LeftDrawer Component - A swipeable drawer that displays navigation links based on the user's authentication status and profile type.
+ *
+ * @component
+ * @param {Object} props - Component props
+ * @param {Function} props.onLogout - A function to handle the logout action. It is called when the "Poistu" (Logout) button is clicked.
+ *
+ * @example
+ * <LeftDrawer onLogout={() => handleLogout()} />
+ *
+ * @returns {JSX.Element} JSX.Element
+ */
 const LeftDrawer = (props) => {
   const token = useSelector((state) => state.app.token);
   const profile = useSelector((state) => state.app.profile);

@@ -24,6 +24,12 @@ const modalStyle = {
   p: 4,
 };
 
+/**
+ * Represents the Profile component for displaying and updating user profile information.
+ * @function
+ * @param {Object} props - The component's props.
+ * @returns {JSX.Element} The JSX element containing the Profile component.
+ */
 const Profile = (props) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -63,38 +69,66 @@ const Profile = (props) => {
     // Don't know yet how to handle dispatch with useEffect
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
   
-
+  /**
+   * Handles opening the specified modal.
+   * @param {string} which - The type of modal to open.
+   */
   const handleOpenModal = (which) => {
     setMessage(false);
     setModal({ ...modal, [which]: true });
   }
 
+  /**
+   * Handles closing the specified modal.
+   * @param {string} which - The type of modal to close.
+   */
   const handleCloseModal = (which) => {
     setMessage(false);
     setModal({ ...modal, [which]: false });
   }
 
+  /**
+   * Handles opening the username modal.
+   */
   const handleOpenUsernameModal = () => {
     handleOpenModal("username");
   }
+
+  /**
+   * Handles closing the username modal.
+   */
   const handleCloseUsernameModal = () => {
     handleCloseModal("username");
   };
+
+  /**
+   * Handles opening the email modal.
+   */
   const handleOpenEmailModal = () => {
     handleOpenModal("email");
   }
+
+  /**
+   * Handles closing the email modal.
+   */
   const handleCloseEmailModal = () => {
     handleCloseModal("email");
   };
+
+  /**
+   * Handles opening the password modal.
+   */
   const handleOpenPasswordModal = () => {
     handleOpenModal("password");
   }
+
+  /**
+   * Handles closing the password modal.
+   */
   const handleClosePasswordModal = () => {
     handleCloseModal("password");
   };
-
   const handleOpenAvatarModal = () => {
     handleOpenModal("avatar");
   }
@@ -102,25 +136,47 @@ const Profile = (props) => {
     handleCloseModal("avatar");
   };
 
+
+  /**
+   * Handles changes in the profile form input fields.
+   * @param {Event} e - The input field change event.
+   */
   const onProfileFormChange = (e) => {
     setMessage(false);
     dispatch(setProfile({ ...profile, [e.target.name]: e.target.value }));
   };
 
+
+  /**
+   * Handles changes in the password form input fields.
+   * @param {Event} e - The input field change event.
+   */
   const onPasswordFormChange = (e) => {
     setPasswordForm({ ...passwordForm, [e.target.name]: e.target.value });
   }
 
+  /**
+   * Handles changes in the username form input fields.
+   * @param {Event} e - The input field change event.
+   */
   const onUsernameFormChange = (e) => {
     setMessage(false);
     dispatch(setProfile({ ...profile, [e.target.name]: e.target.value }));
   };
 
+  /**
+   * Handles changes in the email form input fields.
+   * @param {Event} e - The input field change event.
+   */
   const onEmailFormChange = (e) => {
     setMessage(false);
     dispatch(setProfile({ ...profile, [e.target.name]: e.target.value }));
   };
 
+  /**
+   * Updates the user profile on the server.
+   * @param {Object} profile - The updated user profile data.
+   */
   const updateProfile = async (profile) => {
     if(profile.new === true) {
       let result = await fetch("/api/profiles", {
@@ -159,11 +215,21 @@ const Profile = (props) => {
     }
   }
 
+  /**
+   * Handles the profile form submit event.
+   * @async
+   * @param {Event} e - The form submit event.
+   */
   const handleProfileFormSubmit = async (e) => {
     if(e) e.preventDefault();
     updateProfile(profile);
   }
 
+  /**
+   * Updates the user account on the server.
+   * @param {Object} data - The updated account data.
+   * @returns {Object} The response data from the server.
+   */
   const updateAccount = async (data) => {
     let result = await fetch("/api/profiles", {
       method: "PUT",
@@ -179,6 +245,11 @@ const Profile = (props) => {
     return body;
   }
 
+  /**
+   * Handles the password form submit event.
+   * @async
+   * @param {Event} e - The form submit event.
+   */
   const handlePasswordFormSubmit = async (e) => {
     e.preventDefault();
     if(passwordForm.new.length < 8) {
@@ -206,6 +277,11 @@ const Profile = (props) => {
     }
   }
 
+  /**
+   * Handles the username form submit event.
+   * @async
+   * @param {Event} e - The form submit event.
+   */
   const handleUsernameFormSubmit = async (e) => {
     e.preventDefault();
     let data = {
@@ -219,6 +295,11 @@ const Profile = (props) => {
     }
   }
 
+  /**
+   * Handles the email form submit event.
+   * @async
+   * @param {Event} e - The form submit event.
+   */
   const handleEmailFormSubmit = async (e) => {
     e.preventDefault();
     let data = {
@@ -232,6 +313,10 @@ const Profile = (props) => {
     }
   }
 
+  /**
+   * Handles the avatar form submit event.
+   * @param {Object} data - The avatar data from the FileUploader component.
+   */
   const handleAvatarFormSubmit = async (data) => {
     // console.log(data);
     if(profile.avatar) {

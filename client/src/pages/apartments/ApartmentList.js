@@ -2,6 +2,19 @@ import { useState, useEffect, useCallback } from 'react';
 import { Box, Grid, Typography, FormControl, InputLabel, Select, MenuItem, Button } from "@mui/material"
 import ApartmentCard from "./ApartmentCard"
 
+/**
+ * ApartmentList Component - A React component that displays a list of apartments with sorting and pagination options.
+ *
+ * @component
+ * @example
+ * return (
+ *   <ApartmentList apartments={apartmentDataArray} />
+ * );
+ *
+ * @param {Object} props - The component props.
+ * @param {Array} props.apartments - An array of apartment objects to display in the list.
+ * @returns {JSX.Element} A JSX Element representing the ApartmentList component.
+ */
 const ApartmentList = ({apartments}) => {
   const [sorting, setSorting] = useState("price-asc");
 
@@ -12,6 +25,9 @@ const ApartmentList = ({apartments}) => {
     apartments: apartments
   });
 
+  /**
+   * Callback function that handles changes to the apartments array, sorting, and pagination.
+   */
   const apartmentsChanged = useCallback(() => {
     let sortedApartments = [...apartments];
     switch (sorting) {
@@ -65,12 +81,22 @@ const ApartmentList = ({apartments}) => {
   }, [apartments, pagination, sorting])
 
   useEffect(apartmentsChanged, [apartments, pagination.perPage, pagination.currentPage, sorting]);
-
+  
+  /**
+   * Handles the change event when the sorting option is changed.
+   *
+   * @param {Object} event - The change event object.
+   */
   const onSortChange = (event) => {
     console.log("Sort changed");
     setSorting(event.target.value);
   }
 
+  /**
+   * Handles the change event when the number of apartments per page is changed.
+   *
+   * @param {Object} event - The change event object.
+   */
   const onPerPageChange = (event) => {
     setPagination({
       ...pagination,

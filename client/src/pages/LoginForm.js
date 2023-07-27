@@ -23,6 +23,14 @@ const LoginForm = (props) => {
     resetPassword: false,
   });
 
+  /**
+   * Handles user login by sending a POST request to the server with the provided email and password.
+   * If the login is successful, the user is redirected to the home page.
+   * If the login fails due to incorrect password, the user is notified and allowed to reset the password after multiple failed attempts.
+   * If any other login error occurs, the user is notified of the error message.
+   * @async
+   * @param {Event} event - The form submit event.
+   */
   const handleLogin = async (event) => {
     event.preventDefault();
     let result = await fetch('/api/sessions', {
@@ -65,18 +73,34 @@ const LoginForm = (props) => {
     }
   }
 
+  /**
+   * Handles changes in the input fields and updates the corresponding state.
+   * @param {Event} event - The input field change event.
+   */
   const handleChange = (event) => {
     setLoginState({ ...loginState, [event.target.name]: event.target.value });
   }
 
+  /**
+   * Redirects the user to the registration page.
+   */
   const onRegisterButton = () => {
     navigate("/register");
   }
 
+  /**
+   * Redirects the user to the password recovery page.
+   */
   const onResetPasswordButton = () => {
     navigate("/recovery");
   }
 
+  /**
+   * Handles Google login by sending the Google OAuth token to the server for authentication.
+   * If the authentication is successful, the user is redirected to the home page.
+   * @async
+   * @param {Object} googleData - The Google login data containing the credential.
+   */
   const onGoogleLogin = async (googleData) => {
     // console.log(googleData);
     const res = await fetch("/auth/google", {

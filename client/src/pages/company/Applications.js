@@ -27,6 +27,10 @@ const Applications = (props) => {
     applications : [applications],
   });
 
+  /**
+   * Paginates the applications.
+   * @function
+   */
   const paginateApplications = useCallback(() => {
     const pages = Math.ceil(applications.length / pagination.perPage)
     let paginatedApplications = []
@@ -42,6 +46,10 @@ const Applications = (props) => {
     // console.log("Paginating applications");
   }, [pagination, applications]);
 
+  /**
+   * Sorts the applications based on the selected sorting option.
+   * @function
+   */
   const sortApplications = useCallback(() => {
     let sortedApplications = [...applications];
     switch (sort) {
@@ -118,11 +126,21 @@ const Applications = (props) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(paginateApplications, [pagination.perPage, applications]);
 
+  /**
+   * Handles the change of sorting option.
+   * @function
+   * @param {Event} event - The event object representing the change event.
+   */
   const onSortChange = (event) => {
     // console.log(event.target.value)
     setSort(event.target.value);
   }
 
+  /**
+   * Handles the change of applications per page.
+   * @function
+   * @param {Event} event - The event object representing the change event.
+   */
   const onPerPageChange = (event) => {
     setPagination({
       ...pagination,

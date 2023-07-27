@@ -2,7 +2,15 @@ import CookieConsent from "react-cookie-consent";
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleCookies } from '../appSlice';
 
-
+/**
+ * Gdpr Component - Displays a cookie consent banner for GDPR compliance.
+ *
+ * @component
+ * @example
+ * <Gdpr />
+ *
+ * @returns {JSX.Element} JSX.Element
+ */
 const Gdpr = (props) => {
   const dispatch = useDispatch();
 

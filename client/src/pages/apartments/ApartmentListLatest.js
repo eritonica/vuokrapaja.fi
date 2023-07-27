@@ -2,6 +2,20 @@ import { useState, useEffect, useCallback } from 'react';
 import { Box, Grid, Typography, FormControl, InputLabel, Select, MenuItem, Button } from "@mui/material"
 import ApartmentCard from "./ApartmentCard"
 
+
+/**
+ * ApartmentListLatest Component - A React component that displays a list of the latest apartments.
+ *
+ * @component
+ * @example
+ * return (
+ *   <ApartmentListLatest apartments={latestApartmentDataArray} />
+ * );
+ *
+ * @param {Object} props - The component props.
+ * @param {Array} props.apartments - An array of the latest apartment objects to display in the list.
+ * @returns {JSX.Element} A JSX Element representing the ApartmentListLatest component.
+ */
 const ApartmentListLatest = ({apartments}) => {
   
   return (
