@@ -35,7 +35,7 @@ const Profile = (props) => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		console.log(company);
-		if(company.new === true) {
+		if(company.new === true || company._id === undefined) {
 			let response = await fetch("/api/companies", {
 				method: "POST",
 				headers: {

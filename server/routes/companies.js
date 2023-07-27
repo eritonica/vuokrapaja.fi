@@ -82,6 +82,7 @@ const createEmptyCompany = async (accountId) => {
 router.get('/companies', async (req, res) => {
 	console.log(req.session.account._id);
 	let companies = await members.getCompaniesByMember(req.session.account._id);
+	
 	return res.status(200).json(companies);
 });
 

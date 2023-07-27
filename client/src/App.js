@@ -92,14 +92,19 @@ function App() {
         },
       });
       let companies = await response.json();
-      if(!companies.message) {
+      if (!companies.message) {
         console.log(companies);
-        if(companies[0] !== undefined) {
-          dispatch(setCompany({
-            ...company,
-            ...companies[0][0],
-            new: false,
-          }));
+        for (const companyArray of companies) {
+          if (Array.isArray(companyArray) && companyArray.length > 0) {
+            for (const company of companyArray) {
+              if (company['_id'] !== undefined) { 
+                dispatch(setCompany({
+                  ...company,
+                  new: false,
+                }));
+              }
+            }
+          }
         }
       }
     }
